@@ -1,8 +1,8 @@
 exports.dbConnectionParams = {
-  user: 'readerapp',
-  password: 'aAFf48ljvai8',
-  database: 'reader_production',
-  host: 'readtheinter.net',
+  user: 'ledeapp',
+  password: 'dbpass',
+  database: 'lede_production',
+  host: 'unburythelede.com',
   port: 5432
 };
 
