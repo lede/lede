@@ -43,7 +43,7 @@ function indexFeed(jobParams) {
 
   log.info("Indexing feed " + jobParams.feed + " (" + job.worker.queue + ")");
 
-  dataLayer.Feed.findOne(jobParams.feed, function(err, result) {
+  dataLayer.Source.findOne(jobParams.feed, function(err, result) {
     var done = function(err) {
       if (err) {
         log.error("Indexing feed " + jobParams.feed + ": " + err);
@@ -101,7 +101,7 @@ function indexFeed(jobParams) {
         if (statusCode == 301) { // permanent redirect
           feed.url = options.urlOverride; // update it in-memory so it stays consistent
 
-          dataLayer.Feed.update(feed.id, { url: feed.url }, function(err, result) {
+          dataLayer.Source.update(feed.id, { url: feed.url }, function(err, result) {
             if (err) {
               done(err);
               return;
@@ -138,10 +138,10 @@ function startWorker(queue, name) {
   //worker.on('job', function(job) { log.info("Indexing feed " + util.inspect(job))});
 
   // Triggered every time a Job errors.
- // worker.on('error', function(job) { log.error("Feed " + job.feed + " error: " + err.message)});
+ // worker.on('error', function(job) { log.error("Source " + job.feed + " error: " + err.message)});
 
   // Triggered on every successful Job run.
-  //worker.on('success', function(job) { log.info("Feed " + job.feed + " processed successfully")});
+  //worker.on('success', function(job) { log.info("Source " + job.feed + " processed successfully")});
 
   worker.start();
 
