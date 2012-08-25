@@ -111,17 +111,17 @@ function fetchOfferedFeeds(siteBody, done) {
 
 // searches the database for a feed with the given URL
 function lookupFeed(feedUrl, done) {
-  dataLayer.Feed.findOne({ url: feedUrl }, { only: [ 'id', 'title', 'description', 'url' ]}, done);
+  dataLayer.Source.findOne({ url: feedUrl }, { only: [ 'id', 'title', 'description', 'url' ]}, done);
 }
 
 /** find the feed by URL if it exists in the DB, or insert it if it doesn't exist.
- * @param feed  an object representing a feed (not necessarily a Feed object as returned by the datalayer) consisting of "url", "title", and "description" fields which
+ * @param feed  an object representing a feed (not necessarily a Source object as returned by the datalayer) consisting of "url", "title", and "description" fields which
  * will be inserted into the DB.  URL must be the canonical
  * URL (followed all redirects, etc).  if the feed object contains an ID field, it is assumed that this is known to be the ID in the database, and it just calls done with the feed as the result argument.
- * @param done  receives error or result.  the result will be the feed info (not an actual Feed object; "id", "title", "description", "url") 
+ * @param done  receives error or result.  the result will be the feed info (not an actual Source object; "id", "title", "description", "url") 
  */
 function addNewFeed(feed, done) {
-  dataLayer.Feed.create(feed, function (err, result) {
+  dataLayer.Source.create(feed, function (err, result) {
     if (err) {
       done(err);
     } else {
@@ -236,7 +236,7 @@ function discover(jobParams) {
         setResqueCallback(err);
       }
     } else if (result.id) { // we found an existing feed
-      log.info("Feed " + result.id + " found by direct URL");
+      log.info("Source " + result.id + " found by direct URL");
       handleSpecificFeedFound(result);
     } else { // we found a brand new feed
       log.info("New feed found by direct URL: " + result.url);

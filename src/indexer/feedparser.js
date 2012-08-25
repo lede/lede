@@ -16,7 +16,7 @@ function updateFeedMetadata(feed, parser, indexTime, updated, done) {
   if (parser.getTitle() && feed.title != parser.getTitle()) {
     updateFields.title = parser.getTitle();
   } else if (!feed.title) { // title isn't set and the feed didn't provide it
-    updateFields.title = "[Feed " + feed.id + "]";
+    updateFields.title = "[Source " + feed.id + "]";
   }
 
   // TODO handle permalink
@@ -28,7 +28,7 @@ function updateFeedMetadata(feed, parser, indexTime, updated, done) {
   }
   
   log.debug("Updating feed " + feed.id + ": " + util.inspect(updateFields));
-  dataLayer.Feed.update(feed.id, updateFields, done);
+  dataLayer.Source.update(feed.id, updateFields, done);
 }
 
 function updatePostContents(parser, item, callback) {
@@ -43,7 +43,7 @@ function updatePostContents(parser, item, callback) {
       callback(null, result[0].id);
     } else {
       dataLayer.PostContent.create({
-        contents: item.getContents(),
+        content: item.getContents(),
         description: item.getDescription(),
         title: item.getTitle(),
         uri: item.getPermalink()

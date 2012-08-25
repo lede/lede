@@ -41,7 +41,7 @@ function fetchFeed(feed, done, options) {
   }
   
   requestParams.headers = {
-    "User-Agent": "Feedfetcher-ReadThe.Net; (+http://readthe.net/feedfetcher.html" + (feed.id ? "; feed-id=" + feed.id : "") + ")"
+    "User-Agent": "Feedfetcher-Lede; (+http://unburythelede.com/feedfetcher.html" + (feed.id ? "; feed-id=" + feed.id : "") + ")"
   };
 
   log.debug("Connecting to: " + util.inspect(requestParams));
@@ -55,7 +55,7 @@ function fetchFeed(feed, done, options) {
     if (res.statusCode != 200) {
       switch (res.statusCode) {
         case 301:
-          log.debug("Feed " + options.feedName(feed) + " moved permanently (301) from '" + feed.url + "' to '" + res.headers['location'] + "'");
+          log.debug("Source " + options.feedName(feed) + " moved permanently (301) from '" + feed.url + "' to '" + res.headers['location'] + "'");
 
           options.urlOverride = res.headers['location'];
           options.redirectCallback(feed, done, options, res.statusCode);
@@ -63,7 +63,7 @@ function fetchFeed(feed, done, options) {
           
         case 302:
         case 307:
-          log.debug("Feed " + options.feedName(feed) + " moved temporarily (" + res.statusCode + ") from '" + feed.url + "' to '" + res.headers['location'] + "'");
+          log.debug("Source " + options.feedName(feed) + " moved temporarily (" + res.statusCode + ") from '" + feed.url + "' to '" + res.headers['location'] + "'");
           options.urlOverride = res.headers['location'];
           options.redirectCallback(feed, done, options, res.statusCode);
           break;

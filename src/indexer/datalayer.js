@@ -7,15 +7,8 @@ exports.client.client.on('error', function(e) {
   process.exit(1);
 });
 
-exports.Feed = FastLegS.Base.extend({
-  tableName: "feeds",
-  primaryKey: "id",
-  updateTimestamp: "updated_at",
-  createTimestamp: "created_at"
-});
-
-exports.PostContent = FastLegS.Base.extend({
-  tableName: "post_contents",
+exports.Source = FastLegS.Base.extend({
+  tableName: "sources",
   primaryKey: "id",
   updateTimestamp: "updated_at",
   createTimestamp: "created_at"
@@ -26,32 +19,42 @@ exports.Post = FastLegS.Base.extend({
   primaryKey: "id",
   updateTimestamp: "updated_at",
   createTimestamp: "created_at",
-  one: [{
-    content: exports.PostContent,
-    joinOn: 'post_content_id'
-  }]
 });
 
-exports.PostWithContent = FastLegS.Base.extend({
-  tableName: "post_with_content_view",
-  primaryKey: "post_id"
-});
-
-exports.Subscription = FastLegS.Base.extend({
-  tableName: "subscriptions",
-  primaryKey: "id",
-  updateTimestamp: "updated_at",
-  createTimestamp: "created_at"
-});
-
-exports.SubscriptionFolder = FastLegS.Base.extend({
-  tableName: "subscription_folders",
+exports.User = FastLegS.Base.extend({
+  tableName: "users",
   primaryKey: "id",
   updateTimestamp: "updated_at",
   createTimestamp: "created_at",
-  many: [{
-    subscriptions: exports.Subscription,
-    joinOn: 'subscription_folder_id'
+});
+
+exports.Link = FastLegS.Base.extend({
+  tableName: "links",
+  primaryKey: "id",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at",
+  one: [{
+    from_post: exports.Post,
+    joinOn: 'from_post_id'
+  },
+  {
+    to_post: exports.Post,
+    joinOn: 'to_post_id'
+  }]
+});
+
+exports.Lede = FastLegS.Base.extend({
+  tableName: "ledes",
+  primaryKey: "id",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at",
+  belongsTo: [{
+    post: exports.Post,
+    joinOn: 'post_id'
+  },
+  {
+    user: exports.User,
+    joinOn: 'user_id'
   }]
 });
 

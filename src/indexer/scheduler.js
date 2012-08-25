@@ -11,7 +11,7 @@ function findStaleFeeds(callback) {
 
   log.debug("Finding feeds indexed prior to " + indexTime.toUTCString());
 
-  dataLayer.Feed.find(
+  dataLayer.Source.find(
     {
       "indexed_at.lte.or_null": indexTime,
       "indexable": true
