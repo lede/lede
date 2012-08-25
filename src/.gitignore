@@ -1,0 +1,5 @@
+*.swp
+*.swo
+*.swn
+*schema.rb
+node_modules
