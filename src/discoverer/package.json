@@ -1,0 +1,20 @@
+{
+    "name": "lede-discoverer",
+    "description": "New feed discoverer for Lede",
+    "version": "0.1.0",
+    "author" : "Ryan Meador",
+    "homepage": "https://github.com/lede/lede",
+    "repository" : {
+        "type" : "git",
+        "url" : "https://github.com/lede/lede.git"
+    },
+    "main" : "./indexer",
+    "dependencies": {
+        "step": ">=0.0.5",
+        "underscore": ">=1.2.2",
+        "htmlparser": "*",
+        "soupselect": "*"
+    },
+    "engine": [ "node >=0.8.8" ],
+    "keywords": ["rss", "feed", "atom", "spider", "crawler", "discoverer", "lede"]
+}

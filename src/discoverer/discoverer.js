@@ -2,15 +2,13 @@ log = require('../core/logger').getLogger("discoverer");
 var _ = require('underscore');
 var util = require('util');
 var settings = require('./' + process.argv[2]); // TODO hack!
-var dataLayer = require('./datalayer');
+var dataLayer = require('../core/datalayer');
 var Step = require('step');
-var feedFetcher = require('./feedfetcher');
-var NodePie = require('nodepie');
+var feedFetcher = require('../core/feedfetcher');
 var os = require('os');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
-var subscribe = require('./subscribe');
-var queues = require('./resque-queues');
+var queues = require('../core/resque-queues');
 
 // enumerate feeds provided by the web page whose body is provided
 function parseOfferedFeedUrls(siteBody, done) {
