@@ -5,10 +5,13 @@ set :user,    "deploy"
 # name this the same thing as the directory on your server
 set :application, "lede-app"
 
-# or use a hosted repository
+# use a hosted repository
 set :repository, "ssh://git@github.com/lede/lede.git"
 
 server "#{domain}", :app, :web, :db, :primary => true
+
+# set environment
+set :environment, ENV['ENV'] || 'production' # default to production - TODO: make this staging once we have that
 
 set :deploy_via, :copy
 set :copy_exclude, [".git", ".DS_Store"]
@@ -42,6 +45,16 @@ namespace :deploy do
 
   task :after_deploy do
     cleanup
+  end
+
+  task :launch do
+    migrate
+    deploy
+  end
+
+  task :migrate do
+    # really shaky relative paths - TODO: fix
+    `cd ../../db/ && ./node_modules/db-migrate/bin/db-migrate up --config database.json -e #{environment}`
   end
 
 end
