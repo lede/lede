@@ -8,9 +8,6 @@
   "dependencies": {
     "express": "3.0.0rc3",
     "hjs": "*",
-    "less-middleware": "*",
-    "cluster-master": "*",
-    "underscore": "*",
-    "daemon": "*"
+    "less-middleware": "*"
   }
 }
