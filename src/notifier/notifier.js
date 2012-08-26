@@ -17,7 +17,7 @@ email.send({
   password: settings.notifier.password,
   template: 'views/digest.hjs',
   data: view,
-  to: 'jonathan.hayden@gmail.com',
+  to: 'justin@unburythelede.com',
   from: 'jon@unburythelede.com',
   subject: 'Lede Notifier: Test from development',
 },

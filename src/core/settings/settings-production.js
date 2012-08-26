@@ -1,7 +1,7 @@
 exports.dbConnectionParams = {
-  user: 'ledeapp',
+  user: 'production',
   password: 'dbpass',
-  database: 'lede_production',
+  database: 'production',
   host: 'unburythelede.com',
   port: 5432
 };
