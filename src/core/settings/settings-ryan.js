@@ -45,3 +45,13 @@ exports.discoverer = {
     "fast_discovery,slow_discovery": 1
   },
 };
+
+// common settings for the mailer used in notifier
+exports.notifier = {
+  host: 'smtp.sendgrid.net',
+  port: '587',
+  domain: 'unburythelede.com',
+  authentication: 'login',
+  username: 'lede',
+  password: 'Passw0rd!'
+};

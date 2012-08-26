@@ -50,9 +50,9 @@ function addNewSource(url, fast, done) {
     } else {
       log.debug("Added new source to database (" + result.rows[0].id + "), initiating index");
       if (fast) {
-        queues.fastIndex.enqueue({ feed: result.rows[0].id });
+        queues.fastIndex.enqueue({ source: result.rows[0].id });
       } else {
-        queues.slowIndex.enqueue({ feed: result.rows[0].id });
+        queues.slowIndex.enqueue({ source: result.rows[0].id });
       }
       done(null, result.rows[0]);
     }

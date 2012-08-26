@@ -39,3 +39,13 @@ exports.indexer = {
   },
   throttleInterval: 60 // if a feed has been updated within this many seconds, it will not be updated again
 };
+
+// common settings for the mailer used in notifier
+exports.notifier = {
+  host: 'smtp.sendgrid.net',
+  port: '587',
+  domain: 'unburythelede.com',
+  authentication: 'login',
+  username: 'lede',
+  password: 'Passw0rd!'
+};
