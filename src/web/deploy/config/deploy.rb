@@ -10,9 +10,6 @@ set :repository, "ssh://git@github.com/lede/lede.git"
 
 server "#{domain}", :app, :web, :db, :primary => true
 
-# set environment
-set :environment, ENV['ENV'] || 'production' # default to production - TODO: make this staging once we have that
-
 set :deploy_via, :copy
 set :copy_exclude, [".git", ".DS_Store"]
 set :scm, :git
@@ -54,7 +51,7 @@ namespace :deploy do
 
   task :migrate do
     # really shaky relative paths - TODO: fix
-    `cd ../../db/ && ./node_modules/db-migrate/bin/db-migrate up --config database.json -e #{environment}`
+    `cd ../../db/ && ./node_modules/db-migrate/bin/db-migrate up --config database.json -e production`
   end
 
 end
