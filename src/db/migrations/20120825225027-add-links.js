@@ -8,7 +8,16 @@ exports.up = function(db, callback) {
     to_post_id: 'int',
     created_at: 'timestamp',
     updated_at: 'timestamp'
-    }, callback);
+    }, constrain);
+
+  // use SQL until db-migrate supports adding constraints natively
+  function constrain(err) {
+    if (err) { callback(err); return; }
+    db.runSql(
+      'ALTER TABLE links ADD FOREIGN KEY (from_post_id) REFERENCES posts;' +
+      'ALTER TABLE links ADD FOREIGN KEY (to_post_id) REFERENCES posts;'
+      , callback);
+  }
 };
 
 exports.down = function(db, callback) {
