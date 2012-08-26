@@ -1,8 +1,6 @@
 var email = require('mailer');
 var settings = require('../core/settings');
 var dataLayer = require('../core/datalayer');
-var sgusername = 'lede';
-var sgpassword = 'Passw0rd!';
 
 var view = {
   firstname: 'Jon',
