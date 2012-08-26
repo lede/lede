@@ -11,7 +11,7 @@ var feedFetcher = require('../core/feedfetcher');
 var feedParser = require('./feedparser');
 var dataLayer = require('../core/datalayer');
 var _ = require('underscore');
-var settings = require('./' + process.argv[2]); // TODO hack!
+var settings = require('../core/settings');
 var os = require('os');
 
 var redis = require('redis').createClient(settings.redisConnectionParams.port, settings.redisConnectionParams.host);

@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var util = require('util');
-var settings = require('./' + process.argv[2]); // TODO hack!
+var settings = require('./settings');
 
 var resque = require('resque').connect(settings.redisConnectionParams);
 

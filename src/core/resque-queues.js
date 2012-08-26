@@ -1,4 +1,4 @@
-var settings = require('./' + process.argv[2]); // TODO hack!
+var settings = require('./settings');
 
 var redis = require('redis').createClient(settings.redisConnectionParams.port, settings.redisConnectionParams.host);
 redis.on('error', function(e) {
