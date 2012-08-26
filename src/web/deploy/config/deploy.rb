@@ -24,6 +24,7 @@ ssh_options[:paranoid] = false
 
 set :app_path, "src/web/app"
 set :migration_path, "src/db"
+set :server_path, "#{releases_path}/../server-control"
 
 set :cluster_size, 3
 
@@ -55,11 +56,20 @@ namespace :deploy do
     update_dependencies
     migrate
     symlink # FIXME: danger - at this point static assets are updated but dynamic code isn't reloaded
-    rolling_restart
+    fast_restart
   end
 
   task :rolling_restart do
     run "cd #{current_path}/#{app_path} && node ./server/server.js restart #{cluster_size} /var/run/express-cluster.pid"
+  end
+
+  task :fast_restart do
+    begin 
+      run "cd #{server_path} && node server.js stop #{current_path}/#{app_path}/app.js #{cluster_size} /var/run/express-cluster.pid"
+    rescue => e
+      p "Looks like the server wasn't running, we'll just start it."
+    end
+    run "cd #{server_path} && node server.js start #{current_path}/#{app_path}/app.js #{cluster_size} /var/run/express-cluster.pid"
   end
 
   task :migrate do
