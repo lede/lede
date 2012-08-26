@@ -10,7 +10,7 @@ var getters = {
   "https:": https
 };
 
-function fetchFeed(feed, done, options) {
+function fetchFeed(source, done, options) {
   if (!options) {
     options = {};
   }
@@ -20,10 +20,10 @@ function fetchFeed(feed, done, options) {
   }
 
   if (!options.feedName) {
-    options.feedName = function (feed) { return "'" + feed.url + "'" };
+    options.feedName = function (source) { return "'" + source.url + "'" };
   }
 
-  var requestParams = url.parse(options.urlOverride ? options.urlOverride : feed.url);
+  var requestParams = url.parse(options.urlOverride ? options.urlOverride : source.url);
 
   if (!requestParams.hostname) { // check for invalid hostnames (at this time, that really just means null, but maybe we should make it more robust in the future)
     done(new Error("Hostname was not specified (or it couldn't be parsed)"));
@@ -41,7 +41,7 @@ function fetchFeed(feed, done, options) {
   }
   
   requestParams.headers = {
-    "User-Agent": "Feedfetcher-Lede; (+http://unburythelede.com/feedfetcher.html" + (feed.id ? "; feed-id=" + feed.id : "") + ")"
+    "User-Agent": "Feedfetcher-Lede; (+http://unburythelede.com/feedfetcher.html" + (source.id ? "; source-id=" + source.id : "") + ")"
   };
 
   log.debug("Connecting to: " + util.inspect(requestParams));
@@ -55,17 +55,17 @@ function fetchFeed(feed, done, options) {
     if (res.statusCode != 200) {
       switch (res.statusCode) {
         case 301:
-          log.debug("Source " + options.feedName(feed) + " moved permanently (301) from '" + feed.url + "' to '" + res.headers['location'] + "'");
+          log.debug("Source " + options.feedName(source) + " moved permanently (301) from '" + source.url + "' to '" + res.headers['location'] + "'");
 
           options.urlOverride = res.headers['location'];
-          options.redirectCallback(feed, done, options, res.statusCode);
+          options.redirectCallback(source, done, options, res.statusCode);
           break;
           
         case 302:
         case 307:
-          log.debug("Source " + options.feedName(feed) + " moved temporarily (" + res.statusCode + ") from '" + feed.url + "' to '" + res.headers['location'] + "'");
+          log.debug("Source " + options.feedName(source) + " moved temporarily (" + res.statusCode + ") from '" + source.url + "' to '" + res.headers['location'] + "'");
           options.urlOverride = res.headers['location'];
-          options.redirectCallback(feed, done, options, res.statusCode);
+          options.redirectCallback(source, done, options, res.statusCode);
           break;
 
         default:
@@ -82,7 +82,7 @@ function fetchFeed(feed, done, options) {
       bodyData += chunk;
     });
     res.on('end', function() {
-      done(null, { feed: feed, body: bodyData });
+      done(null, { source: source, body: bodyData });
     });
   }).on('error', function(e) {
     //console.log("Got error: " + e.message);

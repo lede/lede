@@ -2,14 +2,15 @@
 var daemon = require('daemon');
 var _ = require('underscore');
 var fs = require('fs');
-var cluster_master = require('cluster-master');
+var spawn = require('child_process').spawn;
+var util = require('util');
 
 /* constants */
 
 // default worker count if none is specified on the command line
 var DEFAULT_WORKER_NUM = 3;
+var DEFAULT_BASE_PORT = 3000;
 var DEFAULT_PIDFILE = '.pid'; // should really be specified, this will be placed in working copy
-var DEFAULT_LOGFILE = '.log'; // ditto
 
 // supported commands enum
 var COMMANDS = {
@@ -26,11 +27,16 @@ function coalesce(val, fallback) {
 }
 
 /* argument parsing */
-// TODO: use a real argument parsing library
 var command = coalesce(process.argv[2], COMMANDS.start);
-var worker_num = coalesce(process.argv[3], DEFAULT_WORKER_NUM);
-var pidfile = coalesce(process.argv[4], DEFAULT_PIDFILE);
-var logfile = coalesce(process.argv[5], DEFAULT_LOGFILE);
+// TODO: use a real argument parsing library
+var target = process.argv[3];
+if(command != COMMANDS.help && _.isUndefined(target)) {
+  console.log('Target to run must be provided');
+  process.exit(1);
+}
+var worker_num = coalesce(process.argv[4], DEFAULT_WORKER_NUM);
+var pidfile = coalesce(process.argv[5], DEFAULT_PIDFILE);
+var base_port = parseInt(coalesce(process.argv[6], DEFAULT_BASE_PORT));
 
 
 /* command implementations */
@@ -46,6 +52,9 @@ function stop() {
   get_daemon(function(pid) {
     process.kill(pid, 'SIGINT'); // don't kill, just signal a restart with SIGHUP
   });
+  setTimeout(function() {
+    console.log("Done.");
+  }, 10000);
 }
 
 function restart(workers) {
@@ -56,7 +65,7 @@ function restart(workers) {
 }
 
 function help() {
-  console.log('Usage: node server.js start|stop|restart|help [workers] [pidfile] [logfile]');
+  console.log('Usage: node server.js [start|stop|restart|help] target [workers] [pidfile] [base-port]');
 }
 
 // helper to get the daemon process for signaling
@@ -89,6 +98,22 @@ switch(command) {
 
 /* Daemon implementation */
 
+function start_child(port) {
+    var parent_env = process.env;
+    parent_env['PORT'] = port;
+    child = spawn('node', [target], { env: parent_env }); 
+    child.on('exit', function(code) {
+      console.log(child.pid + ' exited with code: ' + code);
+    });
+    child.stdout.on('data', function(data) {
+      console.log(child.pid + ' [OUT] '  + data);
+    });
+    child.stderr.on('data', function(data) {
+      console.log(child.pid + ' [ERR] '  + data);
+    });
+    return child;
+}
+
 function server_daemon() {
 
   // write out the pidfile
@@ -99,26 +124,50 @@ function server_daemon() {
     }
   });
 
-  // kick off the actual server cluster
-  cluster_master({
-    exec: 'app.js',
-    size: worker_num
-  });
+  // list of children
+  children = [];
+
+  for(var worker_index = 0; worker_index < worker_num; worker_index++) {
+    console.log('Starting worker on port: ' + base_port + worker_index);
+    children.push(start_child(base_port + worker_index));
+  }
 
   // handle restart signal
   process.on('SIGHUP', function() {
-    cluster_master.restart();
+
+    // list of new children
+    var new_children = [];
+    var port_offset = 0;
+
+    // rolling restart, kill off old children and start new ones
+    _.each(children, function(child) {
+      child.kill();
+      new_children.push(start_child(port));
+    });
+
+    // swap child over list over to new one
+    children = new_children;
   });
 
   // handle stop cleanly
   process.on('SIGINT', function() {
-    cluster_master.quit();
+    _.each(children, function(child) {
+      try {
+        child.kill();
+      } catch (ex) {
+        console.log("Abandoning child that we couldn't kill");
+      }
+    });
     process.exit(0);
   });
 
   // handle hard stop
   process.on('SIGKILL', function() {
-    cluster_master.quitHard();
+    _.each(children, function(child) {
+      child.kill('SIGKILL');
+    });
     process.exit(0);
   });
+
+  console.log('Registered signal handlers');
 }
