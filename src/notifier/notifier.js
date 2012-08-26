@@ -5,7 +5,8 @@ var sgpassword = 'Passw0rd!';
 
 var view = {
   firstname: 'Jon',
-  animal: 'shark'
+  animal: 'shark',
+  things: 'tables'
 };
 
 email.send({
