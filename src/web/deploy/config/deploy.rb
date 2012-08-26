@@ -69,10 +69,10 @@ namespace :deploy do
     update_indexer_dependencies
     update_notifier_dependencies
     update_scheduler_dependencies
-    restart_discoverer
-    restart_indexer
-    restart_notifier
-    restart_scheduler
+    discoverer_restart
+    indexer_restart
+    notifier_restart
+    scheduler_restart
   end
 
   task :migrate do
