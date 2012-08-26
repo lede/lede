@@ -64,7 +64,11 @@ namespace :deploy do
   end
 
   task :fast_restart do
-    run "cd #{server_path} && node server.js stop #{current_path}/#{app_path}/app.js #{cluster_size} /var/run/express-cluster.pid"
+    begin 
+      run "cd #{server_path} && node server.js stop #{current_path}/#{app_path}/app.js #{cluster_size} /var/run/express-cluster.pid"
+    rescue => e
+      p "Looks like the server wasn't running, we'll just start it."
+    end
     run "cd #{server_path} && node server.js start #{current_path}/#{app_path}/app.js #{cluster_size} /var/run/express-cluster.pid"
   end
 
