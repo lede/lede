@@ -7,9 +7,9 @@ if (process.argv.length != 3) {
   process.exit(1);
 }
 
-var feedFetcher = require('./feedfetcher');
+var feedFetcher = require('../core/feedfetcher');
 var feedParser = require('./feedparser');
-var dataLayer = require('./datalayer');
+var dataLayer = require('../core/datalayer');
 var _ = require('underscore');
 var settings = require('./' + process.argv[2]); // TODO hack!
 var os = require('os');

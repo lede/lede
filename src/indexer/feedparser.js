@@ -1,5 +1,5 @@
 var NodePie = require('nodepie');
-var dataLayer = require('./datalayer');
+var dataLayer = require('../core/datalayer');
 var _ = require('underscore');
 var Step = require('step');
 var util = require('util');
