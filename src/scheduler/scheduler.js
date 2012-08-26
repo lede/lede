@@ -2,7 +2,7 @@ log = require('../core/logger').getLogger("scheduler");
 var _ = require('underscore');
 var util = require('util');
 var settings = require('./' + process.argv[2]); // TODO hack!
-var dataLayer = require('./datalayer');
+var dataLayer = require('../core/datalayer');
 
 var resque = require('resque').connect(settings.redisConnectionParams);
 
