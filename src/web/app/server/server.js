@@ -52,6 +52,9 @@ function stop() {
   get_daemon(function(pid) {
     process.kill(pid, 'SIGINT'); // don't kill, just signal a restart with SIGHUP
   });
+  setTimeout(function() {
+    console.log("Done.");
+  }, 10000);
 }
 
 function restart(workers) {
@@ -149,7 +152,11 @@ function server_daemon() {
   // handle stop cleanly
   process.on('SIGINT', function() {
     _.each(children, function(child) {
-      child.kill();
+      try {
+        child.kill();
+      } catch (ex) {
+        console.log("Abandoning child that we couldn't kill");
+      }
     });
     process.exit(0);
   });
