@@ -4,7 +4,7 @@ var util = require('util');
 var settings = require('../core/settings');
 var dataLayer = require('../core/datalayer');
 
-var resque = require('resque').connect(settings.redisConnectionParams);
+var queues = require('../core/resque-queues');
 
 function findStaleFeeds(callback) {
   var indexTime = new Date(Date.now() - (settings.scheduler.minimumIndexInterval * 1000));
@@ -32,7 +32,7 @@ function enqueueFeeds(err, feeds) {
 
   _.each(feeds, function(feed) {
     log.debug("Enqueuing feed " + feed.id);
-    resque.enqueue('scheduled_index', 'Resque::Scheduled_index', { feed: feed.id });
+    queues.slowIndex.enqueue({ feed: feed.id });
   });
 }
 
