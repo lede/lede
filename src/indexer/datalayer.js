@@ -1,6 +1,8 @@
 var FastLegS = require('FastLegS');
 var settings = require('./' + process.argv[2]); // TODO hack!
 
+// TODO I suspect this only uses one DB connection per process, and we might get better throughput if we had more than one (at least one per worker)
+
 exports.client = FastLegS.connect(settings.dbConnectionParams).client;
 exports.client.client.on('error', function(e) {
   log.fatal("Database connection error: " + e.message);
