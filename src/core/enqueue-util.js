@@ -2,38 +2,36 @@ var _ = require('underscore');
 var util = require('util');
 var settings = require('./settings');
 
-var resque = require('resque').connect(settings.redisConnectionParams);
+var queues = require('./resque-queues');
 
 switch (process.argv[3]) {
-  case 'fti':
-    resque.enqueue('fasttrack_index', 'Resque::Fasttrack_index', { feed: process.argv[4] });
-    console.log("enqueued fasttrack_index");
+  case 'fi':
+    queue.fastIndex.enqueue({ source: process.argv[4] });
+    console.log("enqueued fast_index");
     break;
 
   case 'si':
-    resque.enqueue('scheduled_index', 'Resque::Scheduled_index', { feed: process.argv[4] });
-    console.log("enqueued scheduled_index");
+    queue.slowIndex.enqueue({ source: process.argv[4] });
+    console.log("enqueued slow_index");
     break;
 
   case 'fd':
-    resque.enqueue('fast_discovery', 'Resque::Fast_discovery', { url: process.argv[4] });
+    queue.fastDiscover.enqueue({ url: process.argv[4] });
     console.log("enqueued fast_discovery");
     break;
 
-  case 'fds': // fast discovery with subscribe
-    resque.enqueue('fast_discovery', 'Resque::Fast_discovery', {
-      url: process.argv[4],
-      subscribe: {
-        userId: process.argv[5] ? process.argv[5] : 1,
-        folderId: process.argv[6]
-      }
-    });
-    console.log("enqueued fast_discovery with subscribe");
+  case 'sd':
+    queue.slowDiscover.enqueue({ url: process.argv[4] });
+    console.log("enqueued slow_discovery");
     break;
 
-  case 'sd':
-    resque.enqueue('slow_discovery', 'Resque::Slow_discovery', { url: process.argv[4] });
-    console.log("enqueued slow_discovery");
+  case 'clean':
+    console.log("Cleaning stale workers");
+    queues.resque.cleanStaleWorkers();
+    break;
+
+  default:
+    console.log("Unknown command");
     break;
 }
 
