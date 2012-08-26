@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var util = require('util');
-var dataLayer = require('./datalayer');
+var dataLayer = require('../core/datalayer');
 var Step = require('step');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
