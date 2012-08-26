@@ -11,8 +11,8 @@
     "main" : "./core",
     "dependencies": {
         "pg": ">=0.8.3",
-        "db-migrate": ">=0.2.1"
-        "log4js": ">=0.4.1",
+        "db-migrate": ">=0.2.1",
+        "log4js": ">=0.4.1"
     },
     "engine": [ "node >=0.8.8" ],
     "keywords": [ "lede", "dontfollow" ]
