@@ -1,4 +1,4 @@
-xports.dbConnectionParams = {
+exports.dbConnectionParams = {
   user: 'justin',
   password: 'justindbpass',
   database: 'dev_justin',
