@@ -1,6 +1,6 @@
 exports.dbConnectionParams = {
   user: 'production',
-  password: 'dbpass',
+  password: 'U*6}-%YpK06@;Rt',
   database: 'production',
   host: 'unburythelede.com',
   port: 5432
