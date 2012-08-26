@@ -1,5 +1,5 @@
 // do lots of setup stuff
-log = require('./logger').getLogger("indexer");
+log = require('../core/logger').getLogger("indexer");
 var util = require('util');
 
 if (process.argv.length != 3) {
