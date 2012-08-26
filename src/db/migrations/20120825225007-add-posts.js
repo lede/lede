@@ -9,13 +9,21 @@ exports.up = function(db, callback) {
     published_at: 'timestamp',
     indexed_at: 'timestamp',
     author: 'text',
-    source: 'int',
+    source_id: 'int',
     title: 'text',
     uri: 'text',
     links_extracted_at: 'timestamp',
     created_at: 'timestamp',
     updated_at: 'timestamp'
-  }, callback);
+  }, constrain);
+
+  // use SQL until db-migrate supports adding constraints natively
+  function constrain(err) {
+    if (err) { callback(err); return; }
+    db.runSql(
+      'ALTER TABLE posts ADD FOREIGN KEY (source_id) REFERENCES sources;'
+      , callback);
+  }
 };
 
 exports.down = function(db, callback) {
