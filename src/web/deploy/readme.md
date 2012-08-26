@@ -7,16 +7,16 @@ You will need to have have keys for the deploy account on the production server 
 
 To set this up,
 
-$ ssh <you>@unburythelede.com
-$ sudo su deploy
-$ cd
-$ cat <your public ssh key> >> .ssh/authorized_keys
+    ssh <you>@unburythelede.com
+    sudo su deploy
+    cd
+    cat <your public ssh key> >> .ssh/authorized_keys
 
 ## Launching to production
 
 To run a zero-downtime launch,
 
-$ cap deploy:launch
+    cap deploy:launch
 
 This will:
 
@@ -29,7 +29,7 @@ This will:
 
 You probably never want to do this (and it is a bit dangerous), but:
 
-$ cap deploy:migrate
+    cap deploy:migrate
 
 Will run the latest (according to github) migrations on production.
 
