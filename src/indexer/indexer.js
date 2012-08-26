@@ -11,6 +11,7 @@ var feedFetcher = require('../core/feedfetcher');
 var feedParser = require('./feedparser');
 var dataLayer = require('../core/datalayer');
 var _ = require('underscore');
+var util = require('util');
 var settings = require('../core/settings');
 var os = require('os');
 var queues = require('../core/resque-queues');
