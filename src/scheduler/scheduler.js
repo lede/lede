@@ -6,14 +6,14 @@ var dataLayer = require('../core/datalayer');
 
 var queues = require('../core/resque-queues');
 
-function findStaleFeeds(callback) {
-  var indexTime = new Date(Date.now() - (settings.scheduler.minimumIndexInterval * 1000));
+function findStaleSources(callback) {
+  var indexTime = new Date();
 
-  log.debug("Finding feeds indexed prior to " + indexTime.toUTCString());
+  log.debug("Finding sources due to be indexed before " + indexTime.toUTCString());
 
   dataLayer.Source.find(
     {
-      "indexed_at.lte.or_null": indexTime,
+      "next_index_at.lte.or_null": indexTime,
       "indexable": true
     },
     {
@@ -22,22 +22,22 @@ function findStaleFeeds(callback) {
     callback);
 }
 
-function enqueueFeeds(err, feeds) {
+function enqueueSources(err, sources) {
   if (err) {
-    log.error("Finding stale feeds: " + err.message);
+    log.error("Finding stale sources: " + err.message);
     return;
   }
   
-  log.info("Found " + feeds.length + " stale feed(s)");
+  log.info("Found " + sources.length + " stale source(s)");
 
-  _.each(feeds, function(feed) {
-    log.debug("Enqueuing feed " + feed.id);
-    queues.slowIndex.enqueue({ feed: feed.id });
+  _.each(sources, function(source) {
+    log.debug("Enqueuing source " + source.id);
+    queues.slowIndex.enqueue({ source: source.id });
   });
 }
 
-function checkFeeds() {
-  findStaleFeeds(enqueueFeeds);
+function checkSources() {
+  findStaleSources(enqueueSources);
 }
 
 process.on('SIGINT', function() {
@@ -47,5 +47,5 @@ process.on('SIGINT', function() {
 
 log.info("Scheduler started");
 
-setInterval(checkFeeds, settings.scheduler.checkInterval * 1000);
-checkFeeds(); // call it immediately since the above will delay one interval period before calling
+setInterval(checkSources, settings.scheduler.checkInterval * 1000);
+checkSources(); // call it immediately since the above will delay one interval period before calling
