@@ -1,7 +1,7 @@
 
 ## Setup
 
-$ npm install
+    npm install
 
 ## Running
 
@@ -9,7 +9,7 @@ $ npm install
 
 For development, the following is almost certainly sufficient:
 
-$ node app.js
+    node app.js
 
 ### Clustered / Production
 
