@@ -4,19 +4,19 @@ var _ = require('underscore');
 var Step = require('step');
 var util = require('util');
 
-function updateFeedMetadata(feed, parser, indexTime, updated, done) {
+function updateSourceMetadata(source, parser, indexTime, updated, done) {
   var updateFields = new Object();
 
-  if (parser.getDescription() && feed.description != parser.getDescription()) {
+  if (parser.getDescription() && source.description != parser.getDescription()) {
     updateFields.description = parser.getDescription();
   }
 
   // TODO handle PubSubHubBub
   
-  if (parser.getTitle() && feed.title != parser.getTitle()) {
+  if (parser.getTitle() && source.title != parser.getTitle()) {
     updateFields.title = parser.getTitle();
-  } else if (!feed.title) { // title isn't set and the feed didn't provide it
-    updateFields.title = "[Source " + feed.id + "]";
+  } else if (!source.title) { // title isn't set and the source didn't provide it
+    updateFields.title = "[Source " + source.id + "]";
   }
 
   // TODO handle permalink
@@ -27,8 +27,8 @@ function updateFeedMetadata(feed, parser, indexTime, updated, done) {
     updateFields.new_content_at = indexTime;
   }
   
-  log.debug("Updating feed " + feed.id + ": " + util.inspect(updateFields));
-  dataLayer.Source.update(feed.id, updateFields, done);
+  log.debug("Updating source " + source.id + ": " + util.inspect(updateFields));
+  dataLayer.Source.update(source.id, updateFields, done);
 }
 
 function updatePostContents(parser, item, callback) {
@@ -62,7 +62,7 @@ function updatePostContents(parser, item, callback) {
 }
 
 // assumes function will never be called with an empty list for updatedPosts
-function updatePosts(feed, parser, updatedPosts, done) {
+function updatePosts(source, parser, updatedPosts, done) {
   Step(
     function() {
       var group = this.group();
@@ -73,7 +73,7 @@ function updatePosts(feed, parser, updatedPosts, done) {
           if (!err) {
             dataLayer.Post.create({
               // TODO add more
-              feed_id: feed.id,
+              feed_id: source.id,
               post_content_id: postContentsId,
               published_at: item.getDate()
             },
@@ -89,14 +89,14 @@ function updatePosts(feed, parser, updatedPosts, done) {
 }
 
 // callback takes an array of the items that were updated
-function checkForUpdatedPosts(feed, parser, callback) {
+function checkForUpdatedPosts(source, parser, callback) {
 
   Step(
     function readPosts() {
       dataLayer.PostWithContent.find(
         {
           "uri.in": _.map(parser.getItems(), function(item) { return item.getPermalink(); }),
-          "feed_id": feed.id
+          "feed_id": source.id
         },
         {
           only: [ 'post_id', 'uri', 'post_content_id', 'feed_id' ],
@@ -121,23 +121,23 @@ function checkForUpdatedPosts(feed, parser, callback) {
         });
       });
 
-      log.info("Found " + updatedItems.length + " updated item(s) for feed " + feed.id);
+      log.info("Found " + updatedItems.length + " updated item(s) for source " + source.id);
       return updatedItems;
     },
     callback
   );
 }
 
-function parseFeed(feed, xml, done) {
+function parseFeed(source, xml, done) {
   try {
-    log.debug("parsing feed " + feed.id);
+    log.debug("parsing source " + source.id);
 
     var indexTime = new Date();
 
     var parser = new NodePie(xml, {keepHTMLEntities: true});
     parser.init();
 
-    checkForUpdatedPosts(feed, parser, function(err, updatedPosts) {
+    checkForUpdatedPosts(source, parser, function(err, updatedPosts) {
       if (err) {
         done(err);
       } else {
@@ -146,10 +146,10 @@ function parseFeed(feed, xml, done) {
             var group = this.group();
 
             if (updatedPosts.length > 0) {
-              updatePosts(feed, parser, updatedPosts, group());
+              updatePosts(source, parser, updatedPosts, group());
             }
 
-            updateFeedMetadata(feed, parser, indexTime, (updatedPosts.length > 0), group());
+            updateSourceMetadata(source, parser, indexTime, (updatedPosts.length > 0), group());
           },
           done
         );
