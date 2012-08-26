@@ -1,0 +1,37 @@
+{  
+  "production": {
+    "driver": "pg",
+    "user": "production",
+    "password": "U*6}-%YpK06@;Rt",
+    "host": "unburythelede.com",
+    "database": "production"
+  },
+  "dev_jon": {
+    "driver": "pg",
+    "user": "jon",
+    "password": "jondbpass",
+    "host": "unburythelede.com",
+    "database": "dev_jon"
+  },
+  "dev_justin": {
+    "driver": "pg",
+    "user": "justin",
+    "password": "justindbpass",
+    "host": "unburythelede.com",
+    "database": "dev_justin"
+  },
+  "dev_shane": {
+    "driver": "pg",
+    "user": "shane",
+    "password": "shanedbpass",
+    "host": "unburythelede.com",
+    "database": "dev_shane"
+  },
+  "dev_ryan": {
+    "driver": "pg",
+    "user": "ryan",
+    "password": "ryandbpass",
+    "host": "unburythelede.com",
+    "database": "dev_ryan"
+  }
+}
