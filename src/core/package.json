@@ -11,7 +11,10 @@
     "main" : "./core",
     "dependencies": {
         "FastLegS":"0.1.3-forked",
-        "log4js": ">=0.4.1"
+        "log4js": ">=0.4.1",
+        "redis": "*",
+        "resque": "*",
+        "underscore": "*"
     },
     "engine": [ "node >=0.8.8" ],
     "keywords": [ "lede", "dontfollow" ]

@@ -50,9 +50,9 @@ function addNewSource(url, fast, done) {
     } else {
       log.debug("Added new source to database (" + result.rows[0].id + "), initiating index");
       if (fast) {
-        queues.fastIndex.enqueue({ feed: result.rows[0].id });
+        queues.fastIndex.enqueue({ source: result.rows[0].id });
       } else {
-        queues.slowIndex.enqueue({ feed: result.rows[0].id });
+        queues.slowIndex.enqueue({ source: result.rows[0].id });
       }
       done(null, result.rows[0]);
     }
@@ -129,7 +129,7 @@ jobs[queues.slowDiscover.functionName] = function (jobParams) { discover(false, 
 var workers = [];
 
 function startWorker(queue, name) {
-  var worker = resque.createWorker(queue, name, jobs);
+  var worker = queues.resque.createWorker(queue, name, jobs);
 
   worker.start();
 
@@ -139,7 +139,8 @@ function startWorker(queue, name) {
 process.on('SIGINT', function() {
   log.info("Caught SIGINT, exiting");
   _.each(workers, function(worker) { worker.finish(); });
-  setTimeout(process.exit, 1000);
+  // TODO delay until workers complete their task
+  setTimeout(process.exit, 1500);
 });
 
 // create workers per config file
