@@ -1,4 +1,4 @@
-log = require('./logger').getLogger("scheduler");
+log = require('../core/logger').getLogger("scheduler");
 var _ = require('underscore');
 var util = require('util');
 var settings = require('./' + process.argv[2]); // TODO hack!

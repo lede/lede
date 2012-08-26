@@ -1,4 +1,4 @@
-log = require('./logger').getLogger("discoverer");
+log = require('../core/logger').getLogger("discoverer");
 var _ = require('underscore');
 var util = require('util');
 var settings = require('./' + process.argv[2]); // TODO hack!
