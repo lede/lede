@@ -11,7 +11,7 @@
     "main" : "./indexer",
     "dependencies": {
         "resque": ">=0.0.3",
-        "underscore": ">=1.2.2",
+        "underscore": ">=1.2.2"
     },
     "engine": [ "node >=0.8.8" ],
     "keywords": ["rss", "feed", "atom", "scheduler", "lede"]
