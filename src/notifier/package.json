@@ -1,0 +1,17 @@
+{
+    "name": "lede-notifier",
+    "description": "Lede Notifier",
+    "version": "0.1.0",
+    "author" : "Jonathan Hayden",
+    "homepage": "http://github.com/lede/lede",
+    "repository" : {
+        "type" : "git",
+        "url" : "http://github.com/lede/lede.git"
+    },
+    "main" : "./notifier",
+    "dependencies": {
+        "mailer": ">=0.1.20"
+    },
+    "engine": [ "node >=0.8.8" ],
+    "keywords": [ "lede", "dontfollow" ]
+}
