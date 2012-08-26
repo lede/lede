@@ -1,4 +1,11 @@
-{
+{  
+  "production": {
+    "driver": "pg",
+    "user": "production",
+    "password": "U*6}-%YpK06@;Rt",
+    "host": "unburythelede.com",
+    "database": "production"
+  },
   "dev_jon": {
     "driver": "pg",
     "user": "jon",
