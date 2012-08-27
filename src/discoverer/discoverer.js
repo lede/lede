@@ -47,7 +47,7 @@ function lookupFeed(feedUrl, done) {
  * @param done  receives error or result.  the result will be the feed info (not an actual Source object; "id", "title", "description", "url") 
  */
 function addNewSource(url, fast, done) {
-  Source.findOne({url: url}, function(err, source) {
+  dataLayer.Source.findOne({url: url}, function(err, source) {
     if(!err && _.isNull(source)) {
       dataLayer.Source.create({ url: url, indexable: true }, function (err, result) {
         if (err) {
