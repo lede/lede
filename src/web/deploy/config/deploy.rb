@@ -23,6 +23,7 @@ set :git_shallow_clone, 1
 ssh_options[:paranoid] = false
 
 set :web_app_path, "src/web/app"
+set :core_path, "src/core"
 set :discoverer_path, "src/discoverer"
 set :indexer_path, "src/indexer"
 set :notifier_path, "src/notifier"
@@ -60,6 +61,7 @@ namespace :deploy do
     update_dependencies
     migrate
     symlink # FIXME: danger - at this point static assets are updated but dynamic code isn't reloaded
+    relink_core
     fast_restart
   end
 
@@ -73,6 +75,10 @@ namespace :deploy do
     indexer_restart
     notifier_restart
     scheduler_restart
+  end
+
+  task :relink_core do
+    run "cd #{latest_release}/#{core_path} && npm link FastLegs"
   end
 
   task :migrate do
