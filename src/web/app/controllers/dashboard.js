@@ -5,7 +5,7 @@ var total_posts_query =
 	"with counts AS ("
 	+ "	select count(*), date_trunc('hour', created_at) as hour FROM posts group by date_trunc('hour', created_at) ORDER BY date_trunc('hour', created_at)"
 	+ "), padding AS ("
-	+ "	select 0 AS count, date_trunc('hour', s.a) as hour from generate_series(now() - interval '14 days', now(), interval '1 hour') as s(a)"
+	+ "	select 0 AS count, date_trunc('hour', s.a) as hour from generate_series(now() - interval '7 days', now(), interval '1 hour') as s(a)"
 	+ ")"
 	+ "SELECT padding.hour, padding.count + COALESCE(counts.count, 0) AS count FROM padding LEFT JOIN counts ON counts.hour = padding.hour";
 
