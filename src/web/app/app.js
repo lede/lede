@@ -8,7 +8,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , lede = require('./controllers/lede')
-  , dashboard = require('./controllers/dashboard')
+  , posts_dashboard = require('./controllers/posts_dashboard')
+  , sources_dashboard = require('./controllers/sources_dashboard')
   , _ = require('underscore')
   , redis_store = require('connect-redis')(express)
   , redis = require('redis').createClient()
@@ -46,8 +47,11 @@ app.get('/', routes.index);
 // TODO: only accept PUT - this is just for testing
 app.all('/api/lede', lede.create);
 
-app.get('/dashboard/total_posts', dashboard.total_posts);
-app.get('/dashboard/total_posts/:days', dashboard.total_posts_by_day);
+app.get('/dashboard/total_posts', posts_dashboard.total_posts);
+app.get('/dashboard/total_posts/:days', posts_dashboard.total_posts_by_day);
+
+app.get('/dashboard/total_sources', sources_dashboard.total_sources);
+app.get('/dashboard/total_sources/:days', sources_dashboard.total_sources_by_day);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
