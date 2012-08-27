@@ -8,7 +8,9 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , lede = require('./controllers/lede')
-  , _ = require('underscore');
+  , _ = require('underscore')
+  , redis_store = require('connect-redis')(express)
+  , redis = require('redis').createClient()
 
 var app = express();
 
@@ -21,7 +23,11 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
-  app.use(express.session());
+  app.use(express.session({
+    store: new redis_store({
+      client: redis
+    })
+  }));
   app.use(app.router);
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
