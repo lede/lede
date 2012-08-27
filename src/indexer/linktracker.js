@@ -5,14 +5,32 @@ var Step = require('step');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
 
+// TODO try to identify and longify tiny URLs
 function extractLinks(html, callback) {
-  // TODO try to identify and longify tiny URLs
+  var hrefs = [];
+  var handler = new htmlparser.DefaultHandler(function (err, dom) {
+    if (err) {
+      throw err;
+    }
+
+    // might want to directly reference the attribs instead of just links
+    var links = select(dom, 'a');
+    var attribs = _.pluck(links, "attribs");
+    hrefs = _.pluck(attribs, "href");
+  });
+  
+  var parser = new htmlparser.Parser(handler);
+  parser.parseComplete(html);
+  return hrefs;
 }
 
-/** callback is passed a results object with two properties, "resolved" and "unresolved".  The former is a list of post_content_ids for resolved links, the latter is a list of unresolved URLs
+/** callback is passed a results object with two properties, 
+ * "resolved" and "unresolved".  The former is a list of post_content_ids 
+ * for resolved links, the latter is a list of unresolved URLs
  * @param links a list of URLs
  */
 function resolveLinks(links, callback) {
+
 }
 
 function insertResolvedLinks(postContentId, links, callback) {
@@ -27,7 +45,7 @@ function resolveUnresolvedLinks(uri, postContentId, callback) {
 exports.processPostContent = function (postContent, callback) {
   Step(
     function() {
-      extractLinks(postContent.contents, this);
+      return extractLinks(postContent.contents, this);
     },
     function(err, result) {
       if (err) {
