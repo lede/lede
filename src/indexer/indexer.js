@@ -16,6 +16,11 @@ var settings = require('../core/settings');
 var os = require('os');
 var queues = require('../core/resque-queues');
 
+// handle top-level exceptions
+process.on('uncaughtException',function(error){
+  log.info('Uncaught: ' + error);
+})
+
 // useful code begins here
 
 function redisJobCompleteCallback(callbackId, status) {
