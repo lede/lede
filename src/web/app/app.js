@@ -39,7 +39,7 @@ app.get('/', routes.index);
 // TODO: only accept PUT - this is just for testing
 app.all('/api/lede', lede.create);
 
-app.get('/dashboard/total_posts', dashboard.total_posts);
+app.get('/dashboard/total_posts/:days', dashboard.total_posts);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
