@@ -47,18 +47,27 @@ function lookupFeed(feedUrl, done) {
  * @param done  receives error or result.  the result will be the feed info (not an actual Source object; "id", "title", "description", "url") 
  */
 function addNewSource(url, fast, done) {
-  dataLayer.Source.create({ url: url, indexable: true }, function (err, result) {
-    if (err) {
-      // TODO handle IDs that already exist in the DB; these should not be an error
-      done(err);
+  Source.findOne({url: url}, function(err, source) {
+    if(!err && _.isNull(source)) {
+      dataLayer.Source.create({ url: url, indexable: true }, function (err, result) {
+        if (err) {
+          // TODO handle IDs that already exist in the DB; these should not be an error
+          done(err);
+        } else {
+          log.debug("Added new source to database (" + result.rows[0].id + "), initiating index");
+          if (fast) {
+            queues.fastIndex.enqueue({ source: result.rows[0].id });
+          } else {
+            queues.slowIndex.enqueue({ source: result.rows[0].id });
+          }
+          done(null, result.rows[0]);
+        }
+      });
     } else {
-      log.debug("Added new source to database (" + result.rows[0].id + "), initiating index");
-      if (fast) {
-        queues.fastIndex.enqueue({ source: result.rows[0].id });
-      } else {
-        queues.slowIndex.enqueue({ source: result.rows[0].id });
+      if(err) {
+        console.log("Error checking for dup source: " + err);
       }
-      done(null, result.rows[0]);
+      log.info("Skippping duplicate source: " + url);
     }
   });
 }
