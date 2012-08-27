@@ -133,7 +133,7 @@ namespace :deploy do
     rescue => e
       p "Looks like the server wasn't running, we'll just start it."
     end
-    run "cd #{server_path} && node server.js start #{current_path}/#{discoverer_path}/discoverer.js #{current_path}/src/core/settings/settings-production.jsv 1 /var/run/discoverer-cluster.pid"
+    run "cd #{server_path} && node server.js start #{current_path}/#{discoverer_path}/discoverer.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/discoverer-cluster.pid"
   end
 
   task :indexer_restart do
