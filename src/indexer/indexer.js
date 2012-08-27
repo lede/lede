@@ -19,7 +19,7 @@ var queues = require('../core/resque-queues');
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
   log.info('Uncaught: ' + error);
-})
+});
 
 // useful code begins here
 
