@@ -29,15 +29,21 @@ exports.log4jsConfig = {
 };
 
 exports.scheduler = {
-  checkInterval: 60, // seconds between checking the DB for feeds that need indexing
+  checkInterval: 10, // seconds between checking the DB for feeds that need indexing
   minimumIndexInterval: 1800, // seconds since last indexing that must elapse before the feed will be considered for indexing again
 };
 
 exports.indexer = {
   workers: {
-    "fasttrack_index,scheduled_index": 1
+    "fast_index,slow_index": 1
   },
   throttleInterval: 60 // if a feed has been updated within this many seconds, it will not be updated again
+};
+
+exports.discoverer = {
+  workers: {
+    "fast_discovery,slow_discovery": 1
+  },
 };
 
 // common settings for the mailer used in notifier

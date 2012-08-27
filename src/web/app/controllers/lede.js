@@ -13,6 +13,7 @@ function no_err(cb) {
     }
   }
 }
+
 function generic_error(res) {
   // TODO: better error message, status code
   res.send({ result: 'Failed' });

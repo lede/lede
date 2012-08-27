@@ -120,6 +120,7 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
             dataLayer.Post.create({
               content: post.getContents(),
               description: post.getDescription(),
+              source_id: source.id,
               title: post.getTitle(),
               uri: post.getPermalink(),
               author: post.getAuthor(),
