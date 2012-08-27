@@ -1,7 +1,7 @@
 var orm = require("../../../core/datalayer").client;
 var _ = require("underscore");
 
-var total_posts_query = "select count(*), date_trunc('hour', created_at) FROM posts group by date_trunc('hour', created_at);";
+var total_posts_query = "select count(*), date_trunc('hour', created_at) FROM posts group by date_trunc('hour', created_at) ORDER BY date_trunc('hour', created_at);";
 
 exports.total_posts = function(req, res) {
 	orm.emit("query", total_posts_query, function(err, result) {
@@ -14,9 +14,6 @@ exports.total_posts = function(req, res) {
 		  {
 		  	item: items,
 		  	settings: {
-		  		axisx: [
-		  			"Aug",
-		  		],
 		  		axisy: [
 		  			"Bad",
 		  			"Good"
