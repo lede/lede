@@ -23,7 +23,7 @@ function redisJobCompleteCallback(callbackId, status) {
 }
 
 function fetchAndParse(source, done) {
-  feedFetcher.fetchFeed(source, function (err, results) {
+  feedFetcher.fetchFeed(source, function (err, results) { //crash
     if (err) {
       done(err);
     } else {
