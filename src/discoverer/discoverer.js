@@ -13,10 +13,13 @@ var queues = require('../core/resque-queues');
 // enumerate feeds provided by the web page whose body is provided
 function parseOfferedFeedUrls(siteBody, done) {
   try {
+    log.info("starting parseOfferedFeedUrls");
     var parser = new htmlparser.Parser(new htmlparser.DefaultHandler(function(err, dom) {
       if (err) {
+        log.info("error: " + util.inspect(err));
         done(err);
       } else {
+        log.info("parsing");
         var links = _.filter(select(dom, "link"), function(e) {
           return /(rss|atom)/i.test(e.attribs.type);
         });
@@ -26,9 +29,10 @@ function parseOfferedFeedUrls(siteBody, done) {
         }));
       }
     }));
-
+    log.info("built parser");
     parser.parseComplete(siteBody);
   } catch (e) {
+    log.info("error caught: " + util.inspect(e));
     done(e);
   }
 }
@@ -43,7 +47,7 @@ function lookupFeed(feedUrl, done) {
  * @param done  receives error or result.  the result will be the feed info (not an actual Source object; "id", "title", "description", "url") 
  */
 function addNewSource(url, fast, done) {
-  dataLayer.Source.create({ url: url }, function (err, result) {
+  dataLayer.Source.create({ url: url, indexable: true }, function (err, result) {
     if (err) {
       // TODO handle IDs that already exist in the DB; these should not be an error
       done(err);
@@ -72,9 +76,9 @@ function fetchWebPage(url, done) {
 
 /** perform the actual discover task from the resque
  */
-function discover(fast, jobParams) {
+function discover(jobParams) {
   var job = this;
-
+  var fast = true;
   log.info("Performing discovery for '" + jobParams.url + "'");
 
   fetchWebPage(jobParams.url, function (err, result) {
@@ -82,13 +86,21 @@ function discover(fast, jobParams) {
       log.error("Fetch of '" + jobParams.url + "' failed: " + err.message);
       job.fail({ exception: err.name, error: err.message });
     } else {
-      parseOfferedFeedsUrls(result.body, function (err, feedsOffered) {
+      parseOfferedFeedUrls(result.body, function (err, feedsOffered) {
+        log.info("finished parseOfferedFeedsUrls");
         if (err) {
           log.error("Parse of '" + jobParams.url + "' failed: " + err.message);
           job.fail({ exception: err.name, error: err.message });
         } else {
           if (feedsOffered.length == 0) { // test this explicitly because Step can't handle zero-length arrays
             // TODO handle web pages that don't offer feeds by doing some magic content extraction
+            log.info("Found web page that doesn't offer and feeds");
+            if ( _.isUndefined(job) ) {
+              log.info("job is undefined");
+            } else {
+              //log.info("job: " + util.inspect(job));
+              job.succeed();
+            }
             return;
           }
 
@@ -123,8 +135,13 @@ function discover(fast, jobParams) {
 
 var jobs = {}
 
-jobs[queues.fastDiscover.functionName] = function (jobParams) { discover(true, jobParams) };
-jobs[queues.slowDiscover.functionName] = function (jobParams) { discover(false, jobParams) };
+jobs[queues.fastDiscover.functionName] = discover; 
+
+jobs[queues.slowDiscover.functionName] = function (jobParams) {
+  console.log("hello");
+  log.info("Hello, from slowDiscover");
+  discover(false, jobParams) 
+};
 
 var workers = [];
 
