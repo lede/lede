@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var util = require('util');
 var dataLayer = require('../core/datalayer');
+var queues = require('../core/resque-queues');
 var Step = require('step');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
@@ -12,13 +13,11 @@ function extractLinks(html, callback) {
     if (err) {
       throw err;
     }
-
     // might want to directly reference the attribs instead of just links
     var links = select(dom, 'a');
     var attribs = _.pluck(links, "attribs");
     hrefs = _.pluck(attribs, "href");
   });
-  
   var parser = new htmlparser.Parser(handler);
   parser.parseComplete(html);
   return hrefs;
@@ -30,7 +29,11 @@ function extractLinks(html, callback) {
  * @param links a list of URLs
  */
 function resolveLinks(links, callback) {
-
+  // need to farm this out to the discoverer
+  _.each(links, function(link) {
+    log.info("Enqueing discover job for link " + link);
+    queues.fastDiscover.enqueue({ url: link });
+  });
 }
 
 function insertResolvedLinks(postContentId, links, callback) {
@@ -45,7 +48,7 @@ function resolveUnresolvedLinks(uri, postContentId, callback) {
 exports.processPostContent = function (postContent, callback) {
   Step(
     function() {
-      return extractLinks(postContent.contents, this);
+      return extractLinks(postContent, this);
     },
     function(err, result) {
       if (err) {
