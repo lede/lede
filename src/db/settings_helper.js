@@ -26,6 +26,6 @@ dbconf[settings.dbConnectionParams.user] = {
 }
 
 var buffer = JSON.stringify(dbconf);
-fs.writeFileSync('testdatabase.json', buffer); 
+fs.writeFileSync('TESTdatabase.json', buffer); 
 
 console.log(dbconf);
