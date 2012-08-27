@@ -8,6 +8,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , lede = require('./controllers/lede')
+  , dashboard = require('./controllers/dashboard')
   , _ = require('underscore');
 
 var app = express();
