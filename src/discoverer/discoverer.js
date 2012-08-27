@@ -49,7 +49,7 @@ function lookupFeed(feedUrl, done) {
 function addNewSource(url, fast, done) {
   dataLayer.Source.findOne({url: url}, function(err, source) {
     if(!err && (_.isNull(source) || _.isUndefined(source))) {
-      dataLayer.Source.create({ url: url, indexable: true }, function (err, result) {
+      dataLayer.Source.create({ url: url, indexable: true, index_interval: 60 }, function (err, result) {
         if (err) {
           // TODO handle IDs that already exist in the DB; these should not be an error
           done(err);

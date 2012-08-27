@@ -56,6 +56,7 @@ exports.total_sources_by_day = function(req, res) {
 				console.log(err);
 			}
 
+			// Add highest and lowest values
 			var items = _.map(result.rows, function(row) {
 				return row.count;
 			});
