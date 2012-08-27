@@ -4,7 +4,7 @@ var string_formatter = require("util");
 
 
 var total_posts_query = "select count(id) from posts";
-var total_posts_yesterday = "select count(id) from posts where created_at < date_trunc('day', now())";
+var total_posts_yesterday_query = "select count(id) from posts where created_at < date_trunc('day', now())";
 
 var total_posts_by_day_query_format = 
 	"with counts AS ("
@@ -17,15 +17,14 @@ var total_posts_by_day_query_format =
 
 exports.total_posts = function(req, res) {
 	orm.emit("query", total_posts_query, function(err, result) {
-		orm.emit("query", total_posts_query, function(yesterday_err, yesterday_result) {
+		orm.emit("query", total_posts_yesterday_query, function(yesterday_err, yesterday_result) {
 			if(err) {
 				console.log(err);
 			}
 
-			var items = _.map(result.rows, function(row) {
-				return row.count;
-			});
-		
+			if(yesterday_err) {
+				console.log(yesterday_err);
+			}
 
 			res.send ({ 
 			  	item: [
