@@ -6,7 +6,9 @@
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , lede = require('./controllers/lede')
+  , _ = require('underscore');
 
 var app = express();
 
@@ -31,10 +33,10 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 
-// testing only - this will go away soon
-app.get('/foo', function(req, res) {
-  res.send('Hello World');
-});
+// super simple handler for lead posts
+// TODO: clean up api routing at some point
+// TODO: only accept PUT - this is just for testing
+app.all('/api/lede', lede.create);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

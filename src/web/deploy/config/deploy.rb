@@ -22,7 +22,12 @@ set :git_shallow_clone, 1
 
 ssh_options[:paranoid] = false
 
-set :app_path, "src/web/app"
+set :web_app_path, "src/web/app"
+set :core_path, "src/core"
+set :discoverer_path, "src/discoverer"
+set :indexer_path, "src/indexer"
+set :notifier_path, "src/notifier"
+set :scheduler_path, "src/scheduler"
 set :migration_path, "src/db"
 set :server_path, "#{releases_path}/../server-control"
 
@@ -51,25 +56,30 @@ namespace :deploy do
     cleanup
   end
 
-  task :launch do
+  task :web_launch do
     update_code
     update_dependencies
     migrate
     symlink # FIXME: danger - at this point static assets are updated but dynamic code isn't reloaded
+    relink_core
     fast_restart
   end
 
-  task :rolling_restart do
-    run "cd #{current_path}/#{app_path} && node ./server/server.js restart #{cluster_size} /var/run/express-cluster.pid"
+  task :launch do
+    web_launch
+    update_discoverer_dependencies
+    update_indexer_dependencies
+    update_notifier_dependencies
+    update_scheduler_dependencies
+    discoverer_restart
+    indexer_restart
+    notifier_restart
+    scheduler_restart
   end
 
-  task :fast_restart do
-    begin 
-      run "cd #{server_path} && node server.js stop #{current_path}/#{app_path}/app.js #{cluster_size} /var/run/express-cluster.pid"
-    rescue => e
-      p "Looks like the server wasn't running, we'll just start it."
-    end
-    run "cd #{server_path} && node server.js start #{current_path}/#{app_path}/app.js #{cluster_size} /var/run/express-cluster.pid"
+  task :relink_core do
+    run "cd #{latest_release}/#{core_path} && npm update"
+    run "cd #{latest_release}/#{core_path} && npm link FastLegS"
   end
 
   task :migrate do
@@ -77,15 +87,80 @@ namespace :deploy do
   end
 
   task :update_server_dependencies do
-    run "cd #{latest_release}/#{app_path}/server && npm install"
+    run "cd #{latest_release}/#{web_app_path}/server && npm install"
   end
 
   task :update_app_dependencies do
-    run "cd #{latest_release}/#{app_path} && npm install"
+    run "cd #{latest_release}/#{web_app_path} && npm install"
   end
 
   task :update_migrate_dependencies do
     run "cd #{latest_release}/#{migration_path} && npm install"
+  end
+
+  task :update_discoverer_dependencies do
+    run "cd #{latest_release}/#{discoverer_path} && npm install"
+  end
+
+  task :update_indexer_dependencies do
+    run "cd #{latest_release}/#{indexer_path} && npm install"
+  end
+
+  task :update_notifier_dependencies do
+    run "cd #{latest_release}/#{notifier_path} && npm install"
+  end
+
+  task :update_scheduler_dependencies do
+    run "cd #{latest_release}/#{scheduler_path} && npm install"
+  end
+
+  task :rolling_restart do
+    run "cd #{current_path}/#{web_app_path} && node ./server/server.js restart #{cluster_size} /var/run/express-cluster.pid"
+  end
+
+  task :fast_restart do
+    begin 
+      run "cd #{server_path} && node server.js stop #{current_path}/#{web_app_path}/app.js #{current_path}/src/core/settings/settings-production.js #{cluster_size} /var/run/express-cluster.pid"
+    rescue => e
+      p "Looks like the server wasn't running, we'll just start it."
+    end
+    run "cd #{server_path} && node server.js start #{current_path}/#{web_app_path}/app.js #{current_path}/src/core/settings/settings-production.js #{cluster_size} /var/run/express-cluster.pid"
+  end
+
+  task :discoverer_restart do
+    begin 
+      run "cd #{server_path} && node server.js stop #{current_path}/#{discoverer_path}/discoverer.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/discoverer-cluster.pid"
+    rescue => e
+      p "Looks like the server wasn't running, we'll just start it."
+    end
+    run "cd #{server_path} && node server.js start #{current_path}/#{discoverer_path}/discoverer.js #{current_path}/src/core/settings/settings-production.jsv 1 /var/run/discoverer-cluster.pid"
+  end
+
+  task :indexer_restart do
+    begin 
+      run "cd #{server_path} && node server.js stop #{current_path}/#{indexer_path}/indexer.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/indexer-cluster.pid"
+    rescue => e
+      p "Looks like the server wasn't running, we'll just start it."
+    end
+    run "cd #{server_path} && node server.js start #{current_path}/#{indexer_path}/indexer.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/indexer-cluster.pid"
+  end
+
+  task :notifier_restart do
+    begin 
+      run "cd #{server_path} && node server.js stop #{current_path}/#{notifier_path}/notifier.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/notifier-cluster.pid"
+    rescue => e
+      p "Looks like the server wasn't running, we'll just start it."
+    end
+    run "cd #{server_path} && node server.js start #{current_path}/#{notifier_path}/notifier.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/notifier-cluster.pid"
+  end
+
+  task :scheduler_restart do
+    begin 
+      run "cd #{server_path} && node server.js stop #{current_path}/#{scheduler_path}/scheduler.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/scheduler-cluster.pid"
+    rescue => e
+      p "Looks like the server wasn't running, we'll just start it."
+    end
+    run "cd #{server_path} && node server.js start #{current_path}/#{scheduler_path}/scheduler.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/scheduler-cluster.pid"
   end
 
   task :update_dependencies do

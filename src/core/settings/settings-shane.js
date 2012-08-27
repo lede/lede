@@ -1,7 +1,7 @@
 exports.dbConnectionParams = {
-  user: 'justin',
-  password: 'justindbpass',
-  database: 'dev_justin',
+  user: 'shane',
+  password: 'shanedbpass',
+  database: 'dev_shane',
   host: 'unburythelede.com',
   port: 5432
 };
