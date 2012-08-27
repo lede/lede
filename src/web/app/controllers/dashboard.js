@@ -21,6 +21,9 @@ exports.total_posts = function(req, res) {
 		  {
 		  	item: items,
 		  	settings: {
+		  		axisx: [
+		  			"Two weeks"
+		  		]
 		  		axisy: [
 		  			"Bad",
 		  			"Good"
