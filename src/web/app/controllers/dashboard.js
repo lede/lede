@@ -3,19 +3,19 @@ exports.total_posts = function(req, res) {
 	  {
 	  	item: [
 	  		"1",
-	        "3",
 	        "5",
 	        "7",
-	        "9"
+	        "15"
 	  	],
 	  	settings: {
 	  		axisx: [
-	  			"Aug"
+	  			"Aug",
+	  			"Sept"
 	  		],
 	  		axisy: [
-	  			"Good",
-	  			"Bad"
-	  		]
+	  			"Bad",
+	  			"Good"
+	  				  		]
 	  	}
 	  }
 	);
