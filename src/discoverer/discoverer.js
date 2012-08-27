@@ -48,6 +48,7 @@ function lookupFeed(feedUrl, done) {
  */
 function addNewSource(url, fast, done) {
   dataLayer.Source.findOne({url: url}, function(err, source) {
+    log.info("source " + util.inspect(source));
     if(!err && _.isNull(source)) {
       dataLayer.Source.create({ url: url, indexable: true }, function (err, result) {
         if (err) {
