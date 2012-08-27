@@ -126,22 +126,22 @@ function startWorker(queue, name) {
   var worker = queues.resque.createWorker(queue, name, jobs);
 
   // Triggered every time the Worker polls.
-  //worker.on('poll', function() { log.trace("Polling resque...")});
+  worker.on('poll', function() { log.trace("Polling resque...")});
 
   // Triggered before a Job is attempted.
-  //worker.on('job', function(job) { log.info("Indexing source " + util.inspect(job))});
+  worker.on('job', function(job) { log.info("Indexing source " + util.inspect(job))});
 
   // Triggered every time a Job errors.
- // worker.on('error', function(job) { log.error("Source " + job.source + " error: " + err.message)});
+  worker.on('error', function(job) { log.error("Source " + job.source + " error: " + err.message)});
 
   // Triggered on every successful Job run.
-  //worker.on('success', function(job) { log.info("Source " + job.source + " processed successfully")});
+  worker.on('success', function(job) { log.info("Source " + job.source + " processed successfully")});
 
   worker.start();
 
   workers.push(worker);
 
-  //log.info("Resque worker started, waiting for jobs on queue '" + queue + "'");
+  log.info("Resque worker started, waiting for jobs on queue '" + queue + "'");
 }
 
 process.on('SIGINT', function() {

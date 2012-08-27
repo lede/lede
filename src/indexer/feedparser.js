@@ -1,8 +1,10 @@
 var NodePie = require('nodepie');
 var dataLayer = require('../core/datalayer');
+var linkTracker = require('./linktracker');
 var _ = require('underscore');
 var Step = require('step');
 var util = require('util');
+
 
 function updateSourceMetadata(source, parser, indexTime, updated, done) {
   var updateFields = new Object();
@@ -117,6 +119,9 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
           }
 
           if (postContentsId === false) { // existing post wasn't found
+            log.info("Identified post to crawl for links");
+            linkTracker.processPostContent(post.getContents());
+
             dataLayer.Post.create({
               content: post.getContents(),
               description: post.getDescription(),
@@ -128,7 +133,7 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
               indexed_at: indexTime
             },
             callback); // TODO perhaps this callback isn't returning the object we expect as the results... not important since we're not using it right now
-          } else {
+                    } else {
             callback(null, postContentsId);
           }
         });
