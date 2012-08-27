@@ -29,14 +29,14 @@ function coalesce(val, fallback) {
 /* argument parsing */
 var command = coalesce(process.argv[2], COMMANDS.start);
 
-var settings = process.argv[3];
 
 // TODO: use a real argument parsing library
-var target = process.argv[4];
+var target = process.argv[3];
 if(command != COMMANDS.help && _.isUndefined(target)) {
   console.log('Target to run must be provided');
   process.exit(1);
 }
+var settings = process.argv[4];
 var worker_num = coalesce(process.argv[5], DEFAULT_WORKER_NUM);
 var pidfile = coalesce(process.argv[6], DEFAULT_PIDFILE);
 var base_port = parseInt(coalesce(process.argv[7], DEFAULT_BASE_PORT));
