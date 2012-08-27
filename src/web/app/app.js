@@ -8,6 +8,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , lede = require('./controllers/lede')
+  , dashboard = require('./controllers/dashboard')
   , _ = require('underscore');
 
 var app = express();
@@ -37,6 +38,8 @@ app.get('/', routes.index);
 // TODO: clean up api routing at some point
 // TODO: only accept PUT - this is just for testing
 app.all('/api/lede', lede.create);
+
+app.get('/dashboard/total_posts/:days', dashboard.total_posts);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
