@@ -11,29 +11,31 @@ var total_posts_query =
 	+ "SELECT padding.hour, padding.count + COALESCE(counts.count, 0) AS count FROM padding LEFT JOIN counts ON counts.hour = padding.hour";
 
 exports.total_posts = function(req, res) {
-	var day = req.route.params.days;
+	try {
+		var day = req.route.params.days;
 
-	// THIS IS SO FUCKING UNSAFE SO BLOCK EVERY IP OTHER THAN GECKOBOARD
-	total_posts_query = string_formatter.format(total_posts_query, day);
+		// THIS IS SO FUCKING UNSAFE SO BLOCK EVERY IP OTHER THAN GECKOBOARD
+		total_posts_query = string_formatter.format(total_posts_query, day);
 
-	console.log(total_posts_query);
+		orm.emit("query", total_posts_query, function(err, result) {
+			var items = _.map(result.rows, function(row) {
+				return row.count;
+			});
+		
 
-	orm.emit("query", total_posts_query, function(err, result) {
-		var items = _.map(result.rows, function(row) {
-			return row.count;
+			res.send (
+			  {
+			  	item: items,
+			  	settings: {
+			  		axisy: [
+			  			"Bad",
+			  			"Good"
+			  		]
+			  	}
+			  }
+			);
 		});
-	
-
-		res.send (
-		  {
-		  	item: items,
-		  	settings: {
-		  		axisy: [
-		  			"Bad",
-		  			"Good"
-		  		]
-		  	}
-		  }
-		);
-	});
+	} catch (e) {
+		console.log(e);
+	}
 };
