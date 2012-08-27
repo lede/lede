@@ -78,6 +78,7 @@ namespace :deploy do
   end
 
   task :relink_core do
+    run "cd #{latest_release}/#{core_path} && npm update"
     run "cd #{latest_release}/#{core_path} && npm link FastLegS"
   end
 
