@@ -13,7 +13,15 @@ var express = require('express')
   , _ = require('underscore')
   , redis_store = require('connect-redis')(express)
   , redis = require('redis').createClient()
-  , _ = require('underscore');
+  , _ = require('underscore')
+  , log = require('../../core/logger').getLogger("web");
+
+// handle top-level exceptions
+process.on('uncaughtException',function(error){
+  log.fatal('Top-Level Uncaught Exception: ' + error);
+  log.fatal(error.stack);
+  process.exit(1);
+});
 
 var app = express();
 
@@ -54,5 +62,5 @@ app.get('/dashboard/total_sources', sources_dashboard.total_sources);
 app.get('/dashboard/total_sources/:days', sources_dashboard.total_sources_by_day);
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+  log.info("Express server listening on port " + app.get('port'));
 });

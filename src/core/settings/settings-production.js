@@ -52,11 +52,25 @@ exports.log4jsConfig = {
       pollInterval: 15,
       category: "discoverer" 
     },
+    {
+      category: "web",
+      type: "console"
+    },
+    {
+      type: "file",
+      absolute: true,
+      filename: "/var/log/web.log",
+      maxLogSize: 20480,
+      backups: 10,
+      pollInterval: 15,
+      category: "web" 
+    },
   ],
   levels: {
     indexer: "INFO",
     scheduler: "INFO",
-    discoverer: "INFO"
+    discoverer: "INFO",
+    web: "INFO"
   }
 };
 

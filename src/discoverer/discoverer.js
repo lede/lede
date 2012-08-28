@@ -10,6 +10,13 @@ var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
 var queues = require('../core/resque-queues');
 
+// handle top-level exceptions
+process.on('uncaughtException',function(error){
+  log.fatal('Top-Level Uncaught Exception: ' + error);
+  log.fatal(error.stack);
+  process.exit(1);
+});
+
 // enumerate feeds provided by the web page whose body is provided
 function parseOfferedFeedUrls(siteBody, done) {
   try {
