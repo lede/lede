@@ -51,6 +51,7 @@ function fetchFeed(source, done, options) {
   getters[requestParams.protocol].get(requestParams, function(res) {
     var bodyData = "";
     log.debug("response status code " + res.statusCode);
+    log.info("Got headers: " + util.inspect(res.headers));
 
     if (res.statusCode != 200) {
       switch (res.statusCode) {
@@ -73,6 +74,20 @@ function fetchFeed(source, done, options) {
           done(new Error("received HTTP status code " + res.statusCode));
           break;
       }
+      return;
+    }
+
+    // bail if the size is too large
+    var MAX_CONTENT_SIZE = 5000000; // TODO: move this elsewhere, pick a sane limit, and filter by mimetype
+    try {
+      if(parseInt(res.headers['content-length']) > MAX_CONTENT_SIZE) {
+        done(new Error("Feed is too large: " + res.headers['content-length']));
+        return;
+      } else {
+        log.info("Checked content-length, under limit.");
+      }
+    } catch(ex) {
+      done(new Error("Error parsing content-length from response header:" + util.inspect(ex)));
       return;
     }
 
