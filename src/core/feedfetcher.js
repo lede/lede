@@ -3,6 +3,7 @@ var https = require('https');
 var url = require('url');
 var util = require('util');
 var dataLayer = require('./datalayer.js');
+var _ = require('underscore');
 
 // getter objects for different protocols
 var getters = {
@@ -23,6 +24,10 @@ function fetchFeed(source, done, options) {
     options.feedName = function (source) { return "'" + source.url + "'" };
   }
 
+  if(_.isUndefined(url)) {
+    done(new Error("Undefined url passed to discoverer, skipping"));
+    return;
+  }
   var requestParams = url.parse(options.urlOverride ? options.urlOverride : source.url);
 
   if (!requestParams.hostname) { // check for invalid hostnames (at this time, that really just means null, but maybe we should make it more robust in the future)
