@@ -83,7 +83,7 @@ function fetchFeed(source, done, options) {
     }
 
     // bail if the size is too large
-    var MAX_CONTENT_SIZE = 5000000; // TODO: move this elsewhere, pick a sane limit, and filter by mimetype
+    var MAX_CONTENT_SIZE = 250000; // TODO: move this elsewhere, pick a sane limit, and filter by mimetype
     try {
       if(parseInt(res.headers['content-length']) > MAX_CONTENT_SIZE) {
         done(new Error("Feed is too large: " + res.headers['content-length']));
