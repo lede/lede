@@ -79,6 +79,7 @@ function addNewSource(url, fast, done) {
         console.log("Error checking for dup source: " + err);
       }
       log.info("Skippping duplicate source: " + url);
+      done(null, []);
     }
   });
 }
