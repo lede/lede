@@ -24,7 +24,13 @@ function fetchFeed(source, done, options) {
     options.feedName = function (source) { return "'" + source.url + "'" };
   }
 
-  if(_.isUndefined(source.url)) {
+  /* Various protections against insane stuff coming in here.
+   * So far we've seen (and now check for):
+   * -- undefined
+   * -- an unknown object (non-string)
+   * We'll just check it's defined and a string now, but ultimately we should see where these are coming from.
+   */
+  if(_.isUndefined(source.url) || typeof(source.url) != 'string') {
     done(new Error("Undefined url passed to discoverer, skipping"));
     return;
   }
