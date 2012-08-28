@@ -18,13 +18,40 @@ exports.log4jsConfig = {
       type: "console"
     },
     {
+      type: "file",
+      absolute: true,
+      filename: "/var/log/indexer.log",
+      maxLogSize": 20480,
+      backups: 10,
+      pollInterval: 15,
+      category: "indexer" 
+    },
+    {
       category: "scheduler",
       type: "console"
     },
     {
+      type: "file",
+      absolute: true,
+      filename: "/var/log/scheduler.log",
+      maxLogSize": 20480,
+      backups: 10,
+      pollInterval: 15,
+      category: "scheduler" 
+    },
+    {
       category: "discoverer",
       type: "console"
-    }
+    },
+    {
+      type: "file",
+      absolute: true,
+      filename: "/var/log/discoverer.log",
+      maxLogSize": 20480,
+      backups: 10,
+      pollInterval: 15,
+      category: "discoverer" 
+    },
   ],
   levels: {
     indexer: "INFO",
