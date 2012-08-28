@@ -24,7 +24,7 @@ function fetchFeed(source, done, options) {
     options.feedName = function (source) { return "'" + source.url + "'" };
   }
 
-  if(_.isUndefined(url)) {
+  if(_.isUndefined(source.url)) {
     done(new Error("Undefined url passed to discoverer, skipping"));
     return;
   }
