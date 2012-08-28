@@ -6,6 +6,17 @@ var dataLayer = require('../core/datalayer');
 
 var queues = require('../core/resque-queues');
 
+// handle top-level exceptions
+process.on('uncaughtException',function(error){
+  log.fatal('Top-Level Uncaught Exception: ' + error);
+  log.fatal(error.stack);
+  log.fatal('Exiting in 10 seconds...');
+  setTimeout(function() {
+    log.fatal('Exiting.');
+    process.exit(1);
+  }, 10000);
+});
+
 function findStaleSources(callback) {
   var indexTime = new Date();
 

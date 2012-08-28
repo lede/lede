@@ -18,7 +18,13 @@ var queues = require('../core/resque-queues');
 
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
-  log.info('Uncaught: ' + error);
+  log.fatal('Top-Level Uncaught Exception: ' + error);
+  log.fatal(error.stack);
+  log.fatal('Exiting in 10 seconds...');
+  setTimeout(function() {
+    log.fatal('Exiting.');
+    process.exit(1);
+  }, 10000);
 });
 
 // useful code begins here

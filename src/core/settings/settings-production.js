@@ -21,7 +21,7 @@ exports.log4jsConfig = {
       type: "file",
       absolute: true,
       filename: "/var/log/indexer.log",
-      maxLogSize": 20480,
+      maxLogSize: 20480,
       backups: 10,
       pollInterval: 15,
       category: "indexer" 
@@ -34,7 +34,7 @@ exports.log4jsConfig = {
       type: "file",
       absolute: true,
       filename: "/var/log/scheduler.log",
-      maxLogSize": 20480,
+      maxLogSize: 20480,
       backups: 10,
       pollInterval: 15,
       category: "scheduler" 
@@ -47,16 +47,30 @@ exports.log4jsConfig = {
       type: "file",
       absolute: true,
       filename: "/var/log/discoverer.log",
-      maxLogSize": 20480,
+      maxLogSize: 20480,
       backups: 10,
       pollInterval: 15,
       category: "discoverer" 
+    },
+    {
+      category: "web",
+      type: "console"
+    },
+    {
+      type: "file",
+      absolute: true,
+      filename: "/var/log/web.log",
+      maxLogSize: 20480,
+      backups: 10,
+      pollInterval: 15,
+      category: "web" 
     },
   ],
   levels: {
     indexer: "INFO",
     scheduler: "INFO",
-    discoverer: "INFO"
+    discoverer: "INFO",
+    web: "INFO"
   }
 };
 
@@ -67,14 +81,14 @@ exports.scheduler = {
 
 exports.indexer = {
   workers: {
-    "fast_index,slow_index": 256
+    "fast_index,slow_index": 1
   },
   throttleInterval: 60 // if a feed has been updated within this many seconds, it will not be updated again
 };
 
 exports.discoverer = {
   workers: {
-    "fast_discovery,slow_discovery": 1024
+    "fast_discovery,slow_discovery": 1
   },
 };
 
