@@ -81,14 +81,14 @@ exports.scheduler = {
 
 exports.indexer = {
   workers: {
-    "fast_index,slow_index": 16
+    "fast_index,slow_index": 64
   },
   throttleInterval: 60 // if a feed has been updated within this many seconds, it will not be updated again
 };
 
 exports.discoverer = {
   workers: {
-    "fast_discovery,slow_discovery": 128
+    "fast_discovery,slow_discovery": 1024
   },
 };
 
