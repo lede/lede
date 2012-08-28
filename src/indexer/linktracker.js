@@ -15,7 +15,7 @@ function extractLinks(html) {
     // might want to directly reference the attribs instead of just links
     var links = select(dom, 'a');
     var attribs = _.pluck(links, "attribs");
-    var hrefs = _.pluck(attribs, "href");
+    var hrefs = _.pluck(_.compact(attribs), "href");
 
     _.each(hrefs, function(href) {
       log.info("Enqueing discover job for href " + href);
