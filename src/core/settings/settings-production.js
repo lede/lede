@@ -81,7 +81,7 @@ exports.scheduler = {
 
 exports.indexer = {
   workers: {
-    "fast_index,slow_index": 32
+    "fast_index,slow_index": 16
   },
   throttleInterval: 60 // if a feed has been updated within this many seconds, it will not be updated again
 };
