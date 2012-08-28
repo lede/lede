@@ -21,7 +21,7 @@ exports.log4jsConfig = {
       type: "file",
       absolute: true,
       filename: "/var/log/indexer.log",
-      maxLogSize": 20480,
+      maxLogSize: 20480,
       backups: 10,
       pollInterval: 15,
       category: "indexer" 
@@ -34,7 +34,7 @@ exports.log4jsConfig = {
       type: "file",
       absolute: true,
       filename: "/var/log/scheduler.log",
-      maxLogSize": 20480,
+      maxLogSize: 20480,
       backups: 10,
       pollInterval: 15,
       category: "scheduler" 
@@ -47,7 +47,7 @@ exports.log4jsConfig = {
       type: "file",
       absolute: true,
       filename: "/var/log/discoverer.log",
-      maxLogSize": 20480,
+      maxLogSize: 20480,
       backups: 10,
       pollInterval: 15,
       category: "discoverer" 
