@@ -14,7 +14,11 @@ var queues = require('../core/resque-queues');
 process.on('uncaughtException',function(error){
   log.fatal('Top-Level Uncaught Exception: ' + error);
   log.fatal(error.stack);
-  process.exit(1);
+  log.fatal('Exiting in 10 seconds...');
+  setTimeout(function() {
+    log.fatal('Exiting.');
+    process.exit(1);
+  }, 10000);
 });
 
 // enumerate feeds provided by the web page whose body is provided
