@@ -99,7 +99,7 @@ function fetchWebPage(url, done) {
  */
 function discover(jobParams) {
   var job = this;
-  var fast = true;
+  var fast = jobParams.fast;
   log.info("Performing discovery for '" + jobParams.url + "'");
 
   fetchWebPage(jobParams.url, function (err, result) {
@@ -156,13 +156,10 @@ function discover(jobParams) {
 
 var jobs = {}
 
-jobs[queues.fastDiscover.functionName] = discover; 
+jobs[queues.fastDiscover.functionName] = discover;
 
-jobs[queues.slowDiscover.functionName] = function (jobParams) {
-  console.log("hello");
-  log.info("Hello, from slowDiscover");
-  discover(false, jobParams) 
-};
+jobs[queues.slowDiscover.functionName] = discover;
+
 
 var workers = [];
 
