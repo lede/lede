@@ -105,7 +105,12 @@ function fetchFeed(source, done, options) {
     res.setEncoding('utf8');
 
     res.on('data', function (chunk) {
-      bodyData += chunk;
+      try {
+        bodyData += chunk;
+      } catch (e) {
+        log.info("DISCOVERER PARSE ERROR" + util.inspect(e));
+        done(e);
+      }
     });
     res.on('end', function() {
       done(null, { source: source, body: bodyData });
