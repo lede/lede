@@ -97,9 +97,7 @@ function fetchWebPage(url, done) {
 
 /** perform the actual discover task from the resque
  */
-function discover(jobParams) {
-  var job = this;
-  var fast = jobParams.fast;
+function discover(fast, jobParams, job) {
   log.info("Performing discovery for '" + jobParams.url + "'");
 
   fetchWebPage(jobParams.url, function (err, result) {
@@ -156,9 +154,12 @@ function discover(jobParams) {
 
 var jobs = {}
 
-jobs[queues.fastDiscover.functionName] = discover;
-
-jobs[queues.slowDiscover.functionName] = discover;
+jobs[queues.fastDiscover.functionName] = function(jobParams) {
+ discover(true, jobParams, this);
+}
+jobs[queues.slowDiscover.functionName] = function(jobParams) {
+  discover(false, jobParams, this);
+}
 
 
 var workers = [];
