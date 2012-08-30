@@ -17,6 +17,8 @@ exports.whoami = function(req, res) {
   if(req.session && req.session.user) {
     // TODO: implement
     res.send({ result: req.session.user.email });
+  } else {
+    res.end();
   }
 }
 
