@@ -166,14 +166,18 @@ function checkForUpdatedPosts(source, parser, callback) {
 
   Step(
     function readPosts() {
-      dataLayer.Post.find(
-        {
-          "uri.in": _.map(parser.getItems(), function(item) { return item.getPermalink(); })
-        },
-        {
-          only: [ 'id', 'uri', 'source_id' ],
-        },
-        this);
+      if (parser.getItemQuantity() != 0) {
+        dataLayer.Post.find(
+          {
+            "uri.in": _.map(parser.getItems(), function(item) { return item.getPermalink(); })
+          },
+          {
+            only: [ 'id', 'uri', 'source_id' ],
+          },
+          this);
+      } else {
+        return [];
+      }
     },
     function findUpdated(err, results) {
       if (err) {
