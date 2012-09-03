@@ -20,12 +20,26 @@ function extractLinks(post) {
     var attribs = _.pluck(links, "attribs");
     var hrefs = _.pluck(_.compact(attribs), "href");
 
+    // pull out hrefs that are not defined
+    hrefs = _.reject(hrefs, function(href) {
+      return _.isUndefined(href);
+    });
+
     _.each(hrefs, function(href) {
-  
+      var parsedUrl = url.parse(href);
       // detect relative urls by seeing if the url has a host
-      if(url.parse(href).host) {
-        log.info("Enqueing discover job for href " + href);
+      if(parsedUrl.host) {
+        log.debug("Enqueing discover job for url " + href);
         queues.fastDiscover.enqueue({ parentId: post.id, url: href});
+      } else {
+        log.trace("Parsed relative url " + util.inspect(parsedUrl));
+
+        //If we have real path info or a real query, try to resolve the url
+        if(parsedUrl.pathname || parsedUrl.query) {
+          var resolvedUrl = url.resolve(post.uri, href);
+          log.debug("Created resolved url " + resolvedUrl);
+          queues.fastDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
+        }
       }
     });
   });
