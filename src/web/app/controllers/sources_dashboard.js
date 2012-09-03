@@ -6,7 +6,7 @@ var dashboard = require("./count_dashboard.js");
 var table_name = "sources";
 
 exports.total_sources= function(req, res) {
-	dashboard.total(res, table_name);
+	dashboard.total(req, res, table_name);
 };
 
 exports.total_sources_by_day = function(req, res) {

@@ -6,7 +6,7 @@ var dashboard = require("./count_dashboard.js");
 var table_name = "posts";
 
 exports.total_posts = function(req, res) {
-	dashboard.total(res, table_name);
+	dashboard.total(req, res, table_name);
 };
 
 exports.total_posts_by_day = function(req, res) {

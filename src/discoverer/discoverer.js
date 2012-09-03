@@ -135,6 +135,7 @@ function discover(fast, jobParams, job) {
                 addNewSource(feedUrl, fast, callback);
               });
             },
+
             function (err, result) {
               if (err) {
                 log.error("Insert of Source failed: " + err.message);
@@ -145,7 +146,6 @@ function discover(fast, jobParams, job) {
               }
             }
           );
-
         }
       });
     }

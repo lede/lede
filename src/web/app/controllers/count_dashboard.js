@@ -5,7 +5,7 @@ var logger = require("../../../core/logger").getLogger("web");
 var _ = require("underscore");
 var string_format = require("util").format;
 
-var total_sources_query_format = "select count(id) from %s";
+var total_sources_query_format = "select count(id), now() from %s where created_at > '%s'";
 var total_sources_yesterday_query_format = "select count(id) from %s where created_at < date_trunc('day', now())";
 
 var total_sources_by_day_query_format = 
@@ -17,9 +17,32 @@ var total_sources_by_day_query_format =
 	+ "SELECT padding.hour, padding.count + COALESCE(counts.count, 0) AS count FROM padding LEFT JOIN counts ON counts.hour = padding.hour";
 
 
-exports.total = function(res, table_name) {
-	var total_sources_query = string_format(total_sources_query_format, table_name);
+exports.total = function(req, res, table_name) {
+	var cached_total_response = "cached_" + table_name + "_total_response";
+
+	if(!req.session[cached_total_response]) {
+		req.session[cached_total_response] = {
+			timestamp: "2012-8-01 00:00:00",
+		  	item: [
+		  		{ 
+		  			text : "Total " + table_name,
+    		  		value: 0
+    			},
+  			    { 
+  			   	 	text: "From yesterday",
+    		     	value: 0
+    		    }
+			]
+		};
+	}
+
+	var previous_total = 0;
+	previous_total = req.session[cached_total_response].item[0].value;
+
+	var total_sources_query = string_format(total_sources_query_format, table_name, req.session[cached_total_response].timestamp);
 	var total_sources_yesterday_query = string_format(total_sources_yesterday_query_format, table_name);
+
+	logger.info(total_sources_query);
 
 	orm.emit("query", total_sources_query, function(err, result) {
 		if(err) {
@@ -37,18 +60,23 @@ exports.total = function(res, table_name) {
 				return;
 			}
 
-			res.send ({ 
+			var response = {
+				timestamp: result.rows[0].now,
 			  	item: [
 			  		{ 
 			  			text : "Total " + table_name,
-        		  		value: result.rows[0].count
+        		  		value: result.rows[0].count + previous_total
         			},
       			    { 
       			   	 	text: "From yesterday",
         		     	value: yesterday_result.rows[0].count
         		    }
 				]
-			});
+			}
+
+			req.session[cached_total_response] = response;
+
+			res.send(response);
 		});
 	});
 };
