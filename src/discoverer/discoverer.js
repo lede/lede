@@ -26,7 +26,7 @@ function parseOfferedFeedUrls(siteBody, done) {
   try {
     var parser = new htmlparser.Parser(new htmlparser.DefaultHandler(function(err, dom) {
       if (err) {
-        log.errror("error: " + util.inspect(err));
+        log.error("error: " + util.inspect(err));
         done(err);
       } else {
         log.trace("parsing");
@@ -86,7 +86,7 @@ function addNewSource(url, fast, done) {
   });
 }
 
-functionchWebPage(url, done) {
+function fetchWebPage(url, done) {
   var fetchOptions = {
     redirectCallback: function (feed, done, options, statusCode) {
       log.trace("recursing fetchWebPage due to redirect");
