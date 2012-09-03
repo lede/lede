@@ -120,9 +120,8 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
 
           if (postContentsId === false) { // existing post wasn't found
             log.info("Identified post to crawl for links");
-            linkTracker.processPostContent(post.getContents());
 
-            dataLayer.Post.create({
+            var postContent = {
               content: post.getContents(),
               description: post.getDescription(),
               source_id: source.id,
@@ -131,9 +130,24 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
               author: post.getAuthor(),
               published_at: post.getDate(),
               indexed_at: indexTime
-            },
-            callback); // TODO perhaps this callback isn't returning the object we expect as the results... not important since we're not using it right now
-                    } else {
+            }
+
+            dataLayer.Post.create(postContent, function(err, postCreated) {
+              log.trace("Added post to database, checking for internal links");
+
+               if(err) {
+                callback(err);
+                return;
+              }
+
+              // Since we're doing an insert, we only expect 1 result: rows[0]
+              linkTracker.processPostContent(postCreated.rows[0]);
+            }); 
+
+            // TODO perhaps this callback isn't returning the object we 
+            // expect as the results... not important since we're 
+            // not using it right now
+          } else {
             callback(null, postContentsId);
           }
         });

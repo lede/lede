@@ -24,13 +24,12 @@ process.on('uncaughtException',function(error){
 // enumerate feeds provided by the web page whose body is provided
 function parseOfferedFeedUrls(siteBody, done) {
   try {
-    log.info("starting parseOfferedFeedUrls");
     var parser = new htmlparser.Parser(new htmlparser.DefaultHandler(function(err, dom) {
       if (err) {
-        log.info("error: " + util.inspect(err));
+        log.errror("error: " + util.inspect(err));
         done(err);
       } else {
-        log.info("parsing");
+        log.trace("parsing");
         var links = _.filter(select(dom, "link"), function(e) {
           return /(rss|atom)/i.test(e.attribs.type);
         });
@@ -40,17 +39,20 @@ function parseOfferedFeedUrls(siteBody, done) {
         }));
       }
     }));
-    log.info("built parser");
+    log.trace("Built parser");
     parser.parseComplete(siteBody);
   } catch (e) {
-    log.info("error caught: " + util.inspect(e));
+    log.error("error caught: " + util.inspect(e));
     done(e);
   }
 }
 
 // searches the database for a feed with the given URL
 function lookupFeed(feedUrl, done) {
-  dataLayer.Source.findOne({ url: feedUrl }, { only: [ 'id', 'title', 'description', 'url' ]}, done);
+  dataLayer.Source.findOne(
+    { url: feedUrl }, 
+    { only: [ 'id', 'title', 'description', 'url' ]}, 
+    done);
 }
 
 /** find the feed by URL if it exists in the DB, or insert it if it doesn't exist.
@@ -76,15 +78,15 @@ function addNewSource(url, fast, done) {
       });
     } else {
       if(err) {
-        console.log("Error checking for dup source: " + err);
+        log.error("Error checking for dup source: " + err);
       }
-      log.info("Skippping duplicate source: " + url);
+      log.debug("Skippping duplicate source: " + url);
       done(null, []);
     }
   });
 }
 
-function fetchWebPage(url, done) {
+functionchWebPage(url, done) {
   var fetchOptions = {
     redirectCallback: function (feed, done, options, statusCode) {
       log.trace("recursing fetchWebPage due to redirect");
@@ -106,18 +108,16 @@ function discover(fast, jobParams, job) {
       job.fail({ exception: err.name, error: err.message });
     } else {
       parseOfferedFeedUrls(result.body, function (err, feedsOffered) {
-        log.info("finished parseOfferedFeedsUrls");
         if (err) {
           log.error("Parse of '" + jobParams.url + "' failed: " + err.message);
           job.fail({ exception: err.name, error: err.message });
         } else {
           if (feedsOffered.length == 0) { // test this explicitly because Step can't handle zero-length arrays
             // TODO handle web pages that don't offer feeds by doing some magic content extraction
-            log.info("Found web page that doesn't offer and feeds");
+            log.debug("url '" + jobParams + "' does not offer any feeds");
             if ( _.isUndefined(job) ) {
-              log.info("job is undefined");
+              log.error("job is undefined");
             } else {
-              //log.info("job: " + util.inspect(job));
               job.succeed();
             }
             return;
@@ -137,7 +137,7 @@ function discover(fast, jobParams, job) {
             },
             function (err, result) {
               if (err) {
-                log.info("Insert of Source failed: " + err.message);
+                log.error("Insert of Source failed: " + err.message);
                 job.fail({ exception: err.name, error: err.message });
               } else {
                 log.info("Added " + result.length + " feeds offered by '" + jobParams.url + "'");
