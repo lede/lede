@@ -88,7 +88,7 @@ exports.indexer = {
 
 exports.discoverer = {
   workers: {
-    "fast_discovery,slow_discovery": 64
+    "fast_discovery,slow_discovery": 32
   },
 };
 
