@@ -72,11 +72,8 @@ namespace :deploy do
     update_notifier_dependencies
     update_scheduler_dependencies
     discoverer_restart
-    sleep 10
     indexer_restart
-    sleep 10
     notifier_restart
-    sleep 10
     scheduler_restart
   end
 
