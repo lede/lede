@@ -46,13 +46,12 @@ function fetchAndParse(source, done) {
 function indexFeed(jobParams) {
   var job = this;
 
-  log.info("Indexing source " + jobParams.source + " (" + job.worker.queue + ")");
+  log.info("Indexing source " + jobParams.source + ' queue: ' + job.worker.queue);
 
   dataLayer.Source.findOne(jobParams.source, function(err, result) {
     var done = function(err) {
       if (err) {
         log.error("Indexing source " + jobParams.source + ": " + err);
-
         if (jobParams.callback) {
           redisJobCompleteCallback(jobParams.callback, false);
         }
@@ -74,7 +73,7 @@ function indexFeed(jobParams) {
       return;
     }
 
-    if (result == null) {
+    if (_.isNull(result)) {
       done(new Error("Source not found in the database"));
       return;
     }
