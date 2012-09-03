@@ -21,6 +21,10 @@ function updateSourceMetadata(source, parser, indexTime, updated, done) {
     updateFields.title = "[Source " + source.id + "]";
   }
 
+  if (parser.getDate()) {
+    updateFields.last_published_at = parser.getDate();
+  } // TODO do we want to set this to a local timestamp if the feed doesn't provide it?
+
   // TODO handle permalink
   
   updateFields.indexed_at = indexTime;
@@ -31,7 +35,7 @@ function updateSourceMetadata(source, parser, indexTime, updated, done) {
   // TODO tweak source.index_interval depending on whether or not we got updates, so that it homes in on the correct update frequency for this feed
 
   if (updated) {
-    updateFields.new_content_at = indexTime;
+    updateFields.unique_content_at = indexTime;
   }
   
   log.debug("Updating source " + source.id + ": " + util.inspect(updateFields));
