@@ -65,3 +65,5 @@ exports.notifier = {
   username: 'lede',
   password: 'Passw0rd!'
 };
+
+exports.defaultSourceIndexInterval = 60; // minutes

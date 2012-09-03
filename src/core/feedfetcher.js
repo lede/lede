@@ -62,7 +62,7 @@ function fetchFeed(source, done, options) {
   getters[requestParams.protocol].get(requestParams, function(res) {
     var bodyData = "";
     log.debug("response status code " + res.statusCode);
-    log.info("Got headers: " + util.inspect(res.headers));
+    log.debug("Got headers: " + util.inspect(res.headers));
 
     if (res.statusCode != 200) {
       switch (res.statusCode) {
