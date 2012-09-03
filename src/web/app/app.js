@@ -14,7 +14,9 @@ var express = require('express')
   , redis_store = require('connect-redis')(express)
   , redis = require('redis').createClient()
   , _ = require('underscore')
-  , log = require('../../core/logger').getLogger("web");
+  , log = require('../../core/logger').getLogger("web")
+  , ensure_user = require('./middleware/user.js').ensure_user
+  , user = require('./controllers/user.js');
 
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
@@ -57,13 +59,18 @@ app.get('/', routes.index);
 // super simple handler for lead posts
 // TODO: clean up api routing at some point
 // TODO: only accept PUT - this is just for testing
-app.all('/api/lede', lede.create);
+app.all('/api/lede', ensure_user, lede.create);
 
 app.get('/dashboard/total_posts', posts_dashboard.total_posts);
 app.get('/dashboard/total_posts/:days', posts_dashboard.total_posts_by_day);
 
 app.get('/dashboard/total_sources', sources_dashboard.total_sources);
 app.get('/dashboard/total_sources/:days', sources_dashboard.total_sources_by_day);
+
+app.get('/user/login', user.login);
+app.get('/user/logout', user.logout);
+app.get('/user/whoami', user.whoami);
+app.get('/user/register', user.register);
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));

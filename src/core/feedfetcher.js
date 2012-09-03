@@ -3,6 +3,7 @@ var https = require('https');
 var url = require('url');
 var util = require('util');
 var dataLayer = require('./datalayer.js');
+var _ = require('underscore');
 
 // getter objects for different protocols
 var getters = {
@@ -23,6 +24,16 @@ function fetchFeed(source, done, options) {
     options.feedName = function (source) { return "'" + source.url + "'" };
   }
 
+  /* Various protections against insane stuff coming in here.
+   * So far we've seen (and now check for):
+   * -- undefined
+   * -- an unknown object (non-string)
+   * We'll just check it's defined and a string now, but ultimately we should see where these are coming from.
+   */
+  if(_.isUndefined(source.url) || typeof(source.url) != 'string') {
+    done(new Error("Undefined url passed to discoverer, skipping"));
+    return;
+  }
   var requestParams = url.parse(options.urlOverride ? options.urlOverride : source.url);
 
   if (!requestParams.hostname) { // check for invalid hostnames (at this time, that really just means null, but maybe we should make it more robust in the future)
@@ -51,6 +62,7 @@ function fetchFeed(source, done, options) {
   getters[requestParams.protocol].get(requestParams, function(res) {
     var bodyData = "";
     log.debug("response status code " + res.statusCode);
+    log.info("Got headers: " + util.inspect(res.headers));
 
     if (res.statusCode != 200) {
       switch (res.statusCode) {
@@ -76,10 +88,29 @@ function fetchFeed(source, done, options) {
       return;
     }
 
+    // bail if the size is too large
+    var MAX_CONTENT_SIZE = 75000; // TODO: move this elsewhere, pick a sane limit, and filter by mimetype
+    try {
+      if(parseInt(res.headers['content-length']) > MAX_CONTENT_SIZE) {
+        done(new Error("Feed is too large: " + res.headers['content-length']));
+        return;
+      } else {
+        log.info("Checked content-length, under limit.");
+      }
+    } catch(ex) {
+      done(new Error("Error parsing content-length from response header:" + util.inspect(ex)));
+      return;
+    }
+
     res.setEncoding('utf8');
 
     res.on('data', function (chunk) {
-      bodyData += chunk;
+      try {
+        bodyData += chunk;
+      } catch (e) {
+        log.info("DISCOVERER PARSE ERROR" + util.inspect(e));
+        done(e);
+      }
     });
     res.on('end', function() {
       done(null, { source: source, body: bodyData });

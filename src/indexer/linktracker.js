@@ -19,7 +19,7 @@ function extractLinks(html) {
 
     _.each(hrefs, function(href) {
       log.info("Enqueing discover job for href " + href);
-      queues.fastDiscover.enqueue({ url: href });
+      queues.fastDiscover.enqueue({ url: href});
     });
   });
 
