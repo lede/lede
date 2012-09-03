@@ -8,7 +8,7 @@ function generic_error(res, err) {
 
 // functor to wrap a callback, automatically invoke a standard 500 error response on error,
 // and pass along just the result arg on success
-function no_err(res, cb) {
+exports.no_err = function(res, cb) {
   return function(err, data) {
     if(err) {
       generic_error(res, err);

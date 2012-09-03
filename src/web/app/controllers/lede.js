@@ -2,7 +2,7 @@ var Lede = require('../../../core/datalayer').Lede;
 var Post = require('../../../core/datalayer').Post;
 var _ = require('underscore');
 var util = require('util');
-var no_err = require('../helpers/core.js').no_err;
+var no_err = require('../helpers/core').no_err;
 
 exports.create = function(req, res) {
   
