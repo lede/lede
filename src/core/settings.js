@@ -8,4 +8,12 @@ if (process.argv.length < 3 || process.argv[2] == "") {
 }
 
 var path = require('path')
-module.exports = require(path.resolve(process.argv[2]))
+
+exports.get = function(module) {
+  var settings = require(path.resolve(process.argv[2]));
+  
+  // alias the currently-running module's settings as currentModule so common code can use it indiscriminately
+  settings.currentModule = settings[module];
+
+  return settings;
+}

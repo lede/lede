@@ -1,7 +1,7 @@
+settings = require('../core/settings').get("discoverer");
 log = require('../core/logger').getLogger("discoverer");
 var _ = require('underscore');
 var util = require('util');
-var settings = require('../core/settings');
 var dataLayer = require('../core/datalayer');
 var Step = require('step');
 var feedFetcher = require('../core/feedfetcher');

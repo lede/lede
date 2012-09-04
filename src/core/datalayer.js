@@ -1,5 +1,4 @@
 var FastLegS = require('FastLegS');
-var settings = require('./settings');
 
 // TODO I suspect this only uses one DB connection per process, and we might get better throughput if we had more than one (at least one per worker)
 

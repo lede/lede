@@ -4,7 +4,6 @@ var url = require('url');
 var util = require('util');
 var dataLayer = require('./datalayer');
 var _ = require('underscore');
-var settings = require('./settings');
 
 // getter objects for different protocols
 var getters = {

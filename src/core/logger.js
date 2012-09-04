@@ -1,5 +1,4 @@
 var log4js = require('log4js');
-var settings = require('./settings');
 
 log4js.configure(settings.log4jsConfig, {});
 

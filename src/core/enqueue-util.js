@@ -1,6 +1,5 @@
 var _ = require('underscore');
 var util = require('util');
-var settings = require('./settings');
 
 var queues = require('./resque-queues');
 

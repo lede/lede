@@ -1,7 +1,7 @@
+settings = require('../core/settings').get("scheduler");
 log = require('../core/logger').getLogger("scheduler");
 var _ = require('underscore');
 var util = require('util');
-var settings = require('../core/settings');
 var dataLayer = require('../core/datalayer');
 
 var queues = require('../core/resque-queues');

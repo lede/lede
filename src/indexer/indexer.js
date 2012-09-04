@@ -1,18 +1,11 @@
 // do lots of setup stuff
+settings = require('../core/settings').get("indexer");
 log = require('../core/logger').getLogger("indexer");
 var util = require('util');
-
-if (process.argv.length != 3) {
-  log.fatal("Requires one argument that is the settings file to load");
-  process.exit(1);
-}
-
 var feedFetcher = require('../core/feedfetcher');
 var feedParser = require('./feedparser');
 var dataLayer = require('../core/datalayer');
 var _ = require('underscore');
-var util = require('util');
-var settings = require('../core/settings');
 var os = require('os');
 var queues = require('../core/resque-queues');
 
