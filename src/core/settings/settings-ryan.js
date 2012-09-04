@@ -28,7 +28,8 @@ exports.log4jsConfig = {
  ],
   levels: {
     indexer: "INFO",
-    scheduler: "INFO"
+    scheduler: "INFO",
+    discoverer: "INFO"
   }
 };
 
@@ -61,3 +62,4 @@ exports.notifier = {
 };
 
 exports.defaultSourceIndexInterval = 60; // minutes
+exports.maxFetchSize = 250000; // in bytes

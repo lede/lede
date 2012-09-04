@@ -2,8 +2,9 @@ var http = require('http');
 var https = require('https');
 var url = require('url');
 var util = require('util');
-var dataLayer = require('./datalayer.js');
+var dataLayer = require('./datalayer');
 var _ = require('underscore');
+var settings = require('./settings');
 
 // getter objects for different protocols
 var getters = {
@@ -89,13 +90,12 @@ function fetchFeed(source, done, options) {
     }
 
     // bail if the size is too large
-    var MAX_CONTENT_SIZE = 75000; // TODO: move this elsewhere, pick a sane limit, and filter by mimetype
     try {
-      if(parseInt(res.headers['content-length']) > MAX_CONTENT_SIZE) {
+      if(parseInt(res.headers['content-length']) > settings.maxFetchSize) {
         done(new Error("Feed is too large: " + res.headers['content-length']));
         return;
       } else {
-        log.info("Checked content-length, under limit.");
+        log.debug("Content length of " + res.headers['content-length'] + " is under limit of " + settings.maxFetchSize);
       }
     } catch(ex) {
       done(new Error("Error parsing content-length from response header:" + util.inspect(ex)));
@@ -108,7 +108,7 @@ function fetchFeed(source, done, options) {
       try {
         bodyData += chunk;
       } catch (e) {
-        log.info("DISCOVERER PARSE ERROR" + util.inspect(e));
+        log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
         done(e);
       }
     });
