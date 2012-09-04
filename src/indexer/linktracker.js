@@ -6,7 +6,6 @@ var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
 var url = require('url');
 
-
 // TODO try to identify and longify tiny URLs
 function extractLinks(post) {
   try {

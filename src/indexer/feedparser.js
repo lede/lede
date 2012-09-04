@@ -5,7 +5,6 @@ var _ = require('underscore');
 var Step = require('step');
 var util = require('util');
 
-
 function updateSourceMetadata(source, parser, indexTime, updated, done) {
   var updateFields = new Object();
 
