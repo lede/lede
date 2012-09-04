@@ -19,11 +19,7 @@ function extractLinks(post) {
       var links = select(dom, 'a');
       var attribs = _.pluck(links, "attribs");
       var hrefs = _.pluck(_.compact(attribs), "href");
-
-      // pull out hrefs that are not defined
-      hrefs = _.reject(hrefs, function(href) {
-        return _.isUndefined(href);
-      });
+      hrefs = _.compact(hrefs);
 
       _.each(hrefs, function(href) {
         var parsedUrl = url.parse(href);
