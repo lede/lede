@@ -59,30 +59,30 @@ function fetchFeed(source, done, options) {
 
   // TODO request HEAD and only do a GET if it has been changed
 
-  getters[requestParams.protocol].get(requestParams, function(res) {
+  var request = getters[requestParams.protocol].get(requestParams, function(response) {
     var bodyData = "";
-    log.debug("response status code " + res.statusCode);
-    log.debug("Got headers: " + util.inspect(res.headers));
+    log.debug("Response status code " + response.statusCode);
+    log.debug("Got headers: " + util.inspect(response.headers));
 
-    if (res.statusCode != 200) {
-      switch (res.statusCode) {
+    if (response.statusCode != 200) {
+      switch (response.statusCode) {
         case 301:
-          log.debug("Source " + options.feedName(source) + " moved permanently (301) from '" + source.url + "' to '" + res.headers['location'] + "'");
+          log.debug("Source " + options.feedName(source) + " moved permanently (301) from '" + source.url + "' to '" + response.headers['location'] + "'");
 
-          options.urlOverride = res.headers['location'];
-          options.redirectCallback(source, done, options, res.statusCode);
+          options.urlOverride = response.headers['location'];
+          options.redirectCallback(source, done, options, response.statusCode);
           break;
           
         case 302:
         case 307:
-          log.debug("Source " + options.feedName(source) + " moved temporarily (" + res.statusCode + ") from '" + source.url + "' to '" + res.headers['location'] + "'");
-          options.urlOverride = res.headers['location'];
-          options.redirectCallback(source, done, options, res.statusCode);
+          log.debug("Source " + options.feedName(source) + " moved temporarily (" + response.statusCode + ") from '" + source.url + "' to '" + response.headers['location'] + "'");
+          options.urlOverride = response.headers['location'];
+          options.redirectCallback(source, done, options, response.statusCode);
           break;
 
         default:
-          log.debug("Response headers: " + util.inspect(res.headers));
-          done(new Error("received HTTP status code " + res.statusCode));
+          log.debug("Response headers: " + util.inspect(response.headers));
+          done(new Error("Received HTTP status code " + response.statusCode));
           break;
       }
       return;
@@ -90,20 +90,21 @@ function fetchFeed(source, done, options) {
 
     // bail if the size is too large
     try {
-      if(parseInt(res.headers['content-length']) > settings.currentModule.maxFetchSize) {
-        done(new Error("Feed is too large: " + res.headers['content-length']));
+      if(parseInt(response.headers['content-length']) > settings.currentModule.maxFetchSize) {
+        done(new Error("Feed is too large: " + response.headers['content-length']));
+        request.abort();
         return;
       } else {
-        log.debug("Content length of " + res.headers['content-length'] + " is under limit of " + settings.currentModule.maxFetchSize);
+        log.debug("Content length of " + response.headers['content-length'] + " is under limit of " + settings.currentModule.maxFetchSize);
       }
     } catch(ex) {
       done(new Error("Error parsing content-length from response header:" + util.inspect(ex)));
       return;
     }
 
-    res.setEncoding('utf8');
+    response.setEncoding('utf8');
 
-    res.on('data', function (chunk) {
+    response.on('data', function (chunk) {
       try {
         bodyData += chunk;
       } catch (e) {
@@ -111,7 +112,7 @@ function fetchFeed(source, done, options) {
         done(e);
       }
     });
-    res.on('end', function() {
+    response.on('end', function() {
       done(null, { source: source, body: bodyData });
     });
   }).on('error', function(e) {
