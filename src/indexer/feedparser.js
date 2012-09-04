@@ -146,11 +146,9 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
 
               // Since we're doing an insert, we only expect 1 result: rows[0]
               linkTracker.processPostContent(postCreated.rows[0]);
-            }); 
 
-            // TODO perhaps this callback isn't returning the object we 
-            // expect as the results... not important since we're 
-            // not using it right now
+              callback(null, postCreated.rows[0].id);
+            }); 
           } else {
             callback(null, postContentsId);
           }
