@@ -1,3 +1,4 @@
+settings = require('./settings').get("enqueue-util");
 var _ = require('underscore');
 var util = require('util');
 
