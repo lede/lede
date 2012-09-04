@@ -103,3 +103,4 @@ exports.notifier = {
 };
 
 exports.defaultSourceIndexInterval = 60; // minutes
+exports.maxFetchSize = 250000; // bytes
