@@ -26,7 +26,7 @@ function extractLinks(post) {
         // detect relative urls by seeing if the url has a host
         if(parsedUrl.host) {
           log.debug("Enqueing discover job for url " + href);
-          queues.fastDiscover.enqueue({ parentId: post.id, url: href});
+          queues.slowDiscover.enqueue({ parentId: post.id, url: href});
         } else {
           log.trace("Parsed relative url " + util.inspect(parsedUrl));
 
@@ -34,7 +34,7 @@ function extractLinks(post) {
           if(parsedUrl.pathname || parsedUrl.query) {
             var resolvedUrl = url.resolve(post.uri, href);
             log.debug("Created resolved url " + resolvedUrl);
-            queues.fastDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
+            queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
           }
         }
       });
