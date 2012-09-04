@@ -39,6 +39,7 @@ exports.scheduler = {
 };
 
 exports.indexer = {
+  maxFetchSize: 300000, // bytes
   workers: {
     "fast_index,slow_index": 1
   },
@@ -46,6 +47,7 @@ exports.indexer = {
 };
 
 exports.discoverer = {
+  maxFetchSize: 200000, // bytes
   workers: {
     "fast_discovery,slow_discovery": 1
   },
@@ -62,4 +64,3 @@ exports.notifier = {
 };
 
 exports.defaultSourceIndexInterval = 60; // minutes
-exports.maxFetchSize = 250000; // in bytes
