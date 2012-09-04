@@ -90,7 +90,7 @@ function fetchFeed(source, done, options) {
 
     // bail if the size is too large
     try {
-      if(parseInt(res.headers['content-length']) > settings.maxFetchSize) {
+      if(parseInt(res.headers['content-length']) > settings.currentModule.maxFetchSize) {
         done(new Error("Feed is too large: " + res.headers['content-length']));
         return;
       } else {
