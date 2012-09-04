@@ -11,6 +11,16 @@ var getters = {
   "https:": https
 };
 
+/** make an HTTP or HTTPS request to a remote server for a resource.
+ * @note originally this was just for fetching feeds, but now it can fetch anything... it should probably be renamed, but it still has enough feed-specific functionality that I haven't changed it
+ * @param source  Source object (must have a 'url' property)
+ * @param done  callback that is called when we're done
+ * @param options  optional hash of options for the request.  options include:
+ *                  redirectCallback -- a callback called when we encounter a redirect.  defaults to just calling fetchFeed again with the new URL
+ *                  feedName -- a function to run on the Source which returns a human-readable name (necessary because sometimes the source argument doesn't have an 'id' property)
+ *                  urlOverride -- a different URL to use other than the one in source.url
+ *                  requestFilter -- a function that gets the response object as a param to decide if we want this response.  request continues if it returns false.  it should return an Error object detailing the reason for rejection if it wants the request to be aborted
+ */
 function fetchFeed(source, done, options) {
   if (!options) {
     options = {};
@@ -88,19 +98,17 @@ function fetchFeed(source, done, options) {
       return;
     }
 
-    // bail if the size is too large
-    try {
-      if(parseInt(response.headers['content-length']) > settings.currentModule.maxFetchSize) {
-        done(new Error("Feed is too large: " + response.headers['content-length']));
+    // filter out requests we don't like
+    if (options.requestFilter) {
+      var err = options.requestFilter(response);
+      if (err) {
         request.abort();
+        done(err);
         return;
-      } else {
-        log.debug("Content length of " + response.headers['content-length'] + " is under limit of " + settings.currentModule.maxFetchSize);
       }
-    } catch(ex) {
-      done(new Error("Error parsing content-length from response header:" + util.inspect(ex)));
-      return;
     }
+
+    // TODO set timeout on the request?
 
     response.setEncoding('utf8');
 
@@ -121,4 +129,19 @@ function fetchFeed(source, done, options) {
   });
 }
 
+// a size filter to be passed as options.requestFilter to fetchFeed()
+function filterSize(response) {
+  try {
+    if(parseInt(response.headers['content-length']) > settings.currentModule.maxFetchSize) {
+      return new Error("Feed is too large: " + response.headers['content-length']);
+    } else {
+      log.debug("Content length of " + response.headers['content-length'] + " is under limit of " + settings.currentModule.maxFetchSize);
+      return false;
+    }
+  } catch (ex) {
+    return new Error("Error parsing content-length from response header: " + util.inspect(ex));
+  }
+}
+
 exports.fetchFeed = fetchFeed;
+exports.filterSize = filterSize;
