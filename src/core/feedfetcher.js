@@ -94,7 +94,7 @@ function fetchFeed(source, done, options) {
         done(new Error("Feed is too large: " + res.headers['content-length']));
         return;
       } else {
-        log.debug("Content length of " + res.headers['content-length'] + " is under limit of " + settings.maxFetchSize);
+        log.debug("Content length of " + res.headers['content-length'] + " is under limit of " + settings.currentModule.maxFetchSize);
       }
     } catch(ex) {
       done(new Error("Error parsing content-length from response header:" + util.inspect(ex)));
