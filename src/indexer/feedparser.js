@@ -5,8 +5,23 @@ var _ = require('underscore');
 var Step = require('step');
 var util = require('util');
 
+function updatePostFields(updateFields, postObject, postParser) {
+  function updateField(field, value) {
+    if (value && postObject[field] != value) {
+      updateFields[field] = value;
+    }
+  }
+
+  updateField('content', postParser.getContents());
+  updateField('description', postParser.getDescription());
+  updateField('title', postParser.getTitle());
+  updateField('uri', postParser.getPermalink());
+  updateField('author', postParser.getAuthor());
+  updateField('published_at', postParser.getDate());
+}
+
 function updateSourceMetadata(source, parser, indexTime, updated, done) {
-  var updateFields = new Object();
+  var updateFields = {};
 
   if (parser.getDescription() && source.description != parser.getDescription()) {
     updateFields.description = parser.getDescription();
@@ -55,25 +70,7 @@ function updateExistingPost(post, source, indexTime, callback) {
     } else if (result) { // NOTE this section will not execute until we fix the code in checkForUpdatedPosts() to actually give us updated posts instead of only new ones
       var updateFields = {};
 
-      if (post.getContents() && result.content != post.getContents()) {
-        updateFields.content = post.getContents();
-      }
-
-      if (post.getDescription() && result.description != post.getDescription()) {
-        updateFields.description = post.getDescription();
-      }
-
-      if (post.getTitle() && result.title != post.getTitle()) {
-        updateFields.title = post.getTitle();
-      }
-
-      if (post.getPermalink() && result.uri != post.getPermalink()) {
-        updateFields.uri = post.getPermalink();
-      }
-
-      if (post.getAuthor() && result.author != post.getAuthor()) {
-        updateFields.author = post.getAuthor();
-      }
+      updatePostFields(updateFields, result, post);
 
       if (result.source_id != source.id) { // TODO maybe we should only change this if it is NULL?  in case the same article appears in multiple feeds
         updateFields.source_id = source.id;
@@ -125,15 +122,11 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
             log.info("Identified post to crawl for links");
 
             var postContent = {
-              content: post.getContents(),
-              description: post.getDescription(),
-              source_id: source.id,
-              title: post.getTitle(),
-              uri: post.getPermalink(),
-              author: post.getAuthor(),
-              published_at: post.getDate(),
-              indexed_at: indexTime
+              indexed_at: indexTime,
+              source_id: source.id
             }
+
+            updatePostFields(postContent, postContent, post);
 
             dataLayer.Post.create(postContent, function(err, postCreated) {
               log.trace("Added post to database, checking for internal links");
