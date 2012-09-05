@@ -37,10 +37,6 @@ exports.Link = FastLegS.Base.extend({
   one: [{
     from_post: exports.Post,
     joinOn: 'from_post_id'
-  },
-  {
-    to_post: exports.Post,
-    joinOn: 'to_post_id'
   }]
 });
 
