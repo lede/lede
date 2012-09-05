@@ -123,7 +123,7 @@ function discover(fast, jobParams, job) {
         } else {
           if (feedsOffered.length == 0) { // test this explicitly because Step can't handle zero-length arrays
             // TODO handle web pages that don't offer feeds by doing some magic content extraction
-            log.debug("url '" + jobParams + "' does not offer any feeds");
+            log.debug("url '" + jobParams.url + "' does not offer any feeds");
             if ( _.isUndefined(job) ) {
               log.error("job is undefined");
             } else {
