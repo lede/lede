@@ -18,14 +18,14 @@ exports.login = function(req, res) {
     res.status = 500;
     res.send({ result: 'User name is required but was not specified' });
   }
-}
+};
 
 exports.logout = function(req, res) {
   if(req.session) {
     req.session.destroy(function() {});
     res.send({ result: 'Logged Out' });
   }
-}
+};
 
 // sanity check endpoint, likely just for testing
 // sends back the current active user email
@@ -33,7 +33,7 @@ exports.logout = function(req, res) {
 // always be behind an ensure_user middleware filter
 exports.whoami = function(req, res) {
   res.send({ result: req.session.user.email });
-}
+};
 
 // FIXME: hacked up registration that doesn't take or create a password
 // just for testing
@@ -63,7 +63,7 @@ exports.register = function(req, res) {
     res.status = 500;
     res.send({ result: 'An email must be specified to register an account' });
   }
-}
+};
 
 
 
