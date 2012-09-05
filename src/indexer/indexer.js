@@ -47,19 +47,19 @@ function indexFeed(jobParams) {
     var done = function(err) {
       if (err) {
         log.error("Indexing source " + jobParams.source + ": " + err);
-/*
+
         if (jobParams.callback) {
           redisJobCompleteCallback(jobParams.callback, false);
         }
-*/
+
         job.fail({ exception: err.name, error: err.message });
       } else {
         log.info("Index of source " + jobParams.source + " succeeded");
-/*
+
         if (jobParams.callback) {
           redisJobCompleteCallback(jobParams.callback, true);
         }
-*/
+
         job.succeed();
       }
     };
