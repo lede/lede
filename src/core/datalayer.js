@@ -1,5 +1,4 @@
 var FastLegS = require('FastLegS');
-var settings = require('./' + process.argv[2]);
 
 // TODO I suspect this only uses one DB connection per process, and we might get better throughput if we had more than one (at least one per worker)
 
@@ -38,10 +37,6 @@ exports.Link = FastLegS.Base.extend({
   one: [{
     from_post: exports.Post,
     joinOn: 'from_post_id'
-  },
-  {
-    to_post: exports.Post,
-    joinOn: 'to_post_id'
   }]
 });
 
