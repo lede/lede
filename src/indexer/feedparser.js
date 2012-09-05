@@ -40,17 +40,21 @@ function updateSourceMetadata(source, parser, indexTime, updated, done) {
   } // TODO do we want to set this to a local timestamp if the feed doesn't provide it?
 
   // TODO handle permalink
-  
-  updateFields.indexed_at = indexTime;
-  var nextIndexTime = new Date(indexTime);
-  nextIndexTime.setMinutes(nextIndexTime.getMinutes() + source.index_interval);
-  updateFields.next_index_at = nextIndexTime;
-
-  // TODO tweak source.index_interval depending on whether or not we got updates, so that it homes in on the correct update frequency for this feed
 
   if (updated) {
     updateFields.unique_content_at = indexTime;
+
+    // tweak index_interval to go a little faster since we got new content
+    updateFields.index_interval = Math.max(Math.round(source.index_interval * 0.9), settings.indexer.minIndexInterval);
+  } else {
+    // tweak index_interval to go a little slower since there was no new content
+    updateFields.index_interval = Math.min(Math.round(source.index_interval * 1.1), settings.indexer.maxIndexInterval);
   }
+
+  updateFields.indexed_at = indexTime;
+  var nextIndexTime = new Date(indexTime);
+  nextIndexTime.setMinutes(nextIndexTime.getMinutes() + updateFields.index_interval);
+  updateFields.next_index_at = nextIndexTime;
   
   log.debug("Updating source " + source.id + ": " + util.inspect(updateFields));
   dataLayer.Source.update(source.id, updateFields, done);
@@ -109,7 +113,6 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
     function() {
       var group = this.group();
       _.each(updatedPosts, function(post) {
-        // TODO can this be made to use Step's parallel() function for greater efficiency?
         var callback = group(); // instantiate this here because we need to do it synchronously and the function where it is used is asynchronous
 
         updateExistingPost(post, source, indexTime, function(err, postContentsId) {
