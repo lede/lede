@@ -33,6 +33,9 @@ function extractLinks(post) {
           if(parsedUrl.pathname || parsedUrl.query) {
             var resolvedUrl = url.resolve(post.uri, href);
             log.debug("Created resolved url " + resolvedUrl);
+
+            addLink(post.id, resolvedUrl);
+
             queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
           }
         }
@@ -44,6 +47,25 @@ function extractLinks(post) {
   } catch (e) {
     log.error("Error while extracting links: " + util.inspect(e));
   }
+}
+
+function addLink(postId, url)
+{
+  var linkContent = {
+    from_post_id: postId,
+    uri: url
+  };
+
+  dataLayer.Link.create(linkContent, linkCreated); 
+}
+
+function linkCreated(err, linkCreated) {
+  if(err) {
+    log.error("Failed adding link to database" + err.message);
+    return;
+  }
+
+  log.trace("Added link to database");
 }
 
 exports.processPostContent = function (post) {
