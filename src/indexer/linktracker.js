@@ -47,7 +47,7 @@ function extractLinks(post) {
 
         // Check for not http(s) protocols, this handles javascript: and mailto: 
         if (url.parse(resolvedUrl).protocol != 'http:' && url.parse(resolvedUrl).protocol != 'https:') {
-          log.info("Detected link to non http(s) with " + resolvedUrl);
+          log.debug("Detected link to non http(s) with " + resolvedUrl);
           resolvedUrl = null;
         }
 
@@ -64,9 +64,9 @@ function extractLinks(post) {
 
         // We should now have a followable http(s) link 
         if(resolvedUrl) {
-          log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
+          log.debug("Adding link from post " + post.id + ' to ' + resolvedUrl );
           addLink(post.id, resolvedUrl);
-          log.info("Enqueing discover job for url " + resolvedUrl);
+          log.debug("Enqueing discover job for url " + resolvedUrl);
           queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
         } else {
           log.debug("Resolved url is null, will not enqueue");
