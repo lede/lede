@@ -39,10 +39,12 @@ function extractLinks(post) {
         }
 
         if(resolvedUrl) {
-          log.debug("Enqueing discover job for url " + resolvedUrl);
+          log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
+          addLink(post.id, resolvedUrl);
+          log.info("Enqueing discover job for url " + resolvedUrl);
           queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
         } else {
-          log.info("Resolved url is null, will not enqueue");
+          log.debug("Resolved url is null, will not enqueue");
         }
 
       });
@@ -53,6 +55,25 @@ function extractLinks(post) {
   } catch (e) {
     log.error("Error while extracting links: " + util.inspect(e));
   }
+}
+
+function addLink(postId, url)
+{
+  var linkContent = {
+    from_post_id: postId,
+    uri: url
+  };
+
+  dataLayer.Link.create(linkContent, linkCreated); 
+}
+
+function linkCreated(err, linkCreated) {
+  if(err) {
+    log.error("Failed adding link to database" + err.message);
+    return;
+  }
+
+  log.trace("Added link to database");
 }
 
 exports.processPostContent = function (post) {
