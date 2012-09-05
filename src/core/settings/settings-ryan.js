@@ -29,7 +29,8 @@ exports.log4jsConfig = {
   levels: {
     indexer: "INFO",
     scheduler: "INFO",
-    discoverer: "INFO"
+    discoverer: "INFO",
+    web: "INFO"
   }
 };
 
