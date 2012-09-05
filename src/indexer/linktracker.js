@@ -22,20 +22,29 @@ function extractLinks(post) {
 
       _.each(hrefs, function(href) {
         var parsedUrl = url.parse(href);
+        var resolvedUrl = href;
+
         // detect relative urls by seeing if the url has a host
-        if(parsedUrl.host) {
-          log.debug("Enqueing discover job for url " + href);
-          queues.slowDiscover.enqueue({ parentId: post.id, url: href});
-        } else {
-          log.trace("Parsed relative url " + util.inspect(parsedUrl));
+        if(! parsedUrl.host) {
+          log.debug("Parsed relative url " + util.inspect(parsedUrl));
 
           //If we have real path info or a real query, try to resolve the url
           if(parsedUrl.pathname || parsedUrl.query) {
-            var resolvedUrl = url.resolve(post.uri, href);
             log.debug("Created resolved url " + resolvedUrl);
-            queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
+            resolvedUrl = url.resolve(post.uri, href);
+          } else {
+            log.debug("Failed to resolve url " + href);
+            resolvedUrl = null;
           }
         }
+
+        if(resolvedUrl) {
+          log.debug("Enqueing discover job for url " + resolvedUrl);
+          queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
+        } else {
+          log.info("Resolved url is null, will not enqueue");
+        }
+
       });
     });
 

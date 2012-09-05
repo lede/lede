@@ -39,15 +39,17 @@ exports.scheduler = {
 };
 
 exports.indexer = {
+  maxFetchSize: 150000, // bytes
   workers: {
-    "fast_index,slow_index": 1024
+    "fast_index,slow_index": 64
   },
-  throttleInterval: 60 // if a feed has been updated within this many seconds, it will not be updated again
+  throttleInterval: 900 // if a feed has been updated within this many seconds, it will not be updated again
 };
 
 exports.discoverer = {
+  maxFetchSize: 100000, // bytes
   workers: {
-    "fast_discovery,slow_discovery": 8
+    "fast_discovery,slow_discovery": 32
   },
 };
 
