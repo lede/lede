@@ -4,6 +4,7 @@ var url = require('url');
 var util = require('util');
 var dataLayer = require('./datalayer');
 var _ = require('underscore');
+var mime = require('./mime-parser');
 
 // getter objects for different protocols
 var getters = {
@@ -143,5 +144,21 @@ function filterSize(response) {
   }
 }
 
+// creates a filter suitable for use with options.requestFilter for fetchFeed() that filters out content types not in the list
+function createContentTypeFilter(contentTypes) {
+  if (!_.isArray(contentTypes)) {
+    contentTypes = [contentTypes];
+  }
+
+  return function (response) {
+    if (!_.include(contentTypes, mime.parse(response.headers['content-type']).mimeType)) {
+      return new Error("Unacceptable Content-type '" + response.headers['content-type'] + "'");
+    }
+    
+    return false;
+  }
+}
+
 exports.fetchFeed = fetchFeed;
 exports.filterSize = filterSize;
+exports.createContentTypeFilter = createContentTypeFilter;
