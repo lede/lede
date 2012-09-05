@@ -11,7 +11,7 @@ exports.login = function(req, res) {
         res.send({ result: 'Specified username does not exist' });
       } else {
         req.session.user_id = user.id;
-        res.send({ result: 'Logged in as: ' + req.body.user_email });
+        res.send({ result: 'Logged in as: ' + user.email });
       }
     }));
   } else {
@@ -32,7 +32,7 @@ exports.logout = function(req, res) {
 // NOTE: we don't need to check for req.session.user because this should
 // always be behind an ensure_user middleware filter
 exports.whoami = function(req, res) {
-  res.send({ result: req.session.user.email });
+  res.send({ result: req.body.user.email });
 };
 
 // FIXME: hacked up registration that doesn't take or create a password

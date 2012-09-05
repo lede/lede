@@ -11,7 +11,7 @@ exports.ensure_user = function (req, res, next) {
         res.status = 500;
         res.send({ result: 'Invalid user id specified'});
       } else {
-        req.session.user = user;
+        req.body.user = user;
         next();
       }
     }));
