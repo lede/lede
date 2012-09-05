@@ -14,6 +14,14 @@ function extractLinks(post) {
         throw err;
       }
 
+      // TODO move this some place sane, just testing
+      var blacklist = [
+        'feedads.g.doubleclick.net',
+        'vimeo.com',
+        'cnn.com',
+        'guardian.co.uk'
+      ];
+
       // might want to directly reference the attribs instead of just links
       var links = select(dom, 'a');
       var attribs = _.pluck(links, "attribs");
@@ -38,6 +46,15 @@ function extractLinks(post) {
           }
         }
 
+        var blacklistMatch = _.find(blacklist, function(checkUrl) {
+          return checkUrl == url.parse(resolvedUrl).hostname;
+        });
+
+        if (blacklistMatch) {
+          log.error("Detected blacklist match on " + blacklistMatch);
+          resolvedUrl = null;
+        }
+
         if(resolvedUrl) {
           log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
           addLink(post.id, resolvedUrl);
@@ -47,7 +64,7 @@ function extractLinks(post) {
           log.debug("Resolved url is null, will not enqueue");
         }
 
-      });
+        });
     });
 
     var parser = new htmlparser.Parser(handler);
