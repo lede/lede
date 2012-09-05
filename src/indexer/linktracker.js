@@ -18,8 +18,7 @@ function extractLinks(post) {
       var blacklist = [
         'feedads.g.doubleclick.net',
         'vimeo.com',
-        'cnn.com',
-        'guardian.co.uk'
+        'cnn.com'
       ];
 
       // might want to directly reference the attribs instead of just links
@@ -46,15 +45,24 @@ function extractLinks(post) {
           }
         }
 
+        // Check for not http(s) protocols, this handles javascript: and mailto: 
+        if (url.parse(resolvedUrl).protocol != 'http:' && url.parse(resolvedUrl).protocol != 'https:') {
+          log.info("Detected link to non http(s) with " + resolvedUrl);
+          resolvedUrl = null;
+        }
+
+        // Naive handling of blacklisting
+        // TODO add regexp matching and a sane way to update the blacklist on the fly
         var blacklistMatch = _.find(blacklist, function(checkUrl) {
           return checkUrl == url.parse(resolvedUrl).hostname;
         });
 
         if (blacklistMatch) {
-          log.error("Detected blacklist match on " + blacklistMatch);
+          log.debug("Detected blacklist match on " + blacklistMatch);
           resolvedUrl = null;
         }
 
+        // We should now have a followable http(s) link 
         if(resolvedUrl) {
           log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
           addLink(post.id, resolvedUrl);
