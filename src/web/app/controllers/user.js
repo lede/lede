@@ -11,7 +11,7 @@ exports.login = function(req, res) {
         res.send({ result: 'Specified username does not exist' });
       } else {
         req.session.user_id = user.id;
-        res.send({ result: 'Loggen in as: ' + req.body.user_email });
+        res.send({ result: 'Logged in as: ' + req.body.user_email });
       }
     }));
   } else {
