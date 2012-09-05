@@ -57,8 +57,7 @@ function extractLinks(post) {
   }
 }
 
-function addLink(postId, url)
-{
+function addLink(postId, url) {
   var linkContent = {
     from_post_id: postId,
     uri: url
