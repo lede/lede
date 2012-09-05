@@ -1,3 +1,5 @@
+settings = require('../../core/settings').get("web");
+log = require('../../core/logger').getLogger("web");
 
 /**
  * Module dependencies.
@@ -14,7 +16,6 @@ var express = require('express')
   , redis_store = require('connect-redis')(express)
   , redis = require('redis').createClient()
   , _ = require('underscore')
-  , log = require('../../core/logger').getLogger("web")
   , ensure_user = require('./middleware/user.js').ensure_user
   , user = require('./controllers/user.js');
 
