@@ -20,6 +20,8 @@ process.on('uncaughtException',function(error){
   }, 10000);
 });
 
+var contentTypeFilter = feedFetcher.createContentTypeFilter(['applicaton/rss+xml', 'application/atom+xml']);
+
 // useful code begins here
 
 function redisJobCompleteCallback(callbackId, status) {
@@ -111,7 +113,20 @@ function indexFeed(jobParams) {
           fetchAndParse(source, done, options);
         }
       },
-      feedName: function (source) { return source.id }
+      feedName: function (source) { return source.id },
+      requestFilter: function (response) {
+        var err = feedFetcher.filterSize(response);
+        if (err) {
+          return err;
+        }
+
+        err = contentTypeFilter(response);
+        if (err) {
+          return err;
+        }
+
+        return false;
+      }
     };
 
     fetchAndParse(result, done, options);

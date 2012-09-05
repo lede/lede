@@ -21,6 +21,8 @@ process.on('uncaughtException',function(error){
   }, 10000);
 });
 
+var contentTypeFilter = feedFetcher.createContentTypeFilter(['text/html', 'text/xhtml+xml']);
+
 // enumerate feeds provided by the web page whose body is provided
 function parseOfferedFeedUrls(siteBody, done) {
   try {
@@ -82,6 +84,19 @@ function fetchWebPage(url, done) {
     redirectCallback: function (feed, done, options, statusCode) {
       log.trace("recursing fetchWebPage due to redirect");
       fetchWebPage(options.urlOverride, done);
+    },
+    requestFilter: function (response) {
+      var err = feedFetcher.filterSize(response);
+      if (err) {
+        return err;
+      }
+
+      err = contentTypeFilter(response);
+      if (err) {
+        return err;
+      }
+
+      return false;
     }
   };
 
