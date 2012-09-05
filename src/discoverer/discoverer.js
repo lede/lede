@@ -64,9 +64,12 @@ function lookupFeed(feedUrl, done) {
 function addNewSource(url, fast, done) {
   dataLayer.Source.create({ url: url, indexable: true, index_interval: settings.defaultSourceIndexInterval }, function (err, result) {
     if (err) {
-      // TODO handle IDs that already exist in the DB; these should not be an error
-      log.error("DB error, this is likely a duplicate source ('" + url + "'):" + err);
-      done(err);
+      if (/sources_url_unique/.test(err.message)) { // TODO figure out if we can detect this error in a less hacky way
+        log.debug("Source '" + url + "' already exists in DB");
+        done(null, null);
+      } else {
+        done(err);
+      }
     } else {
       log.debug("Added new source to database (" + result.rows[0].id + "), initiating index");
       if (fast) {
