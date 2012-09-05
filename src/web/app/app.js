@@ -68,6 +68,9 @@ app.get('/dashboard/total_posts/:days', posts_dashboard.total_posts_by_day);
 app.get('/dashboard/total_sources', sources_dashboard.total_sources);
 app.get('/dashboard/total_sources/:days', sources_dashboard.total_sources_by_day);
 
+app.get('/dashboard/total_links', links_dashboard.total_links);
+app.get('/dashboard/total_links/:days', links_dashboard.total_links_by_day);
+
 app.post('/user/login', user.login);
 app.post('/user/logout', ensure_user, user.logout);
 app.get('/user/whoami', ensure_user, user.whoami);
