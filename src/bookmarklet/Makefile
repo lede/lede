@@ -5,3 +5,7 @@ build/bundle.js: widget/build/yarn.js widget/bookmarklet.js entry.js
 
 widget/build/yarn.js: widget/bookmarklet.html widget/bookmarklet.css
 												./node_modules/yarnify/bin/cmd.js widget -o widget/build/yarn.js
+
+clean:
+			rm -rf build/*
+			rm -rf widget/build/*
