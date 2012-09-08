@@ -28,6 +28,7 @@ set :discoverer_path, "src/discoverer"
 set :indexer_path, "src/indexer"
 set :notifier_path, "src/notifier"
 set :scheduler_path, "src/scheduler"
+set :bookmarklet_source_path, "src/bookmarklet"
 set :migration_path, "src/db"
 set :server_path, "#{releases_path}/../server-control"
 
@@ -59,6 +60,7 @@ namespace :deploy do
   task :web_launch do
     update_code
     update_dependencies
+    rebuild_bookmarklet
     migrate
     symlink # FIXME: danger - at this point static assets are updated but dynamic code isn't reloaded
     relink_core
@@ -84,6 +86,10 @@ namespace :deploy do
 
   task :migrate do
     run "cd #{latest_release}/#{migration_path} && ./node_modules/db-migrate/bin/db-migrate up --config database.json -e production"
+  end
+
+  task :rebuild_bookmarklet do
+    "cd #{latest_release}/#{bookmarklet_source_path} && make clean && make && make install"
   end
 
   task :update_server_dependencies do
