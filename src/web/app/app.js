@@ -68,10 +68,10 @@ app.get('/dashboard/total_posts/:days', posts_dashboard.total_posts_by_day);
 app.get('/dashboard/total_sources', sources_dashboard.total_sources);
 app.get('/dashboard/total_sources/:days', sources_dashboard.total_sources_by_day);
 
-app.post('/user/login', user.login);
-app.post('/user/logout', ensure_user, user.logout);
-app.get('/user/whoami', ensure_user, user.whoami);
-app.put('/user/register', user.register);
+app.post('/api/user/login', user.login);
+app.post('/api/user/logout', ensure_user, user.logout);
+app.get('/api/user/whoami', ensure_user, user.whoami);
+app.put('/api/user/register', user.register);
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));
