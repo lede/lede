@@ -8,7 +8,9 @@ div.mark {
   float: left;
   height: 100%;
   width: 100px;
-  margin: 2px;
+  margin-left: 30%;
+  margin-top: 10%;
+  maring-bottom: 2px;
   padding: 5px;
   -webkit-box-sizing: border-box;
 }
@@ -55,6 +57,7 @@ p.tagline {
   font-size: 60px;
   width: 100%;
   margin-top: -20px;
+  margin-left: 30%;
   color: #555;
   letter-spacing: 0.29em; 
 }
