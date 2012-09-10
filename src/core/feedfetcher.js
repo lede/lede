@@ -133,10 +133,13 @@ function fetchFeed(source, done, options) {
 // a size filter to be passed as options.requestFilter to fetchFeed()
 function filterSize(response) {
   try {
-    if(parseInt(response.headers['content-length']) > settings.currentModule.maxFetchSize) {
-      return new Error("Feed is too large: " + response.headers['content-length']);
+    var length = parseInt(response.headers['content-length'], 10);
+    if (_.isNaN(length) || length == 0) {
+      return new Error("Response does not provide a content-length");
+    } else if (length > settings.currentModule.maxFetchSize) {
+      return new Error("Response is too large: " + length);
     } else {
-      log.debug("Content length of " + response.headers['content-length'] + " is under limit of " + settings.currentModule.maxFetchSize);
+      log.debug("Content length of " + length + " is under limit of " + settings.currentModule.maxFetchSize);
       return false;
     }
   } catch (ex) {

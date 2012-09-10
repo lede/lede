@@ -1,9 +1,9 @@
 var User = require('../../../core/datalayer').User;
 var no_err = require('../helpers/core').no_err;
-var log = require('../../../core/logger').getLogger("web")
+var log = require('../../../core/logger').getLogger("web");
 
 
-function ensure_user(req, res, next) {
+exports.ensure_user = function (req, res, next) {
   log.info('Verifying user is authenticated');
   if(req.session.user_id) {
     User.findOne({id: req.session.user_id}, no_err(res, function(user) {
@@ -11,7 +11,7 @@ function ensure_user(req, res, next) {
         res.status = 500;
         res.send({ result: 'Invalid user id specified'});
       } else {
-        req.session.user = user;
+        req.body.user = user;
         next();
       }
     }));

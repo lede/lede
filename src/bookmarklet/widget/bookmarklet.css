@@ -1,0 +1,15 @@
+div.pop-down {
+  display: none;
+  border-bottom: 1px solid #999;
+  background: #f5f5f5;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  color: #333;
+}
+
+  div.pop-down h1 {
+    margin:10px;
+  }
+

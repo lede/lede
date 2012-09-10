@@ -64,9 +64,12 @@ function lookupFeed(feedUrl, done) {
 function addNewSource(url, fast, done) {
   dataLayer.Source.create({ url: url, indexable: true, index_interval: settings.defaultSourceIndexInterval }, function (err, result) {
     if (err) {
-      // TODO handle IDs that already exist in the DB; these should not be an error
-      log.error("DB error, this is likely a duplicate source ('" + url + "'):" + err);
-      done(err);
+      if (/sources_url_unique/.test(err.message)) { // TODO figure out if we can detect this error in a less hacky way
+        log.debug("Source '" + url + "' already exists in DB");
+        done(null, null);
+      } else {
+        done(err);
+      }
     } else {
       log.debug("Added new source to database (" + result.rows[0].id + "), initiating index");
       if (fast) {
@@ -120,7 +123,7 @@ function discover(fast, jobParams, job) {
         } else {
           if (feedsOffered.length == 0) { // test this explicitly because Step can't handle zero-length arrays
             // TODO handle web pages that don't offer feeds by doing some magic content extraction
-            log.debug("url '" + jobParams + "' does not offer any feeds");
+            log.debug("url '" + jobParams.url + "' does not offer any feeds");
             if ( _.isUndefined(job) ) {
               log.error("job is undefined");
             } else {
