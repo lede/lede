@@ -43,7 +43,9 @@ exports.indexer = {
   workers: {
     "fast_index,slow_index": 64
   },
-  throttleInterval: 900 // if a feed has been updated within this many seconds, it will not be updated again
+  throttleInterval: 900, // if a feed has been updated within this many seconds, it will not be updated again
+  maxIndexInterval: 1440, // max minutes between indexings
+  minIndexInterval: 30 // min minutes between indexings
 };
 
 exports.discoverer = {
