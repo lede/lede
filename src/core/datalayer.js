@@ -19,14 +19,14 @@ exports.Post = FastLegS.Base.extend({
   tableName: "posts",
   primaryKey: "id",
   updateTimestamp: "updated_at",
-  createTimestamp: "created_at",
+  createTimestamp: "created_at"
 });
 
 exports.User = FastLegS.Base.extend({
   tableName: "users",
   primaryKey: "id",
   updateTimestamp: "updated_at",
-  createTimestamp: "created_at",
+  createTimestamp: "created_at"
 });
 
 exports.Link = FastLegS.Base.extend({
@@ -55,3 +55,20 @@ exports.Lede = FastLegS.Base.extend({
   }]
 });
 
+exports.Reason = FastLegS.Base.extend({
+  tableName: "reasons",
+  primaryKey: "id",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at"
+});
+
+exports.Blacklist = FastLegS.Base.extend({
+  tableName: "blacklists",
+  primaryKey: "id",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at",
+  one: [{
+    reason: exports.Reason,
+    joinOn: 'reason_id'
+  }]
+});

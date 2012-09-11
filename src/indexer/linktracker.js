@@ -14,13 +14,6 @@ function extractLinks(post) {
         throw err;
       }
 
-      // TODO move this some place sane, just testing
-      var blacklist = [
-        'feedads.g.doubleclick.net',
-        'vimeo.com',
-        'cnn.com'
-      ];
-
       // might want to directly reference the attribs instead of just links
       var links = select(dom, 'a');
       var attribs = _.pluck(links, "attribs");
@@ -52,15 +45,16 @@ function extractLinks(post) {
         }
 
         // Naive handling of blacklisting
-        // TODO add regexp matching and a sane way to update the blacklist on the fly
-        var blacklistMatch = _.find(blacklist, function(checkUrl) {
-          return checkUrl == url.parse(resolvedUrl).hostname;
+        // TODO the code in here never seems to be executed. Figure out why.  As far as I can tell,
+        // this doesn't affect anything else... heh
+        dataLayer.Blacklist.findOne({url: url.parse(resolvedUrl).hostname}, function(error, result) {
+          if (result) {
+            log.debug("Detected blacklist match on " + result.url);
+            resolvedUrl = null;
+          } else {
+            log.debug("Did not find blacklist match on " + resolvedUrl);
+          }
         });
-
-        if (blacklistMatch) {
-          log.debug("Detected blacklist match on " + blacklistMatch);
-          resolvedUrl = null;
-        }
 
         // We should now have a followable http(s) link 
         if(resolvedUrl) {
