@@ -21,9 +21,9 @@ var express = require('express')
 
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
-  log.fatal('Top-Level Uncaught Exception: ' + error);
+  console.log('Top-Level Uncaught Exception: ' + error);
   log.fatal(error.stack);
-  log.fatal('Exiting in 10 seconds...');
+  log.fatal('Exiting in 0 seconds...');
   setTimeout(function() {
     log.fatal('Exiting.');
     process.exit(1);

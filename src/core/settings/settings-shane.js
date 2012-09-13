@@ -44,6 +44,7 @@ exports.scheduler = {
 };
 
 exports.indexer = {
+  maxFetchSize: 100000, // bytes
   workers: {
     "fast_index,slow_index": 1
   },
@@ -51,6 +52,7 @@ exports.indexer = {
 };
 
 exports.discoverer = {
+  maxFetchSize: 100000, // bytes
   workers: {
     "fast_discovery,slow_discovery": 1
   },

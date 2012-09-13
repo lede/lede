@@ -24,12 +24,17 @@ exports.log4jsConfig = {
     {
       category: "discoverer",
       type: "console"
+    },
+    {
+      category: "web",
+      type: "console"
     }
   ],
   levels: {
     indexer: "INFO",
     scheduler: "INFO",
-    discoverer: "INFO"
+    discoverer: "INFO",
+    web: "INFO"
   }
 };
 
