@@ -47,7 +47,7 @@ function extractLinks(post) {
         // Naive handling of blacklisting
         dataLayer.Blacklist.findOne({url: url.parse(resolvedUrl).hostname}, function(error, result) {
           if (result) {
-            log.error("Detected blacklist match on " + result.url);
+            log.debug("Detected blacklist match on " + result.url);
             resolvedUrl = null;
           } else {
             // We should now have a followable http(s) link 
