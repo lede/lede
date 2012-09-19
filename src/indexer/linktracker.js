@@ -45,28 +45,23 @@ function extractLinks(post) {
         }
 
         // Naive handling of blacklisting
-        // TODO the code in here never seems to be executed. Figure out why.  As far as I can tell,
-        // this doesn't affect anything else... heh
         dataLayer.Blacklist.findOne({url: url.parse(resolvedUrl).hostname}, function(error, result) {
           if (result) {
-            log.debug("Detected blacklist match on " + result.url);
+            log.error("Detected blacklist match on " + result.url);
             resolvedUrl = null;
           } else {
-            log.debug("Did not find blacklist match on " + resolvedUrl);
+            // We should now have a followable http(s) link 
+            if(resolvedUrl) {
+              log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
+              addLink(post.id, resolvedUrl);
+              log.info("Enqueing discover job for url " + resolvedUrl);
+              queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
+            } else {
+              log.info("Resolved url is null, will not enqueue");
+            }
           }
         });
-
-        // We should now have a followable http(s) link 
-        if(resolvedUrl) {
-          log.debug("Adding link from post " + post.id + ' to ' + resolvedUrl );
-          addLink(post.id, resolvedUrl);
-          log.debug("Enqueing discover job for url " + resolvedUrl);
-          queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
-        } else {
-          log.debug("Resolved url is null, will not enqueue");
-        }
-
-        });
+      });
     });
 
     var parser = new htmlparser.Parser(handler);
