@@ -14,7 +14,8 @@
         "log4js": ">=0.4.1",
         "redis": "*",
         "resque": "*",
-        "underscore": "*"
+        "underscore": "*",
+        "confuse": "*"
     },
     "engine": [ "node >=0.8.8" ],
     "keywords": [ "lede", "dontfollow" ]
