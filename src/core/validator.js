@@ -1,5 +1,3 @@
-settings = require('../core/settings').get("");
-log = require('../core/logger').getLogger("validator");
 var url = require('url');
 var util = require('util');
 var dataLayer = require('./datalayer');
@@ -37,11 +35,9 @@ function Blacklist() {
 
 }
 
-// checks if a url is valid
 function checkUrlValid(url, callback) {
   var bl = new Blacklist();
 
-  // If we have a blacklist match, the url is invalid
   bl.get(function(list) {
 
     //TODO: consider generating and caching the regexps once per cache-warm
@@ -58,20 +54,5 @@ function checkUrlValid(url, callback) {
     }
   });
 }
-
-// tester for checkUrlValid
-checkUrlValid('simeo.com', function(isValid) {
-  log.info('Test for valid URL: ' + isValid + ' expects: true');
-});
-
-checkUrlValid('vimeo.com', function(isValid) {
-  log.info('Test for invalid URL: ' + isValid + ' expects: false');
-});
-
-checkUrlValid('guardian.co.uk/jontest/furtive', function(isValid) {
-  log.info('Test for invalid URL: ' + isValid + ' expects: false');
-});
-
-
 
 exports.checkUrlValid = checkUrlValid;
