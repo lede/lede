@@ -1,0 +1,70 @@
+{
+  "dbConnectionParams": {
+    "host": "unburythelede.com",
+    "port": 5432
+  },
+
+  "redisConnectionParams": {
+    "host": "localhost",
+    "port": 6379
+  },
+
+  "log4jsConfig": {
+    "appenders": [
+      {
+        "category": "indexer",
+        "type": "console"
+      },
+      {
+        "category": "scheduler",
+        "type": "console"
+      },
+      {
+        "category": "discoverer",
+        "type": "console"
+      },
+      {
+        "category": "web",
+        "type": "console"
+      }
+    ],
+    "levels": {
+      "indexer": "INFO",
+      "scheduler": "INFO",
+      "discoverer": "INFO",
+      "web": "INFO"
+    }
+  },
+
+  "scheduler": {
+    "checkInterval": 60
+  },
+
+  "indexer": {
+    "maxFetchSize": 150000,
+    "workers": {
+      "fast_index,slow_index": 1
+    },
+    "throttleInterval": 900,
+    "maxIndexInterval": 86400,
+    "minIndexInterval": 900
+  },
+
+  "discoverer": {
+    "maxFetchSize": 100000,
+    "workers": {
+      "fast_discovery,slow_discovery": 1
+    }
+  },
+
+  "notifier": {
+    "host": "smtp.sendgrid.net",
+    "port": "587",
+    "domain": "unburythelede.com",
+    "authentication": "login",
+    "username": "lede",
+    "password": "Passw0rd!"
+  },
+
+  "defaultSourceIndexInterval": 3600
+}

@@ -1,0 +1,20 @@
+{
+  "dbConnectionParams": {
+    "user": "shane",
+    "password": "shanedbpass",
+    "database": "dev_shane"
+  },
+
+  "log4jsConfig": {
+    "levels": {
+      "indexer": "INFO",
+      "scheduler": "INFO",
+      "discoverer": "INFO",
+      "web": "INFO"
+    }
+  },
+
+  "indexer": {
+    "throttleInterval": 60
+  }
+}
