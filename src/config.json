@@ -52,7 +52,7 @@
   },
 
   "discoverer": {
-    "maxFetchSize": 100000,
+    "maxFetchSize": 200000,
     "fetchTimeout": 10,
     "workers": {
       "fast_discovery,slow_discovery": 1
