@@ -45,6 +45,8 @@ function extractLinks(post) {
         }
 
         // Naive handling of blacklisting
+        // TODO start by adding regexp to blacklist entity (e.g. ^.*vimeo.com.*$)
+        // loading all blacklist entities into RAM, probably with some module in core
         dataLayer.Blacklist.findOne({url: url.parse(resolvedUrl).hostname}, function(error, result) {
           if (result) {
             log.debug("Detected blacklist match on " + result.url);
@@ -54,13 +56,14 @@ function extractLinks(post) {
             if(resolvedUrl) {
               log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
               addLink(post.id, resolvedUrl);
-              log.info("Enqueing discover job for url " + resolvedUrl);
+              log.debug("Enqueing discover job for url " + resolvedUrl);
               queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
             } else {
               log.info("Resolved url is null, will not enqueue");
             }
           }
         });
+
       });
     });
 
