@@ -43,7 +43,15 @@ function checkUrlValid(url, callback) {
 
   // If we have a blacklist match, the url is invalid
   bl.get(function(list) {
-    if( _.any(list, function(listItem) { return listItem.url == url }) ) {
+
+    //TODO: consider generating and caching the regexps once per cache-warm
+    //      also consider some smarter way of churning through blacklist
+    var isBlacklisted =  _.any( list, function(listItem) {
+      var re = new RegExp (listItem.url);
+      return re.test(url) 
+    }); 
+
+    if(isBlacklisted) {
       callback(false);
     } else {
       callback(true);
@@ -55,8 +63,15 @@ function checkUrlValid(url, callback) {
 checkUrlValid('simeo.com', function(isValid) {
   log.info('Test for valid URL: ' + isValid + ' expects: true');
 });
+
 checkUrlValid('vimeo.com', function(isValid) {
   log.info('Test for invalid URL: ' + isValid + ' expects: false');
 });
+
+checkUrlValid('guardian.co.uk/jontest/furtive', function(isValid) {
+  log.info('Test for invalid URL: ' + isValid + ' expects: false');
+});
+
+
 
 exports.checkUrlValid = checkUrlValid;
