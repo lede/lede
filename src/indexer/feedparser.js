@@ -53,7 +53,7 @@ function updateSourceMetadata(source, parser, indexTime, updated, done) {
 
   updateFields.indexed_at = indexTime;
   var nextIndexTime = new Date(indexTime);
-  nextIndexTime.setMinutes(nextIndexTime.getMinutes() + updateFields.index_interval);
+  nextIndexTime.setSeconds(nextIndexTime.getSeconds() + updateFields.index_interval);
   updateFields.next_index_at = nextIndexTime;
   
   log.debug("Updating source " + source.id + ": " + util.inspect(updateFields));
