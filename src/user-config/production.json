@@ -44,5 +44,17 @@
         "category": "web" 
       }
     ]
-  }
+  },
+
+  "indexer": {
+    "workers": {
+      "fast_index,slow_index": 128
+    }
+  },
+
+  "discoverer": {
+    "workers": {
+      "fast_discovery,slow_discovery": 64
+    }
+  },
 }

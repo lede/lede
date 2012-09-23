@@ -43,7 +43,7 @@
   "indexer": {
     "maxFetchSize": 150000,
     "workers": {
-      "fast_index,slow_index": 128
+      "fast_index,slow_index": 1
     },
     "throttleInterval": 900,
     "maxIndexInterval": 86400,
@@ -53,7 +53,7 @@
   "discoverer": {
     "maxFetchSize": 100000,
     "workers": {
-      "fast_discovery,slow_discovery": 64
+      "fast_discovery,slow_discovery": 1
     }
   },
 
