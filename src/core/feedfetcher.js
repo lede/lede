@@ -109,8 +109,6 @@ function fetchFeed(source, done, options) {
       }
     }
 
-    // TODO set timeout on the request?
-
     response.setEncoding('utf8');
 
     response.on('data', function (chunk) {
@@ -127,6 +125,11 @@ function fetchFeed(source, done, options) {
   }).on('error', function(e) {
     //console.log("Got error: " + e.message);
     done(e);
+  });
+
+  request.setTimeout(settings.currentModule.fetchTimeout * 1000, function () {
+    request.abort();
+    done(new Error("Socket timeout"));
   });
 }
 
