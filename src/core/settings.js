@@ -24,7 +24,6 @@ var confuseOpts = {
 };
 
 var settings = confuse(confuseOpts);
-console.dir(settings);
 
 exports.get = function(module) {
   // alias the currently-running module's settings as currentModule so common code can use it indiscriminately
