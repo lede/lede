@@ -89,7 +89,7 @@ namespace :deploy do
   end
 
   task :rebuild_bookmarklet do
-    "cd #{latest_release}/#{bookmarklet_source_path} && make clean && make && make install"
+    run "cd #{latest_release}/#{bookmarklet_source_path} && make clean && make && make install"
   end
 
   task :update_server_dependencies do
