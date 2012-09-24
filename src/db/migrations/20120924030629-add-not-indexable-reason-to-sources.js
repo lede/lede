@@ -34,13 +34,6 @@ exports.down = function(db, callback) {
       db.changeColumn("reasons", "id", { primaryKey: true, notNull: true, autoIncrement: true }, group());
       db.runSql("DELETE FROM reasons", group());
     },
-    /* use SQL until db-migrate supports adding constraints natively
-    function constrain(err) {
-      if (err) { callback(err); return; }
-      db.runSql(
-        'ALTER TABLE sources DROP CONSTRAINT sources_not_indexable_reason_id_fkey'
-        , this);
-    },*/
     callback
   );
 };
