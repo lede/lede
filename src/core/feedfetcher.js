@@ -4,7 +4,7 @@ var url = require('url');
 var util = require('util');
 var dataLayer = require('./datalayer');
 var _ = require('underscore');
-var mime = require('./mime-parser');
+var mimeParser = require('./mime-parser');
 
 // getter objects for different protocols
 var getters = {
@@ -153,9 +153,16 @@ function createContentTypeFilter(contentTypes) {
     contentTypes = [contentTypes];
   }
 
+  var contentType = response.headers['content-type'];
+  var mime = mimeParser.parse(contentType);
+
   return function (response) {
-    if (!_.include(contentTypes, mime.parse(response.headers['content-type']).mimeType)) {
-      return new Error("Unacceptable Content-type '" + response.headers['content-type'] + "'");
+    if(!mime) {
+      return new Error("Could not parse content type header '" + contentType + "'");
+    }
+
+    if (!_.include(contentTypes, mime.mimeType)) {
+      return new Error("Unacceptable Content-type '" + contentType + "'");
     }
     
     return false;

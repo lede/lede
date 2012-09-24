@@ -1,13 +1,19 @@
+// Splits the mime type on slash and returns an object comprising the 
+// mime type, type, and subtype, or null if we could not parse one
 exports.parse = function(mimeType) {
-  var o = {};
+  var mimeParts = {};
 
   // from RFC4288
-  var r = /^(([A-Za-z0-9!#$&.+\-^_]+)\/([A-Za-z0-9!#$&.+\-^_]+))/.exec(mimeType);
+  var splitMimeType = /^(([A-Za-z0-9!#$&.+\-^_]+)\/([A-Za-z0-9!#$&.+\-^_]+))/.exec(mimeType);
 
-  o.mimeType = r[1];
-  o.type = r[2];
-  o.subtype = r[3];
+  if(!splitMimeType || splitMimeType.length < 4) {
+  	return null;
+  }
+
+  mimeParts.mimeType = splitMimeType[1];
+  mimeParts.type = splitMimeType[2];
+  mimeParts.subtype = splitMimeType[3];
 
   // TODO parse parameters
-  return o;
+  return mimeParts;
 }
