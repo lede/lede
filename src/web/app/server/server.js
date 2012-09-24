@@ -80,7 +80,6 @@ function get_daemon(cb) {
   });
 }
 
-
 /* command dispatch */
 switch(command) {
   case COMMANDS.start:
