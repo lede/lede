@@ -36,10 +36,10 @@ if(command != COMMANDS.help && _.isUndefined(target)) {
   console.log('Target to run must be provided');
   process.exit(1);
 }
-var settings = process.argv[4];
-var worker_num = coalesce(process.argv[5], DEFAULT_WORKER_NUM);
-var pidfile = coalesce(process.argv[6], DEFAULT_PIDFILE);
-var base_port = parseInt(coalesce(process.argv[7], DEFAULT_BASE_PORT));
+
+var worker_num = coalesce(process.argv[4], DEFAULT_WORKER_NUM);
+var pidfile = coalesce(process.argv[5], DEFAULT_PIDFILE);
+var base_port = parseInt(coalesce(process.argv[6], DEFAULT_BASE_PORT));
 
 
 /* command implementations */
@@ -104,7 +104,7 @@ switch(command) {
 function start_child(port) {
     var parent_env = process.env;
     parent_env['PORT'] = port;
-    child = spawn('node', [target, settings], { env: parent_env }); 
+    child = spawn('node', [target], { env: parent_env }); 
     child.on('exit', function(code) {
       console.log(child.pid + ' exited with code: ' + code);
     });

@@ -126,47 +126,47 @@ namespace :deploy do
 
   task :fast_restart do
     begin 
-      run "cd #{server_path} && node server.js stop #{current_path}/#{web_app_path}/app.js #{current_path}/src/core/settings/settings-production.js #{cluster_size} /var/run/express-cluster.pid"
+      run "cd #{server_path} && node server.js stop #{current_path}/#{web_app_path}/app.js #{cluster_size} /var/run/express-cluster.pid"
     rescue => e
       p "Looks like the server wasn't running, we'll just start it."
     end
-    run "cd #{server_path} && node server.js start #{current_path}/#{web_app_path}/app.js #{current_path}/src/core/settings/settings-production.js #{cluster_size} /var/run/express-cluster.pid"
+    run "cd #{server_path} && node server.js start #{current_path}/#{web_app_path}/app.js #{cluster_size} /var/run/express-cluster.pid"
   end
 
   task :discoverer_restart do
     begin 
-      run "cd #{server_path} && node server.js stop #{current_path}/#{discoverer_path}/discoverer.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/discoverer-cluster.pid"
+      run "cd #{server_path} && node server.js stop #{current_path}/#{discoverer_path}/discoverer.js 1 /var/run/discoverer-cluster.pid"
     rescue => e
       p "Looks like the server wasn't running, we'll just start it."
     end
-    run "cd #{server_path} && node server.js start #{current_path}/#{discoverer_path}/discoverer.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/discoverer-cluster.pid"
+    run "cd #{server_path} && node server.js start #{current_path}/#{discoverer_path}/discoverer.js  1 /var/run/discoverer-cluster.pid"
   end
 
   task :indexer_restart do
     begin 
-      run "cd #{server_path} && node server.js stop #{current_path}/#{indexer_path}/indexer.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/indexer-cluster.pid"
+      run "cd #{server_path} && node server.js stop #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
     rescue => e
       p "Looks like the server wasn't running, we'll just start it."
     end
-    run "cd #{server_path} && node server.js start #{current_path}/#{indexer_path}/indexer.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/indexer-cluster.pid"
+    run "cd #{server_path} && node server.js start #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
   end
 
   task :notifier_restart do
     begin 
-      run "cd #{server_path} && node server.js stop #{current_path}/#{notifier_path}/notifier.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/notifier-cluster.pid"
+      run "cd #{server_path} && node server.js stop #{current_path}/#{notifier_path}/notifier.js 1 /var/run/notifier-cluster.pid"
     rescue => e
       p "Looks like the server wasn't running, we'll just start it."
     end
-    run "cd #{server_path} && node server.js start #{current_path}/#{notifier_path}/notifier.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/notifier-cluster.pid"
+    run "cd #{server_path} && node server.js start #{current_path}/#{notifier_path}/notifier.js 1 /var/run/notifier-cluster.pid"
   end
 
   task :scheduler_restart do
     begin 
-      run "cd #{server_path} && node server.js stop #{current_path}/#{scheduler_path}/scheduler.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/scheduler-cluster.pid"
+      run "cd #{server_path} && node server.js stop #{current_path}/#{scheduler_path}/scheduler.js 1 /var/run/scheduler-cluster.pid"
     rescue => e
       p "Looks like the server wasn't running, we'll just start it."
     end
-    run "cd #{server_path} && node server.js start #{current_path}/#{scheduler_path}/scheduler.js #{current_path}/src/core/settings/settings-production.js 1 /var/run/scheduler-cluster.pid"
+    run "cd #{server_path} && node server.js start #{current_path}/#{scheduler_path}/scheduler.js 1 /var/run/scheduler-cluster.pid"
   end
 
   task :update_dependencies do
@@ -176,5 +176,3 @@ namespace :deploy do
   end
 
 end
-
-

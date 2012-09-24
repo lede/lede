@@ -5,18 +5,6 @@ var util = require('util');
 var dataLayer = require('./datalayer');
 var _ = require('underscore');
 var mimeParser = require('./mime-parser');
-var errors = require('./errors.js');
-
-// exception used when an otherwise valid response is rejected by the filter
-function ResponseFilteredError(message) {
-  this.name = "ResponseFilteredError";
-  this.message = message || "Response was filtered";
-}
-
-ResponseFilteredError.prototype = new Error();
-ResponseFilteredError.prototype.constructor = ResponseFilteredError;
-
-exports.ResponseFilteredError = ResponseFilteredError;
 
 // getter objects for different protocols
 var getters = {
@@ -54,23 +42,23 @@ function fetchFeed(source, done, options) {
    * We'll just check it's defined and a string now, but ultimately we should see where these are coming from.
    */
   if(_.isUndefined(source.url) || typeof(source.url) != 'string') {
-    done(new URIError("Undefined url passed to discoverer, skipping"));
+    done(new Error("Undefined url passed to discoverer, skipping"));
     return;
   }
   var requestParams = url.parse(options.urlOverride ? options.urlOverride : source.url);
 
   if (!requestParams.hostname) { // check for invalid hostnames (at this time, that really just means null, but maybe we should make it more robust in the future)
-    done(new URIError("Hostname was not specified (or it couldn't be parsed)"));
+    done(new Error("Hostname was not specified (or it couldn't be parsed)"));
     return;
   }
 
   if (!requestParams.protocol) {
-    done(new URIError("Protocol was not specified (or it couldn't be parsed)"));
+    done(new Error("Protocol was not specified (or it couldn't be parsed)"));
     return;
   }
 
   if (!getters[requestParams.protocol]) {
-    done(new URIError("Unknown protocol '" + requestParams.protocol + "'"));
+    done(new Error("Unknown protocol '" + requestParams.protocol + "'"));
     return;
   }
   
@@ -82,76 +70,67 @@ function fetchFeed(source, done, options) {
 
   // TODO request HEAD and only do a GET if it has been changed
 
-  try {
-    var request = getters[requestParams.protocol].get(requestParams, function(response) {
-      var bodyData = "";
-      log.debug("Response status code " + response.statusCode);
-      log.debug("Got headers: " + util.inspect(response.headers));
+  var request = getters[requestParams.protocol].get(requestParams, function(response) {
+    var bodyData = "";
+    log.debug("Response status code " + response.statusCode);
+    log.debug("Got headers: " + util.inspect(response.headers));
 
-      if (response.statusCode != 200) {
-        switch (response.statusCode) {
-          case 301:
-            log.debug("Source " + options.feedName(source) + " moved permanently (301) from '" + source.url + "' to '" + response.headers['location'] + "'");
+    if (response.statusCode != 200) {
+      switch (response.statusCode) {
+        case 301:
+          log.debug("Source " + options.feedName(source) + " moved permanently (301) from '" + source.url + "' to '" + response.headers['location'] + "'");
 
-            options.urlOverride = response.headers['location'];
-            options.redirectCallback(source, done, options, response.statusCode);
-            break;
-            
-          case 302:
-          case 307:
-            log.debug("Source " + options.feedName(source) + " moved temporarily (" + response.statusCode + ") from '" + source.url + "' to '" + response.headers['location'] + "'");
-            options.urlOverride = response.headers['location'];
-            options.redirectCallback(source, done, options, response.statusCode);
-            break;
+          options.urlOverride = response.headers['location'];
+          options.redirectCallback(source, done, options, response.statusCode);
+          break;
+          
+        case 302:
+        case 307:
+          log.debug("Source " + options.feedName(source) + " moved temporarily (" + response.statusCode + ") from '" + source.url + "' to '" + response.headers['location'] + "'");
+          options.urlOverride = response.headers['location'];
+          options.redirectCallback(source, done, options, response.statusCode);
+          break;
 
-          default:
-            log.debug("Response headers: " + util.inspect(response.headers));
-            done(new Error("Received HTTP status code " + response.statusCode));
-            break;
-        }
+        default:
+          log.debug("Response headers: " + util.inspect(response.headers));
+          done(new Error("Received HTTP status code " + response.statusCode));
+          break;
+      }
+      return;
+    }
+
+    // filter out requests we don't like
+    if (options.requestFilter) {
+      var err = options.requestFilter(response);
+      if (err) {
+        request.abort();
+        done(err);
         return;
       }
+    }
 
-      // filter out requests we don't like
-      if (options.requestFilter) {
-        var err = options.requestFilter(response);
-        if (err) {
-          request.abort();
-          done(err);
-          return;
-        }
+    response.setEncoding('utf8');
+
+    response.on('data', function (chunk) {
+      try {
+        bodyData += chunk;
+      } catch (e) {
+        log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
+        done(e);
       }
-
-      response.setEncoding('utf8');
-
-      response.on('data', function (chunk) {
-        try {
-          bodyData += chunk;
-        } catch (e) {
-          log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
-          done(e);
-        }
-      });
-      response.on('end', function() {
-        done(null, { source: source, body: bodyData });
-      });
-    }).on('error', function(e) {
-      //console.log("Got error: " + e.message);
-      var err = new errors.ConnectionError(e.message);
-      err.cause = e;
-      done(err);
     });
-
-    request.setTimeout(settings.currentModule.fetchTimeout * 1000, function () {
-      request.abort();
-      done(new errors.ConnectionError("Socket timeout"));
+    response.on('end', function() {
+      done(null, { source: source, body: bodyData });
     });
-  } catch (e) {
-    // sometimes this throws (we think) due to https://github.com/joyent/node/issues/3924
-    var err = new errors.ConnectionError(e.message);
-    err.cause = e;
-    done(err);
-  }
+  }).on('error', function(e) {
+    //console.log("Got error: " + e.message);
+    done(e);
+  });
+
+  request.setTimeout(settings.currentModule.fetchTimeout * 1000, function () {
+    request.abort();
+    done(new Error("Socket timeout"));
+  });
 }
 
 // a size filter to be passed as options.requestFilter to fetchFeed()
@@ -159,15 +138,15 @@ function filterSize(response) {
   try {
     var length = parseInt(response.headers['content-length'], 10);
     if (_.isNaN(length) || length == 0) {
-      return new ResponseFilteredError("Response does not provide a content-length");
+      return new Error("Response does not provide a content-length");
     } else if (length > settings.currentModule.maxFetchSize) {
-      return new ResponseFilteredError("Response is too large: " + length);
+      return new Error("Response is too large: " + length);
     } else {
       log.debug("Content length of " + length + " is under limit of " + settings.currentModule.maxFetchSize);
       return false;
     }
   } catch (ex) {
-    return new ResponseFilteredError("Error parsing content-length from response header: " + util.inspect(ex));
+    return new Error("Error parsing content-length from response header: " + util.inspect(ex));
   }
 }
 
@@ -182,11 +161,11 @@ function createContentTypeFilter(contentTypes) {
     var mime = mimeParser.parse(contentType);
 
     if(!mime) {
-      return new ResponseFilteredError("Could not parse content type header '" + contentType + "'");
+      return new Error("Could not parse content type header '" + contentType + "'");
     }
 
     if (!_.include(contentTypes, mime.mimeType)) {
-      return new ResponseFilteredError("Unacceptable Content-type '" + contentType + "'");
+      return new Error("Unacceptable Content-type '" + contentType + "'");
     }
     
     return false;
