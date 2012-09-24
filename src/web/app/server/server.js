@@ -29,7 +29,6 @@ function coalesce(val, fallback) {
 /* argument parsing */
 var command = coalesce(process.argv[2], COMMANDS.start);
 
-
 // TODO: use a real argument parsing library
 var target = process.argv[3];
 if(command != COMMANDS.help && _.isUndefined(target)) {
@@ -41,12 +40,11 @@ var worker_num = coalesce(process.argv[4], DEFAULT_WORKER_NUM);
 var pidfile = coalesce(process.argv[5], DEFAULT_PIDFILE);
 var base_port = parseInt(coalesce(process.argv[6], DEFAULT_BASE_PORT));
 
-
 /* command implementations */
 
 function start(workers) {
   console.log('Starting server with ' + workers + ' worker(s)');
-  daemon.start(); // daemonize code after this (deep magic)
+  daemon.start(process.stdout, process.stderr); // daemonize code after this (deep magic)
   server_daemon(); // kick off server cluster
 }
 
@@ -102,22 +100,24 @@ switch(command) {
 /* Daemon implementation */
 
 function start_child(port) {
-    var parent_env = process.env;
-    parent_env['PORT'] = port;
-    child = spawn('node', [target], { env: parent_env }); 
-    child.on('exit', function(code) {
-      console.log(child.pid + ' exited with code: ' + code);
-    });
-    child.stdout.on('data', function(data) {
-      console.log(child.pid + ' [OUT] '  + data);
-    });
-    child.stderr.on('data', function(data) {
-      console.log(child.pid + ' [ERR] '  + data);
-    });
-    return child;
+  console.log("Got to start_child");
+  var parent_env = process.env;
+  parent_env['PORT'] = port;
+  child = spawn('node', [target], { env: parent_env }); 
+  child.on('exit', function(code) {
+    console.log(child.pid + ' exited with code: ' + code);
+  });
+  child.stdout.on('data', function(data) {
+    console.log(child.pid + ' [OUT] '  + data);
+  });
+  child.stderr.on('data', function(data) {
+    console.log(child.pid + ' [ERR] '  + data);
+  });
+  return child;
 }
 
 function server_daemon() {
+  console.log("Got here!");
 
   // write out the pidfile
   fs.writeFile(pidfile, process.pid, function(err) {
