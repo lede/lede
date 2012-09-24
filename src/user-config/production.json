@@ -1,0 +1,60 @@
+{
+  "dbConnectionParams": {
+    "user": "production",
+    "password": "U*6}-%YpK06@;Rt",
+    "database": "production"
+  },
+
+  "log4jsConfig": {
+    "appenders": [
+      {
+        "type": "file",
+        "absolute": true,
+        "filename": "/var/log/indexer.log",
+        "maxLogSize": 20480,
+        "backups": 10,
+        "pollInterval": 15,
+        "category": "indexer" 
+      },
+      {
+        "type": "file",
+        "absolute": true,
+        "filename": "/var/log/scheduler.log",
+        "maxLogSize": 20480,
+        "backups": 10,
+        "pollInterval": 15,
+        "category": "scheduler" 
+      },
+      {
+        "type": "file",
+        "absolute": true,
+        "filename": "/var/log/discoverer.log",
+        "maxLogSize": 20480,
+        "backups": 10,
+        "pollInterval": 15,
+        "category": "discoverer" 
+      },
+      {
+        "type": "file",
+        "absolute": true,
+        "filename": "/var/log/web.log",
+        "maxLogSize": 20480,
+        "backups": 10,
+        "pollInterval": 15,
+        "category": "web" 
+      }
+    ]
+  },
+
+  "indexer": {
+    "workers": {
+      "fast_index,slow_index": 128
+    }
+  },
+
+  "discoverer": {
+    "workers": {
+      "fast_discovery,slow_discovery": 64
+    }
+  },
+}

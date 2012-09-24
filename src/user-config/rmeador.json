@@ -1,0 +1,20 @@
+{
+  "dbConnectionParams": {
+    "user": "ryan",
+    "password": "ryandbpass",
+    "database": "dev_ryan"
+  },
+
+  "log4jsConfig": {
+    "levels": {
+      "indexer": "INFO",
+      "scheduler": "INFO",
+      "discoverer": "INFO",
+      "web": "INFO"
+    }
+  },
+
+  "indexer": {
+    "throttleInterval": 60
+  }
+}

@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var util = require('util');
 var dataLayer = require('../core/datalayer');
+var validator = require('../core/validator');
 var queues = require('../core/resque-queues');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
@@ -44,23 +45,14 @@ function extractLinks(post) {
           resolvedUrl = null;
         }
 
-        // Naive handling of blacklisting
-        // TODO start by adding regexp to blacklist entity (e.g. ^.*vimeo.com.*$)
-        // loading all blacklist entities into RAM, probably with some module in core
-        dataLayer.Blacklist.findOne({url: url.parse(resolvedUrl).hostname}, function(error, result) {
-          if (result) {
-            log.debug("Detected blacklist match on " + result.url);
-            resolvedUrl = null;
+        validator.checkUrlValid(resolvedUrl, function(isValid) {
+          if(isValid) {
+            log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
+            addLink(post.id, resolvedUrl);
+            log.debug("Enqueing discover job for url " + resolvedUrl);
+            queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
           } else {
-            // We should now have a followable http(s) link 
-            if(resolvedUrl) {
-              log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
-              addLink(post.id, resolvedUrl);
-              log.debug("Enqueing discover job for url " + resolvedUrl);
-              queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
-            } else {
-              log.info("Resolved url is null, will not enqueue");
-            }
+            log.info("URL "+ resolvedUrl +" has been tossed by the blacklist, not trying to enqueue");
           }
         });
 
