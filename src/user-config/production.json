@@ -58,5 +58,5 @@
     "workers": {
       "fast_discovery,slow_discovery": 64
     }
-  },
+  }
 }
