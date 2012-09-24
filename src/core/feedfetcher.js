@@ -156,10 +156,10 @@ function createContentTypeFilter(contentTypes) {
     contentTypes = [contentTypes];
   }
 
-  var contentType = response.headers['content-type'];
-  var mime = mimeParser.parse(contentType);
-
   return function (response) {
+    var contentType = response.headers['content-type'];
+    var mime = mimeParser.parse(contentType);
+
     if(!mime) {
       return new Error("Could not parse content type header '" + contentType + "'");
     }

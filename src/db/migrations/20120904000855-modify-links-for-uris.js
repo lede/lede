@@ -1,14 +1,29 @@
 var dbm = require('db-migrate');
 var type = dbm.dataType;
+var Step = require('step');
 
 exports.up = function(db, callback) {
-	db.runSql("ALTER TABLE links DROP CONSTRAINT links_to_post_id_fkey;", callback);
-	db.runSql("ALTER TABLE links ALTER COLUMN to_post_id TYPE text;", callback);
-	db.runSql("ALTER TABLE links RENAME COLUMN to_post_id TO uri;", callback);
+  Step(
+  	function() {
+	  db.runSql("ALTER TABLE links DROP CONSTRAINT links_to_post_id_fkey;", this.parallel());
+	  db.changeColumn("links", "to_post_id", { type: 'text' }, this.parallel());
+  	},
+  	function() {
+      db.renameColumn("links", "to_post_id", "uri", this.parallel());
+  	},
+    callback
+  );
 };
 
 exports.down = function(db, callback) {
-	db.runSql("ALTER TABLE links RENAME COLUMN uri TO to_post_id;", callback);
-	db.runSql("ALTER TABLE links ALTER COLUMN to_post_id TYPE int;", callback);
-	db.runSql("ALTER TABLE links ADD CONSTRAINT links_to_post_id_fkey FOREIGN KEY (to_post_id) REFERENCES posts;", callback);
+  Step(
+  	function() {
+  	  db.renameColumn("links", "uri", "to_post_id", this.parallel());
+	  db.changeColumn("links", "to_post_id", { type: 'int' }, this.parallel());
+  	},
+  	function() {
+	  db.runSql("ALTER TABLE links ADD CONSTRAINT links_to_post_id_fkey FOREIGN KEY (to_post_id) REFERENCES posts;", this.parallel());
+  	},
+    callback
+  );
 };
