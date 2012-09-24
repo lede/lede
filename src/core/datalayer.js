@@ -2,6 +2,16 @@ var FastLegS = require('FastLegS');
 
 // TODO I suspect this only uses one DB connection per process, and we might get better throughput if we had more than one (at least one per worker)
 
+function DatabaseError(message) {
+  this.name = "DatabaseError";
+  this.message = message || "A database error occurred";
+}
+
+DatabaseError.prototype = new Error();
+DatabaseError.prototype.constructor = DatabaseError;
+
+exports.DatabaseError = DatabaseError;
+
 exports.client = FastLegS.connect(settings.dbConnectionParams).client;
 exports.client.client.on('error', function(e) {
   log.fatal("Database connection error: " + e.message);

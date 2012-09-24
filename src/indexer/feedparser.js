@@ -70,7 +70,7 @@ function updateExistingPost(post, source, indexTime, callback) {
   },
   function(err, result) {
     if (err) {
-      callback(new Error("Error while finding existing post: " + err.message));
+      callback(new dataLayer.DatabaseError("Error while finding existing post: " + err.message));
     } else if (result) { // NOTE this section will not execute until we fix the code in checkForUpdatedPosts() to actually give us updated posts instead of only new ones
       var updateFields = {};
 

@@ -70,7 +70,7 @@ function indexFeed(jobParams) {
     }
 
     if (_.isNull(result)) {
-      done(new Error("Source not found in the database"));
+      done(new datalayer.DatabaseError("Source not found in the database"));
       return;
     }
 
