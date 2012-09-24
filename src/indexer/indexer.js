@@ -58,7 +58,7 @@ function incrementFailureCount(source, reason, callback) {
 function indexFeed(jobParams) {
   var job = this;
 
-  log.info("Indexing source " + jobParams.source + ' queue: ' + job.worker.queue);
+  log.info("Indexing source " + jobParams.source + ' from queue ' + job.worker.queue);
 
   dataLayer.Source.findOne(jobParams.source, function(err, result) {
     var done = function(err) {
@@ -183,7 +183,7 @@ function startWorker(queue, name) {
   worker.on('poll', function() { log.trace("Polling resque...")});
 
   // Triggered before a Job is attempted.
-  worker.on('job', function(job) { log.info("Indexing source " + util.inspect(job))});
+  worker.on('job', function(job) { /*log.info("Indexing source " + util.inspect(job))*/});
 
   // Triggered every time a Job errors.
   worker.on('error', function(job) { log.error("Source " + job.source + " error: " + err.message)});

@@ -150,7 +150,9 @@ function discover(fast, jobParams, job) {
                 log.error("Insert of Source failed: " + err.message);
                 job.fail({ exception: err.name, error: err.message });
               } else {
-                log.info("Added " + result.length + " feeds offered by '" + jobParams.url + "'");
+                var numNewFeeds = _.compact(result).length;
+                var numOldFeeds = result.length - numNewFeeds;
+                log.info("Added " + numNewFeeds + " feeds offered by '" + jobParams.url + "'" + (numOldFeeds ? " (ignored " + numOldFeeds + " feeds already in DB)" : ""));
                 job.succeed();
               }
             }
