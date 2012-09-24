@@ -8,6 +8,7 @@ var dataLayer = require('../core/datalayer');
 var _ = require('underscore');
 var os = require('os');
 var queues = require('../core/resque-queues');
+var errors = require('../core/errors.js');
 
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
@@ -38,6 +39,22 @@ function fetchAndParse(source, done) {
   });
 }
 
+function markNotIndexable(source, reason, callback) {
+  log.debug("Marking source " + source.id + " as not indexable due to reason " + reason);
+  dataLayer.Source.update(source.id, { indexable: false, not_indexable_reason_id: reason }, callback);
+}
+
+function incrementFailureCount(source, reason, callback) {
+  source.failure_count += 1;
+  if (source.failure_count > settings.indexer.maxRetries) {
+    markNotIndexable(source, reason, callback);
+  } else {
+    var nextIndexTime = new Date();
+    nextIndexTime.setSeconds(nextIndexTime.getSeconds() + settings.indexer.retryInterval);
+    dataLayer.Source.update(source.id, { failure_count: source.failure_count, next_index_at: nextIndexTime }, callback);
+  }
+}
+
 function indexFeed(jobParams) {
   var job = this;
 
@@ -48,11 +65,29 @@ function indexFeed(jobParams) {
       if (err) {
         log.error("Indexing source " + jobParams.source + ": " + err);
 
-        if (jobParams.callback) {
-          redisJobCompleteCallback(jobParams.callback, false);
+        function finalizeError(finalError) {
+          if (finalError) {
+            log.error("Encountered additional error when handling previous error: " + finalError);
+          }
+
+          if (jobParams.callback) {
+            redisJobCompleteCallback(jobParams.callback, false);
+          }
+
+          job.fail({ exception: err.name, error: err.message });
         }
 
-        job.fail({ exception: err.name, error: err.message });
+        if (err instanceof URIError) {
+          markNotIndexable(result, 1, finalizeError); // insta-kill because a URI error isn't going change over time, it's just unusable
+        } else if (err instanceof errors.ConnectionError) {
+          incrementFailureCount(result, 1, finalizeError);
+        } else if (err instanceof feedfetcher.ContentTypeError) {
+          incrementFailureCount(result, 2, finalizeError);
+        } else if (err instanceof feedfetcher.ResponseSizeError) {
+          incrementFailureCount(result, 7, finalizeError);
+        } else {
+          finalizeError(null);
+        }
       } else {
         log.info("Index of source " + jobParams.source + " succeeded");
 

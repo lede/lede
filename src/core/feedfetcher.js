@@ -5,6 +5,37 @@ var util = require('util');
 var dataLayer = require('./datalayer');
 var _ = require('underscore');
 var mimeParser = require('./mime-parser');
+var errors = require('./errors.js');
+
+// exception used when an otherwise valid response is rejected by the filter
+function ResponseFilteredError(message) {
+  this.name = "ResponseFilteredError";
+  this.message = message || "Response was filtered";
+}
+
+ResponseFilteredError.prototype = new Error();
+ResponseFilteredError.prototype.constructor = ResponseFilteredError;
+exports.ResponseFilteredError = ResponseFilteredError;
+
+// error for when the content type is not something we can use
+function ContentTypeError(message) {
+  this.name = "ContentTypeError";
+  this.message = message || "Content type is invalid or couldn't be determined";
+}
+
+ContentTypeError.prototype = new ResponseFilteredError();
+ContentTypeError.prototype.constructor = ContentTypeError;
+exports.ContentTypeError = ContentTypeError;
+
+// error for when a response is too large
+function ResponseSizeError(message) {
+  this.name = "ResponseSizeError";
+  this.message = message || "Response size is too large or couldn't be determined";
+}
+
+ResponseSizeError.prototype = new ResponseFilteredError();
+ResponseSizeError.prototype.constructor = ResponseSizeError;
+exports.ResponseSizeError = ResponseSizeError;
 
 // getter objects for different protocols
 var getters = {
@@ -138,15 +169,15 @@ function filterSize(response) {
   try {
     var length = parseInt(response.headers['content-length'], 10);
     if (_.isNaN(length) || length == 0) {
-      return new Error("Response does not provide a content-length");
+      return new ResponseSizeError("Response does not provide a content-length");
     } else if (length > settings.currentModule.maxFetchSize) {
-      return new Error("Response is too large: " + length);
+      return new ResponseSizeError("Response is too large: " + length);
     } else {
       log.debug("Content length of " + length + " is under limit of " + settings.currentModule.maxFetchSize);
       return false;
     }
   } catch (ex) {
-    return new Error("Error parsing content-length from response header: " + util.inspect(ex));
+    return new ResponseSizeError("Error parsing content-length from response header: " + util.inspect(ex));
   }
 }
 
@@ -161,11 +192,11 @@ function createContentTypeFilter(contentTypes) {
     var mime = mimeParser.parse(contentType);
 
     if(!mime) {
-      return new Error("Could not parse content type header '" + contentType + "'");
+      return new ContentTypeError("Could not parse content type header '" + contentType + "'");
     }
 
     if (!_.include(contentTypes, mime.mimeType)) {
-      return new Error("Unacceptable Content-type '" + contentType + "'");
+      return new ContentTypeError("Unacceptable Content-type '" + contentType + "'");
     }
     
     return false;

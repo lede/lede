@@ -55,6 +55,8 @@ function updateSourceMetadata(source, parser, indexTime, updated, done) {
   var nextIndexTime = new Date(indexTime);
   nextIndexTime.setSeconds(nextIndexTime.getSeconds() + updateFields.index_interval);
   updateFields.next_index_at = nextIndexTime;
+
+  updateFields.failure_count = 0; // reset failure count since we had a successful parse
   
   log.debug("Updating source " + source.id + ": " + util.inspect(updateFields));
   dataLayer.Source.update(source.id, updateFields, done);
