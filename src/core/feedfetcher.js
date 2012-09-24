@@ -73,23 +73,23 @@ function fetchFeed(source, done, options) {
    * We'll just check it's defined and a string now, but ultimately we should see where these are coming from.
    */
   if(_.isUndefined(source.url) || typeof(source.url) != 'string') {
-    done(new Error("Undefined url passed to discoverer, skipping"));
+    done(new URIError("Undefined url passed to discoverer, skipping"));
     return;
   }
   var requestParams = url.parse(options.urlOverride ? options.urlOverride : source.url);
 
   if (!requestParams.hostname) { // check for invalid hostnames (at this time, that really just means null, but maybe we should make it more robust in the future)
-    done(new Error("Hostname was not specified (or it couldn't be parsed)"));
+    done(new URIError("Hostname was not specified (or it couldn't be parsed)"));
     return;
   }
 
   if (!requestParams.protocol) {
-    done(new Error("Protocol was not specified (or it couldn't be parsed)"));
+    done(new URIError("Protocol was not specified (or it couldn't be parsed)"));
     return;
   }
 
   if (!getters[requestParams.protocol]) {
-    done(new Error("Unknown protocol '" + requestParams.protocol + "'"));
+    done(new URIError("Unknown protocol '" + requestParams.protocol + "'"));
     return;
   }
   
@@ -101,67 +101,76 @@ function fetchFeed(source, done, options) {
 
   // TODO request HEAD and only do a GET if it has been changed
 
-  var request = getters[requestParams.protocol].get(requestParams, function(response) {
-    var bodyData = "";
-    log.debug("Response status code " + response.statusCode);
-    log.debug("Got headers: " + util.inspect(response.headers));
+  try {
+    var request = getters[requestParams.protocol].get(requestParams, function(response) {
+      var bodyData = "";
+      log.debug("Response status code " + response.statusCode);
+      log.debug("Got headers: " + util.inspect(response.headers));
 
-    if (response.statusCode != 200) {
-      switch (response.statusCode) {
-        case 301:
-          log.debug("Source " + options.feedName(source) + " moved permanently (301) from '" + source.url + "' to '" + response.headers['location'] + "'");
+      if (response.statusCode != 200) {
+        switch (response.statusCode) {
+          case 301:
+            log.debug("Source " + options.feedName(source) + " moved permanently (301) from '" + source.url + "' to '" + response.headers['location'] + "'");
 
-          options.urlOverride = response.headers['location'];
-          options.redirectCallback(source, done, options, response.statusCode);
-          break;
-          
-        case 302:
-        case 307:
-          log.debug("Source " + options.feedName(source) + " moved temporarily (" + response.statusCode + ") from '" + source.url + "' to '" + response.headers['location'] + "'");
-          options.urlOverride = response.headers['location'];
-          options.redirectCallback(source, done, options, response.statusCode);
-          break;
+            options.urlOverride = response.headers['location'];
+            options.redirectCallback(source, done, options, response.statusCode);
+            break;
+            
+          case 302:
+          case 307:
+            log.debug("Source " + options.feedName(source) + " moved temporarily (" + response.statusCode + ") from '" + source.url + "' to '" + response.headers['location'] + "'");
+            options.urlOverride = response.headers['location'];
+            options.redirectCallback(source, done, options, response.statusCode);
+            break;
 
-        default:
-          log.debug("Response headers: " + util.inspect(response.headers));
-          done(new Error("Received HTTP status code " + response.statusCode));
-          break;
-      }
-      return;
-    }
-
-    // filter out requests we don't like
-    if (options.requestFilter) {
-      var err = options.requestFilter(response);
-      if (err) {
-        request.abort();
-        done(err);
+          default:
+            log.debug("Response headers: " + util.inspect(response.headers));
+            done(new ConnectionError("Received HTTP status code " + response.statusCode));
+            break;
+        }
         return;
       }
-    }
 
-    response.setEncoding('utf8');
-
-    response.on('data', function (chunk) {
-      try {
-        bodyData += chunk;
-      } catch (e) {
-        log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
-        done(e);
+      // filter out requests we don't like
+      if (options.requestFilter) {
+        var err = options.requestFilter(response);
+        if (err) {
+          request.abort();
+          done(err);
+          return;
+        }
       }
-    });
-    response.on('end', function() {
-      done(null, { source: source, body: bodyData });
-    });
-  }).on('error', function(e) {
-    //console.log("Got error: " + e.message);
-    done(e);
-  });
 
-  request.setTimeout(settings.currentModule.fetchTimeout * 1000, function () {
-    request.abort();
-    done(new Error("Socket timeout"));
-  });
+      response.setEncoding('utf8');
+
+      response.on('data', function (chunk) {
+        try {
+          bodyData += chunk;
+        } catch (e) {
+          log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
+          done(e);
+        }
+      });
+      response.on('end', function() {
+        done(null, { source: source, body: bodyData });
+      });
+    }).on('error', function(e) {
+      //console.log("Got error: " + e.message);
+      var err = new errors.ConnectionError(e.message);
+      err.cause = e;
+      done(err);
+    });
+
+    request.setTimeout(settings.currentModule.fetchTimeout * 1000, function () {
+      request.abort();
+      done(new errors.ConnectionError("Socket timeout"));
+    });
+  } catch (e) {
+    // sometimes this throws (we think) due to https://github.com/joyent/node/issues/3924
+    var err = new errors.ConnectionError(e.message);
+    err.cause = e;
+    done(err);
+  }
 }
 
 // a size filter to be passed as options.requestFilter to fetchFeed()
