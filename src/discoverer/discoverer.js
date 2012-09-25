@@ -3,6 +3,7 @@ log = require('../core/logger').getLogger("discoverer");
 var _ = require('underscore');
 var util = require('util');
 var dataLayer = require('../core/datalayer');
+var validator = require('../core/validator');
 var Step = require('step');
 var feedFetcher = require('../core/feedfetcher');
 var os = require('os');
@@ -141,7 +142,14 @@ function discover(fast, jobParams, job) {
 
                 log.trace("Site offers feed '" + feedUrl + "'");
 
-                addNewSource(feedUrl, fast, callback);
+                validator.checkUrlValid(feedUrl, function(isValid) {
+                  if(isValid) {
+                    addNewSource(feedUrl, fast, callback);
+                  } else {
+                    log.info("URL "+ feedUrl +" has been tossed by the blacklist, not trying to add source");
+                    callback(null, null);
+                  }
+                });
               });
             },
 
