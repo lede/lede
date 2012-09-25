@@ -81,9 +81,9 @@ function indexFeed(jobParams) {
           markNotIndexable(result, 1, finalizeError); // insta-kill because a URI error isn't going change over time, it's just unusable
         } else if (err instanceof errors.ConnectionError) {
           incrementFailureCount(result, 1, finalizeError);
-        } else if (err instanceof feedfetcher.ContentTypeError) {
+        } else if (err instanceof feedFetcher.ContentTypeError) {
           incrementFailureCount(result, 2, finalizeError);
-        } else if (err instanceof feedfetcher.ResponseSizeError) {
+        } else if (err instanceof feedFetcher.ResponseSizeError) {
           incrementFailureCount(result, 7, finalizeError);
         } else {
           finalizeError(null);
