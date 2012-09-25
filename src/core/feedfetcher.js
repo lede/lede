@@ -125,7 +125,7 @@ function fetchFeed(source, done, options) {
 
           default:
             log.debug("Response headers: " + util.inspect(response.headers));
-            done(new ConnectionError("Received HTTP status code " + response.statusCode));
+            done(new errors.ConnectionError("Received HTTP status code " + response.statusCode));
             break;
         }
         return;

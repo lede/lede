@@ -3,6 +3,7 @@ log = require('../core/logger').getLogger("discoverer");
 var _ = require('underscore');
 var util = require('util');
 var dataLayer = require('../core/datalayer');
+var validator = require('../core/validator');
 var Step = require('step');
 var feedFetcher = require('../core/feedfetcher');
 var os = require('os');
@@ -141,7 +142,14 @@ function discover(fast, jobParams, job) {
 
                 log.trace("Site offers feed '" + feedUrl + "'");
 
-                addNewSource(feedUrl, fast, callback);
+                validator.checkUrlValid(feedUrl, function(isValid) {
+                  if(isValid) {
+                    addNewSource(feedUrl, fast, callback);
+                  } else {
+                    log.info("URL "+ feedUrl +" has been tossed from discoverer by blacklist, not trying to add source");
+                    callback(null, null);
+                  }
+                });
               });
             },
 
@@ -150,7 +158,9 @@ function discover(fast, jobParams, job) {
                 log.error("Insert of Source failed: " + err.message);
                 job.fail({ exception: err.name, error: err.message });
               } else {
-                log.info("Added " + result.length + " feeds offered by '" + jobParams.url + "'");
+                var numNewFeeds = _.compact(result).length;
+                var numOldFeeds = result.length - numNewFeeds;
+                log.info("Added " + numNewFeeds + " feeds offered by '" + jobParams.url + "'" + (numOldFeeds ? " (ignored " + numOldFeeds + " feeds already in DB)" : ""));
                 job.succeed();
               }
             }

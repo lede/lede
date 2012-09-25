@@ -124,7 +124,7 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
           }
 
           if (postContentsId === false) { // existing post wasn't found
-            log.info("Identified post to crawl for links");
+            log.debug("Identified post to crawl for links");
 
             var postContent = {
               indexed_at: indexTime,
