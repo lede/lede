@@ -33,5 +33,12 @@
     "password": "ryandbpass",
     "host": "unburythelede.com",
     "database": "dev_ryan"
+  },
+  "dev_test": {
+    "driver": "pg",
+    "user": "test",
+    "password": "testdbpass",
+    "host": "unburythelede.com",
+    "database": "dev_test"
   }
 }
