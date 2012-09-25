@@ -146,7 +146,7 @@ function discover(fast, jobParams, job) {
                   if(isValid) {
                     addNewSource(feedUrl, fast, callback);
                   } else {
-                    log.info("URL "+ feedUrl +" has been tossed by the blacklist, not trying to add source");
+                    log.info("URL "+ feedUrl +" has been tossed from discoverer by blacklist, not trying to add source");
                     callback(null, null);
                   }
                 });

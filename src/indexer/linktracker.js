@@ -52,7 +52,7 @@ function extractLinks(post) {
             log.debug("Enqueing discover job for url " + resolvedUrl);
             queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
           } else {
-            log.info("URL "+ resolvedUrl +" has been tossed by the blacklist, not trying to enqueue");
+            log.info("URL "+ resolvedUrl +" has been tossed from indexer by blacklist, not trying to enqueue");
           }
         });
 
