@@ -26,7 +26,7 @@ function extractLinks(post) {
         var resolvedUrl = href;
 
         // detect relative urls by seeing if the url has a host
-        if(! parsedUrl.host) {
+        if(! parsedUrl.hostname) {
           log.debug("Parsed relative url " + util.inspect(parsedUrl));
 
           //If we have real path info or a real query, try to resolve the url
@@ -52,7 +52,7 @@ function extractLinks(post) {
             log.debug("Enqueing discover job for url " + resolvedUrl);
             queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
           } else {
-            log.info("URL "+ resolvedUrl +" has been tossed by the blacklist, not trying to enqueue");
+            log.info("URL "+ resolvedUrl +" has been tossed from indexer by blacklist, not trying to enqueue");
           }
         });
 
