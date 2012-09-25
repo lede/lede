@@ -20,6 +20,21 @@ function updatePostFields(updateFields, postObject, postParser) {
   updateField('published_at', postParser.getDate());
 }
 
+function calculateIndexInterval(indexInterval, updated) {
+  if (updated) {
+    // tweak index_interval to go a little faster since we got new content
+    return Math.max(Math.round(indexInterval * 0.9), settings.indexer.minIndexInterval);
+  } else {
+    // tweak index_interval to go a little slower since there was no new content
+    return Math.min(Math.round(indexInterval * 1.1), settings.indexer.maxIndexInterval);
+  }
+}
+
+function calculateNextIndexTime(indexInterval, indexTime) {
+  var nextIndexTime = new Date(indexTime);
+  nextIndexTime.setSeconds(nextIndexTime.getSeconds() + updateFields.index_interval);
+}
+
 function updateSourceMetadata(source, parser, indexTime, updated, done) {
   var updateFields = {};
 
@@ -43,18 +58,12 @@ function updateSourceMetadata(source, parser, indexTime, updated, done) {
 
   if (updated) {
     updateFields.unique_content_at = indexTime;
-
-    // tweak index_interval to go a little faster since we got new content
-    updateFields.index_interval = Math.max(Math.round(source.index_interval * 0.9), settings.indexer.minIndexInterval);
   } else {
-    // tweak index_interval to go a little slower since there was no new content
-    updateFields.index_interval = Math.min(Math.round(source.index_interval * 1.1), settings.indexer.maxIndexInterval);
   }
 
   updateFields.indexed_at = indexTime;
-  var nextIndexTime = new Date(indexTime);
-  nextIndexTime.setSeconds(nextIndexTime.getSeconds() + updateFields.index_interval);
-  updateFields.next_index_at = nextIndexTime;
+  updateFields.index_interval = calculateIndexInterval(source.index_interval, updated);
+  updateFields.next_index_at = calculateNextIndexTime(updateFields.index_interval, indexTime);
 
   updateFields.failure_count = 0; // reset failure count since we had a successful parse
   
