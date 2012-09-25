@@ -204,7 +204,7 @@ function parseFeed(source, xml, done) {
 
     var indexTime = new Date();
 
-    var parser = new NodePie(xml, {keepHTMLEntities: false});
+    var parser = new NodePie(xml, {keepHTMLEntities: true});
     parser.init();
 
     checkForUpdatedPosts(source, parser, function(err, updatedPosts) {
