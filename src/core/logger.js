@@ -2,7 +2,7 @@ var log4js = require('log4js');
 
 log4js.configure(settings.log4jsConfig, {});
 
-//var logger = log4js.getLogger('indexer');
+var logger = log4js.getLogger('indexer');
 
 log4js.replaceConsole();
 

@@ -160,6 +160,7 @@ function server_daemon() {
         console.log("Abandoning child that we couldn't kill");
       }
     });
+    
     process.exit(0);
   });
 
