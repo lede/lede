@@ -3,9 +3,17 @@
   <title>Lede</title>
   <link href='http://fonts.googleapis.com/css?family=Andada' rel='stylesheet' type='text/css'>
   <link href='/stylesheets/main.css' media='all' rel='stylesheet' type='text/css'>
+  <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'></script>
+  <script type='text/javascript'>
+    $(function() {
+      $('.logo').fadeIn(500, function() {
+        $('.tagline').fadeIn(500);
+      });
+    });
+  </script>
 </head>
 <body>
-  <div class='logo'>
+  <div class='logo' style='display:none'>
     <div class='mark'>
       <div class='box'></div>
       <div class='line'></div>
@@ -13,6 +21,6 @@
     </div> 
     <h1> Lede </h1>
   </div>
-  <p class='tagline'>don't follow</p>
+  <p class='tagline' style='display:none'>don't follow</p>
 </body>
 </html>
