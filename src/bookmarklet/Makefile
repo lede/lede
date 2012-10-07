@@ -12,7 +12,10 @@ clean:
 
 install: 	build/bundle.js
 					mkdir -p ../web/app/public/bookmarklet/
+					mkdir -p ../web/app/public/bookmarklet/widget
 					cp build/bundle.js ../web/app/public/bookmarklet/bundle.js
+					cp widget/bookmarklet.js ../web/app/public/bookmarklet/widget/bookmarklet.js
+					cp boot.html ../web/app/public/bookmarklet/boot.html
 
 uninstall: 	../web/app/public/bookmarklet/bundle.js
 						rm -rf ../web/app/public/bookmarklet/
