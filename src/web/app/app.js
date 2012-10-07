@@ -13,7 +13,8 @@ var express = require('express')
   , posts_dashboard = require('./controllers/posts_dashboard')
   , sources_dashboard = require('./controllers/sources_dashboard')
   , links_dashboard = require('./controllers/links_dashboard')
-  , links = require('./controllers/links')
+  , link = require('./controllers/link')
+  , post = require('./controllers/post')
   , _ = require('underscore')
   , redis_store = require('connect-redis')(express)
   , redis = require('redis').createClient()
@@ -73,7 +74,9 @@ app.get('/dashboard/total_sources/:days', sources_dashboard.total_sources_by_day
 app.get('/dashboard/total_links', links_dashboard.total_links);
 app.get('/dashboard/total_links/:days', links_dashboard.total_links_by_day);
 
-app.get('/api/links/:from_post_id', links.links_from_post);
+app.get('/api/link/from_post/:from_post_id', link.links_from_post);
+
+app.get('/api/post/:id', post.get);
 
 app.post('/api/user/login', user.login);
 app.post('/api/user/logout', ensure_user, user.logout);
