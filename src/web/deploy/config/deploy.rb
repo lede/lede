@@ -88,6 +88,10 @@ namespace :deploy do
     run "cd #{latest_release}/#{migration_path} && LEDE_DB=production ./node_modules/migrate/bin/migrate"
   end
 
+  task :nuke_db do
+    run "cd #{latest_release}/#{migration_path} && LEDE_DB=production ./node_modules/migrate/bin/migrate down"
+  end
+
   task :rebuild_bookmarklet do
     run "cd #{latest_release}/#{bookmarklet_source_path} && make clean && make && make install"
   end
