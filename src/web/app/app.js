@@ -60,7 +60,7 @@ app.get('/', routes.index);
 
 // super simple handler for lead posts
 // TODO: clean up api routing at some point
-// TODO: only accept PUT - this is just for testing
+// NOTE: we have to accept GET here because we're using image requests as a cross-site hack
 app.all('/api/lede', ensure_user, lede.create);
 
 app.get('/dashboard/total_posts', posts_dashboard.total_posts);
