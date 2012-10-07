@@ -6,16 +6,16 @@
 ### Create a new migration
 
     cd lede/src/db
-    ./node_modules/db-migrate/bin/db-migrate create migration_name 
+    ./node_moduls/migrate/bin/migrate create <migration_name>
 
 
 ### Migrate up
 
     cd lede/src/db
-    ./node_modules/db-migrate/bin/db-migrate up --config database.json -e dev_username
+    LEDE_DB=dev_yourname ./node_modules/migrate/bin/migrate
 
 ### Migrate down
 
     cd lede/src/db
-    ./node_modules/db-migrate/bin/db-migrate down --config database.json -e dev_username
+    LEDE_DB=dev_yourname ./node_modules/migrate/bin/migrate down
     
