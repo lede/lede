@@ -32,7 +32,7 @@ function calculateIndexInterval(indexInterval, updated) {
 
 function calculateNextIndexTime(indexInterval, indexTime) {
   var nextIndexTime = new Date(indexTime);
-  nextIndexTime.setSeconds(nextIndexTime.getSeconds() + updateFields.index_interval);
+  nextIndexTime.setSeconds(nextIndexTime.getSeconds() + indexInterval);
 }
 
 function updateSourceMetadata(source, parser, indexTime, updated, done) {
@@ -58,7 +58,6 @@ function updateSourceMetadata(source, parser, indexTime, updated, done) {
 
   if (updated) {
     updateFields.unique_content_at = indexTime;
-  } else {
   }
 
   updateFields.indexed_at = indexTime;
