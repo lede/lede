@@ -5,7 +5,7 @@ var no_err = require('../helpers/core').no_err;
 
 var table_name = "links";
 
-var links_from_post_id_query_format =  "select distinct l.from_post_id, p.id as to_post_id from links l join posts p on l.uri = p.uri where l.from_post_id = '%s'";
+var links_from_post_id_query_format =  "select distinct l.from_post_id, p.id as to_post_id, p.title, p.uri from links l join posts p on l.uri = p.uri where l.from_post_id = '%s'";
 
 exports.links_from_post = function(req, res) {
   if(req.route.params.from_post_id) {
