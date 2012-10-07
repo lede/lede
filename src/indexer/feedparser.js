@@ -12,12 +12,19 @@ function updatePostFields(updateFields, postObject, postParser) {
     }
   }
 
-  updateField('content', postParser.getContents());
-  updateField('description', postParser.getDescription());
-  updateField('title', postParser.getTitle());
-  updateField('uri', postParser.getPermalink());
-  updateField('author', postParser.getAuthor());
-  updateField('published_at', postParser.getDate());
+  var contents = postParser.getContents();
+  var description = postParser.getDescription();
+  var title = postParser.getTitle();
+  var permalink = postParser.getPermalink();
+  var author = postParser.getAuthor();
+  var date = postParser.getDate();
+
+  updateField('content', contents);
+  updateField('description', description);
+  updateField('title', title);
+  updateField('uri', permalink);
+  updateField('author', author);
+  updateField('published_at', date);
 }
 
 function calculateIndexInterval(indexInterval, updated) {
@@ -165,7 +172,7 @@ function createOrUpdatePosts(source, indexTime, updatedPosts, done) {
   );
 }
 
-// callback takes an array of the items that were updated
+// Callback takes an array of the items that were updated
 function checkForUpdatedPosts(source, parser, callback) {
 
   Step(
@@ -213,26 +220,32 @@ function parseFeed(source, xml, done) {
 
     var indexTime = new Date();
 
-    var parser = new NodePie(xml, {keepHTMLEntities: true});
-    parser.init();
-
-    checkForUpdatedPosts(source, parser, function(err, updatedPosts) {
-      if (err) {
+    var parser = new NodePie(xml, { keepHTMLEntities: false });
+    parser.init(function(err, result) {
+      if(err) {
         done(err);
-      } else {
-        Step(
-          function() {
-            var group = this.group();
-
-            if (updatedPosts.length > 0) {
-              createOrUpdatePosts(source, indexTime, updatedPosts, group());
-            }
-
-            updateSourceMetadata(source, parser, indexTime, (updatedPosts.length > 0), group());
-          },
-          done
-        );
+        return;
       }
+      
+      checkForUpdatedPosts(source, parser, function(err, updatedPosts) {
+        if (err) {
+          done(err);
+        } else {
+          console
+          Step(
+            function() {
+              var group = this.group();
+
+              if (updatedPosts.length > 0) {
+                createOrUpdatePosts(source, indexTime, updatedPosts, group());
+              }
+
+              updateSourceMetadata(source, parser, indexTime, (updatedPosts.length > 0), group());
+            },
+            done
+          );
+        }
+      });
     });
   } catch (e) {
     done(e);
