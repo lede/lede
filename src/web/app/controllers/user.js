@@ -64,9 +64,3 @@ exports.register = function(req, res) {
     res.send({ result: 'An email must be specified to register an account' });
   }
 };
-
-
-
-
-
-
