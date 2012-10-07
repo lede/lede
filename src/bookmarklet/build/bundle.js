@@ -452,13 +452,14 @@ var elem = yarn('bookmarklet.html', ['bookmarklet.css']);
 
 exports.inject = function(target_element) {
   target_element.appendChild(elem);
+  __LEDE_POPDOWN__ = elem;
 };
 
 
 
 });
 
-require.define("/widget/build/yarn.js",function(require,module,exports,__dirname,__filename,process){module.exports = require("yarnify")("_fa9c6d97-",{"/bookmarklet.html":"<div class='pop-down'>\n  <h1>You now lede this story</h1>\n</div>\n","/bookmarklet.css":["f99e2b21","._fa9c6d97-f99e2b21 div._fa9c6d97._fa9c6d97-pop-down {\n  display: none;\n  border-bottom: 1px solid #999;\n  background: #f5f5f5;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  color: #333;\n}\n\n  ._fa9c6d97-f99e2b21 div._fa9c6d97._fa9c6d97-pop-down h1._fa9c6d97 {\n    margin:10px;\n  }\n\n"]});
+require.define("/widget/build/yarn.js",function(require,module,exports,__dirname,__filename,process){module.exports = require("yarnify")("_bd3073bf-",{"/bookmarklet.html":"<div id='pop-down' class='pop-down'>\n  <h1>You now lede this story</h1>\n</div>\n<script type='text/javascript'>\n  setTimeout(function() {\n    $(__LEDE_POPDOWN__).find('div').slideDown();\n    setTimeout(function() {\n      $(__LEDE_POPDOWN__).find('div').slideUp();\n    }, 3000);\n  }, 200);\n</script>\n","/bookmarklet.css":["f1a1d761","._bd3073bf-f1a1d761 div._bd3073bf._bd3073bf-pop-down {\n  display: none;\n  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);\n  background: #f5f5f5;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  color: #333;\n}\n\n  ._bd3073bf-f1a1d761 div._bd3073bf._bd3073bf-pop-down h1._bd3073bf {\n    margin:10px;\n  }\n\n"]});
 
 });
 
