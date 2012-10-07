@@ -1,3 +1,11 @@
-<div class='pop-down'>
+<div id='pop-down' class='pop-down'>
   <h1>You now lede this story</h1>
 </div>
+<script type='text/javascript'>
+  setTimeout(function() {
+    $(__LEDE_POPDOWN__).find('div').slideDown();
+    setTimeout(function() {
+      $(__LEDE_POPDOWN__).find('div').slideUp();
+    }, 3000);
+  }, 200);
+</script>
