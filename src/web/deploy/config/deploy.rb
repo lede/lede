@@ -85,6 +85,7 @@ namespace :deploy do
   end
 
   task :migrate do
+    run "touch #{previous_release}/#{migration_path}/migrations/.migrate && cp #{previous_release}/#{migration_path}/migrations/.migrate #{latest_release}/#{migration_path}/migrations/.migrate"
     run "cd #{latest_release}/#{migration_path} && LEDE_DB=production ./node_modules/migrate/bin/migrate"
   end
 
