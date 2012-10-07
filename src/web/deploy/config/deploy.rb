@@ -85,7 +85,7 @@ namespace :deploy do
   end
 
   task :migrate do
-    run "cd #{latest_release}/#{migration_path} && ./node_modules/db-migrate/bin/db-migrate up --config database.json -e production"
+    run "cd #{latest_release}/#{migration_path} && LEDE_DB=production ./node_modules/migrate/bin/migrate"
   end
 
   task :rebuild_bookmarklet do
