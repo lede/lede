@@ -232,7 +232,6 @@ function parseFeed(source, xml, done) {
         if (err) {
           done(err);
         } else {
-          console
           Step(
             function() {
               var group = this.group();
