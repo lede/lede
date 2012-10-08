@@ -30,7 +30,7 @@ Once nginx is installed, it must be configured to proxy dynamic requests to expr
 
 To get started, edit /etc/nginx/nginx.conf
 
-    $ vim /etc/nginx/nginx.conf
+    $ sudo vim /etc/nginx/nginx.conf
 
 You need to add an upstream declaration to your http block:
 
