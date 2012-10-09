@@ -146,6 +146,9 @@ function fetchFeed(source, done, options) {
       response.on('data', function (chunk) {
         try {
           bodyData += chunk;
+          if(bodyData.length > settings.currentModule.maxFetchSize) {
+            throw "Source lied or didn't specify content length - reading went over the limit, bailing";
+          }
         } catch (e) {
           log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
           done(e);
@@ -177,8 +180,9 @@ function fetchFeed(source, done, options) {
 function filterSize(response) {
   try {
     var length = parseInt(response.headers['content-length'], 10);
-    if (_.isNaN(length) || length == 0) {
-      return new ResponseSizeError("Response does not provide a content-length");
+    if (_.isNaN(length)) {
+      log.debug("Content length unspecified, but we'll read until we hit the limit");
+      return false; // we'll handle unspecified lengths when reading the stream and abort there
     } else if (length > settings.currentModule.maxFetchSize) {
       return new ResponseSizeError("Response is too large: " + length);
     } else {
