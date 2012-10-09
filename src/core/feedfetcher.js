@@ -147,7 +147,7 @@ function fetchFeed(source, done, options) {
         try {
           bodyData += chunk;
           if(bodyData.length > settings.currentModule.maxFetchSize) {
-            throw "Source lied or didn't specify content length - reading went over the limit, bailing";
+            throw "Source lied or didn't specify content length (" + settings.currentModule.maxFetchSize + ") - reading went over the limit, bailing";
           }
         } catch (e) {
           log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
