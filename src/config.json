@@ -41,7 +41,7 @@
   },
 
   "indexer": {
-    "maxFetchSize": 150000,
+    "maxFetchSize": 20000,
     "fetchTimeout": 10,
     "workers": {
       "fast_index,slow_index": 1
@@ -54,7 +54,7 @@
   },
 
   "discoverer": {
-    "maxFetchSize": 200000,
+    "maxFetchSize": 20000,
     "fetchTimeout": 10,
     "workers": {
       "fast_discovery,slow_discovery": 1
