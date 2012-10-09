@@ -103,7 +103,10 @@ function fetchFeed(source, done, options) {
 
   try {
     var request = getters[requestParams.protocol].get(requestParams, function(response) {
-      var bodyData = "";
+      var maxFetchSize = settings.currentModule.maxFetchSize;
+      var bodyData = [];
+      var currentBodySize = 0;
+
       log.debug("Response status code " + response.statusCode);
       log.debug("Got headers: " + util.inspect(response.headers));
 
@@ -145,8 +148,9 @@ function fetchFeed(source, done, options) {
 
       response.on('data', function (chunk) {
         try {
-          bodyData += chunk;
-          if(bodyData.length > settings.currentModule.maxFetchSize) {
+          bodyData.push(chunk);
+          currentBodySize += chunk.length;
+          if(currentBodySize> maxFetchSize) {
             throw "Source lied or didn't specify content length (" + settings.currentModule.maxFetchSize + ") - reading went over the limit, bailing";
           }
         } catch (e) {
@@ -155,7 +159,7 @@ function fetchFeed(source, done, options) {
         }
       });
       response.on('end', function() {
-        done(null, { source: source, body: bodyData });
+        done(null, { source: source, body: bodyData.join('') });
       });
     }).on('error', function(e) {
       //console.log("Got error: " + e.message);
