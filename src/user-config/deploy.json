@@ -47,9 +47,9 @@
   },
 
   "indexer": {
-    "throttleInterval": 32,
+    "throttleInterval": 60,
     "workers": {
-      "fast_index,slow_index": 128
+      "fast_index,slow_index": 32
     }
   },
 
