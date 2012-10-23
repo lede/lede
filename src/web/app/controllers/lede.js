@@ -19,7 +19,7 @@ exports.create = function(req, res) {
 
     // let the client know we're done here.
     console.log('Created a new Lede with ID: ' + results.rows[0].id);
-    res.send({ result: 'Created' });
+    res.sendfile('/public/images/response_pixel.gif');
 
   }));
 
