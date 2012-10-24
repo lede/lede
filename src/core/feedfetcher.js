@@ -158,17 +158,22 @@ function fetchFeed(source, done, options) {
         } catch (e) {
             bodyData = null;
             currentBodySize = null;
-          log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
+          log.error("Error fetching feed: " + util.inspect(e));
           done(e);
         }
       });
 
       response.on('end', function() {
-        if(!bodyData) {
-          throw "Fetched item was larger than the max fetch size of " + settings.currentModule.maxFetchSize;
-        }
+        try {
+          if(!bodyData) {
+            throw "Fetched item was larger than the max fetch size of " + settings.currentModule.maxFetchSize;
+          }
 
-        done(null, { source: source, body: bodyData.join('') });
+          done(null, { source: source, body: bodyData.join('') });
+        } catch (e) {
+          log.error("Error fetching feed: " + util.inspect(e));
+          done(e);
+        }
       });
     }).on('error', function(e) {
       //console.log("Got error: " + e.message);
