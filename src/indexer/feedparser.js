@@ -181,7 +181,7 @@ function checkForUpdatedPosts(source, articles, callback) {
       if (articles.length > 0) {
         dataLayer.Post.find(
           {
-            "uri.in": _.map(articles, function(article) { return article.link; })
+            "uri.in": _.pluck(articles, 'link')
           },
           {
             only: [ 'id', 'uri', 'source_id' ],
