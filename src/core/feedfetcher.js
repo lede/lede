@@ -162,7 +162,12 @@ function fetchFeed(source, done, options) {
           done(e);
         }
       });
+
       response.on('end', function() {
+        if(!bodyData) {
+          throw "Fetched item was larger than the max fetch size of " + settings.currentModule.maxFetchSize;
+        }
+
         done(null, { source: source, body: bodyData.join('') });
       });
     }).on('error', function(e) {
