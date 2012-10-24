@@ -103,7 +103,6 @@ function fetchFeed(source, done, options) {
 
   try {
     var request = getters[requestParams.protocol].get(requestParams, function(response) {
-      var maxFetchSize = settings.currentModule.maxFetchSize;
       var bodyData = [];
       var currentBodySize = 0;
 
@@ -150,10 +149,15 @@ function fetchFeed(source, done, options) {
         try {
           bodyData.push(chunk);
           currentBodySize += chunk.length;
-          if(currentBodySize> maxFetchSize) {
+          if(currentBodySize > settings.currentModule.maxFetchSize) {
+            // Tell the GC to do its thang!!
+            bodyData = null;
+            currentBodySize = null;
             throw "Source lied or didn't specify content length (" + settings.currentModule.maxFetchSize + ") - reading went over the limit, bailing";
           }
         } catch (e) {
+            bodyData = null;
+            currentBodySize = null;
           log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
           done(e);
         }
