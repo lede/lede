@@ -99,11 +99,11 @@ function fetchFeed(source, done, options) {
 
   log.debug("Connecting to: " + util.inspect(requestParams));
 
-  // TODO request HEAD and only do a GET if it has been changed
+  // TODO: request HEAD and only do a GET if it has been changed
+  // TODO: It's possible we should copy the source so it gets GCd ... not sure if it isnt now
 
   try {
     var request = getters[requestParams.protocol].get(requestParams, function(response) {
-      var maxFetchSize = settings.currentModule.maxFetchSize;
       var bodyData = [];
       var currentBodySize = 0;
 
@@ -150,16 +150,34 @@ function fetchFeed(source, done, options) {
         try {
           bodyData.push(chunk);
           currentBodySize += chunk.length;
-          if(currentBodySize> maxFetchSize) {
+          if(currentBodySize > settings.currentModule.maxFetchSize) {
             throw "Source lied or didn't specify content length (" + settings.currentModule.maxFetchSize + ") - reading went over the limit, bailing";
           }
         } catch (e) {
-          log.error("DISCOVERER PARSE ERROR" + util.inspect(e));
+          request.abort();
+          // Tell the GC to do its thang
+          bodyData = null;
+          currentBodySize = null;
+          log.error("Error fetching feed: " + util.inspect(e));
           done(e);
         }
       });
+
       response.on('end', function() {
-        done(null, { source: source, body: bodyData.join('') });
+        try {
+          if(!bodyData) {
+            throw "Fetched item was larger than the max fetch size of " + settings.currentModule.maxFetchSize;
+          }
+
+          done(null, { source: source, body: bodyData.join('') });
+        } catch (e) {
+          log.error("Error fetching feed: " + util.inspect(e));
+          done(e);
+        } finally {
+          // Tell the GC to do its thang
+          bodyData = null;
+          currentBodySize = null;
+        }
       });
     }).on('error', function(e) {
       //console.log("Got error: " + e.message);

@@ -3,7 +3,7 @@ var lede = api;
 
 var graph = Viva.Graph.graph();
 var nodeSize = 24;
-var seed = 22612;
+var seed = 225;
 
 // Set custom nodes appearance
 var graphics = Viva.Graph.View.svgGraphics();
@@ -24,6 +24,11 @@ function addLinks(postId, callback) {
     });
   });
   callback();
+}
+
+function renderGraph() {
+    var renderer = Viva.Graph.View.renderer(graph, {graphics: graphics});
+    renderer.run();
 }
 
 $(function(){
@@ -60,9 +65,5 @@ $(function(){
   }); 
 
   //TODO: get seed from ui input
-  addLinks(seed, function() {
-    //var renderer = Viva.Graph.View.renderer(graph, {graphics: graphics});
-    var renderer = Viva.Graph.View.renderer(graph, {graphics: graphics});
-    renderer.run();
-  });
+  addLinks(seed, renderGraph)
 });

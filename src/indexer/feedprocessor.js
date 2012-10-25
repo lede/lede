@@ -1,4 +1,4 @@
-var ExternalFeedParser = require('feedparser');
+var FeedParser = require('feedparser');
 var dataLayer = require('../core/datalayer');
 var linkTracker = require('./linktracker');
 var _ = require('underscore');
@@ -181,7 +181,7 @@ function checkForUpdatedPosts(source, articles, callback) {
       if (articles.length > 0) {
         dataLayer.Post.find(
           {
-            "uri.in": _.map(articles, function(article) { return article.link; })
+            "uri.in": _.pluck(articles, 'link')
           },
           {
             only: [ 'id', 'uri', 'source_id' ],
@@ -221,7 +221,7 @@ function parseFeed(source, xml, done) {
 
     var indexTime = new Date();
 
-    var parser = new ExternalFeedParser();
+    var parser = new FeedParser();
     parser.parseString(xml, function(err, metadata, articles) {
       if(err) {
         done(err);
