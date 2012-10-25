@@ -150,15 +150,10 @@ function fetchFeed(source, done, options) {
           bodyData.push(chunk);
           currentBodySize += chunk.length;
           if(currentBodySize > settings.currentModule.maxFetchSize) {
-            // Tell the GC to do its thang
-            bodyData = null;
-            currentBodySize = null;
             throw "Source lied or didn't specify content length (" + settings.currentModule.maxFetchSize + ") - reading went over the limit, bailing";
           }
         } catch (e) {
-          // Tell the GC to do its thang
-          bodyData = null;
-          currentBodySize = null;
+          request.abort();
           log.error("Error fetching feed: " + util.inspect(e));
           done(e);
         }
