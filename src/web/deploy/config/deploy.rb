@@ -60,7 +60,7 @@ namespace :deploy do
   task :web_launch do
     update_code
     update_dependencies
-    #rebuild_bookmarklet
+    rebuild_bookmarklet
     migrate
     symlink # FIXME: danger - at this point static assets are updated but dynamic code isn't reloaded
     relink_core
@@ -94,6 +94,7 @@ namespace :deploy do
   end
 
   task :rebuild_bookmarklet do
+    update_bookmarklet_dependencies
     run "cd #{latest_release}/#{bookmarklet_source_path} && make clean && make && make install"
   end
 
@@ -123,6 +124,10 @@ namespace :deploy do
 
   task :update_scheduler_dependencies do
     run "cd #{latest_release}/#{scheduler_path} && npm install"
+  end
+
+  task :update_bookmarklet_dependencies do
+    run "cd #{latest_release}/#{bookmarklet_source_path} && npm install"
   end
 
   task :rolling_restart do
