@@ -154,6 +154,9 @@ function fetchFeed(source, done, options) {
           }
         } catch (e) {
           request.abort();
+          // Tell the GC to do its thang
+          bodyData = null;
+          currentBodySize = null;
           log.error("Error fetching feed: " + util.inspect(e));
           done(e);
         }
