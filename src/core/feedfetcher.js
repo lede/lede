@@ -99,7 +99,8 @@ function fetchFeed(source, done, options) {
 
   log.debug("Connecting to: " + util.inspect(requestParams));
 
-  // TODO request HEAD and only do a GET if it has been changed
+  // TODO: request HEAD and only do a GET if it has been changed
+  // TODO: It's possible we should copy the source so it gets GCd ... not sure if it isnt now
 
   try {
     var request = getters[requestParams.protocol].get(requestParams, function(response) {
