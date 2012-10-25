@@ -3,7 +3,7 @@ settings = require('../core/settings').get("indexer");
 log = require('../core/logger').getLogger("indexer");
 var util = require('util');
 var feedFetcher = require('../core/feedfetcher');
-var feedParser = require('./feedparser');
+var feedProcessor = require('./feedprocessor');
 var dataLayer = require('../core/datalayer');
 var _ = require('underscore');
 var os = require('os');
@@ -34,7 +34,7 @@ function fetchAndParse(source, done) {
     if (err) {
       done(err);
     } else {
-      feedParser.parseFeed(results.source, results.body, done);
+      feedProcessor.parseFeed(results.source, results.body, done);
     }
   });
 }

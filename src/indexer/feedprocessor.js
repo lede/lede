@@ -1,4 +1,4 @@
-var ExternalFeedParser = require('feedparser');
+var FeedParser = require('feedparser');
 var dataLayer = require('../core/datalayer');
 var linkTracker = require('./linktracker');
 var _ = require('underscore');
@@ -221,7 +221,7 @@ function parseFeed(source, xml, done) {
 
     var indexTime = new Date();
 
-    var parser = new ExternalFeedParser();
+    var parser = new FeedParser();
     parser.parseString(xml, function(err, metadata, articles) {
       if(err) {
         done(err);
