@@ -459,7 +459,7 @@ exports.inject = function(target_element) {
 
 });
 
-require.define("/widget/build/yarn.js",function(require,module,exports,__dirname,__filename,process){module.exports = require("yarnify")("_531410c8-",{"/bookmarklet.html":"<div id='pop-down' class='pop-down'>\n  <h1>You now lede this story</h1>\n</div>\n<script type='text/javascript'>\n  setTimeout(function() {\n    $(__LEDE_POPDOWN__).find('div').slideDown();\n    setTimeout(function() {\n      $(__LEDE_POPDOWN__).find('div').slideUp();\n    }, 3000);\n  }, 200);\n</script>\n","/bookmarklet.css":["8989d9a9","._531410c8-8989d9a9 div._531410c8._531410c8-pop-down {\n  display: none;\n  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);\n  background: #f5f5f5;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  color: #333;\n}\n\n  ._531410c8-8989d9a9 div._531410c8._531410c8-pop-down h1._531410c8 {\n    margin:10px;\n  }\n\n"]});
+require.define("/widget/build/yarn.js",function(require,module,exports,__dirname,__filename,process){module.exports = require("yarnify")("_125f9226-",{"/bookmarklet.html":"<div id='pop-down' class='pop-down'>\n  <h1>You now lede this story</h1>\n</div>\n<script type='text/javascript'>\n  setTimeout(function() {\n    $(__LEDE_POPDOWN__).find('div').slideDown();\n    setTimeout(function() {\n      $(__LEDE_POPDOWN__).find('div').slideUp();\n    }, 3000);\n  }, 200);\n</script>\n","/bookmarklet.css":["066acf1f","._125f9226-066acf1f div._125f9226._125f9226-pop-down {\n  display: none;\n  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);\n  background: #f5f5f5;\n  position: absolute;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  color: #333;\n}\n\n  ._125f9226-066acf1f div._125f9226._125f9226-pop-down h1._125f9226 {\n    margin:10px;\n  }\n\n"]});
 
 });
 

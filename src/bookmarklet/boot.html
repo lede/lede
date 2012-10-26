@@ -1,7 +1,0 @@
-<html>
-  <head></head>
-  <body style='height:10000px;'>
-    <h1> Bookmarklet Tester </h1>
-    <a href="javascript:(function(){var js_loader = function(source) {var script = document.createElement('SCRIPT');script.type = 'text/javascript';script.src = source;document.getElementsByTagName('head')[0].appendChild(script);}; js_loader('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');js_loader('http://localhost:8080/bookmarklet/bundle.js');setTimeout(function() { var img = new Image(); var query = '?target=' + encodeURIComponent(window.location.href) + '&title=' + encodeURIComponent(document.title) + '&no_cache=' + Math.random(); img.src = 'http://localhost:8080/api/lede' + query; document.body.appendChild(img)}, 500)})();"> Lede This </a>
-  </body>
-</html>
