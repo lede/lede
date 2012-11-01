@@ -1,5 +1,9 @@
-Hello, {{firstname}} here are the new Ledes you requested as of 5/24/2034
+Hey {{firstname}}! Welcome to Lede.
 <br>
-Lede 1: Some sick story about a boy who cried wolf and then a {{animal}} ate him.
-<br>
-Lede 2: A new technology has been implemented to scrape the {{things}} from the earth.
+Based your interest, we think that you might enjoy the following Ledes.
+
+<ul>
+{{#each ledes}}
+  <li><a href="{{this.url}}" alt="{{this.title}}">{{this.title}}</a></li>
+{{/each}}
+</ul>

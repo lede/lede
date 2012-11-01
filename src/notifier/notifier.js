@@ -1,28 +1,46 @@
-var email = require('mailer');
-var settings = require('../core/settings');
+var nodemailer = require('nodemailer');
+settings = require('../core/settings').get("indexer");
+log = require('../core/logger').getLogger("indexer");
+var util = require('util');
 var dataLayer = require('../core/datalayer');
+var _ = require('underscore');
+var errors = require('../core/errors.js');
+var handlebars = require('handlebars');
+var fs = require('fs');
 
-var view = {
-  firstname: 'Jon',
-  animal: 'shark',
-  things: 'tables'
+var source = fs.readFileSync('views/notification.hjs', 'utf8');
+
+var template = handlebars.compile(source);
+var data = {
+  firstname: 'Justin',
+  ledes: [
+    {url: 'https://www.google.com',title: 'Google!'},
+    {url: 'https://www.poop.com',title: 'Poop!'},
+    {url: 'https://www.apple.com',title: 'Apple!'}
+  ]
+};
+var result = template(data);
+
+var smtpTransport = nodemailer.createTransport("SMTP",{
+  service: "SendGrid",
+  auth: {
+    user: settings.notifier.username,
+    pass: settings.notifier.password
+  }
+});
+
+var mailOptions = {
+  from: 'jon@unburythelede.com',
+  to: 'justin@unburythelede.com',
+  subject: 'Lede Notifier: Test from development',
+  html: result
 };
 
-email.send({
-  host: settings.notifier.host,
-  port: settings.notifier.port,
-  domain: settings.notifier.domain,
-  authentication: settings.notifier.authentication,
-  username: settings.notifier.username,
-  password: settings.notifier.password,
-  template: 'views/digest.hjs',
-  data: view,
-  to: 'justin@unburythelede.com',
-  from: 'jon@unburythelede.com',
-  subject: 'Lede Notifier: Test from development',
-},
-function(err, res){
-  if(err){
+smtpTransport.sendMail(mailOptions, function(err, res) {
+  if(err) {
     console.log(err);
+  } else {
+    console.log("Message sent: " + res.message);
   }
+  smtpTransport.close();
 });
