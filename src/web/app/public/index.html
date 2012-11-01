@@ -80,7 +80,9 @@
           <a href='#' id='signup-button' class='button'> Ready! </a>
         </li>
         <li style='display:none' id='step-2'>
-          Drag the <a href='#' id='bookmarklet' class='button'> Lede This! </a> button to your bookmarklet bar.
+          Drag the
+          <a href="javascript:(function(){var js_loader = function(source) {var script = document.createElement('SCRIPT');script.type = 'text/javascript';script.src = source;document.getElementsByTagName('head')[0].appendChild(script);}; js_loader('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');js_loader('http://unburythelede.com/bookmarklet/bundle.js');setTimeout(function() { var img = new Image(); var query = '?target=' + encodeURIComponent(window.location.href) + '&title=' + encodeURIComponent(document.title) + '&no_cache=' + Math.random(); img.src = 'http://unburythelede.com/api/lede' + query; document.body.appendChild(img)}, 500)})();" class='button'> Lede This! </a>
+          to your bookmarklet bar.
         </li>
         <li style='display:none' id='step-3'>
           When you read something you like in your daily browsing, click the bookmarklet.
