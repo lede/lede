@@ -98,3 +98,7 @@ a.button {
 a.button:hover {
   text-decoration: none;
 }
+
+div.thanks p {
+  font-size: 1.2em;
+}
