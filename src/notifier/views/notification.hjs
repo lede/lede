@@ -1,5 +1,3 @@
-Hey {{firstname}}! Welcome to Lede.
-<br>
 Based your interest, we think that you might enjoy the following Ledes.
 
 <ul>
@@ -7,3 +5,8 @@ Based your interest, we think that you might enjoy the following Ledes.
   <li><a href="{{uri}}" alt="{{title}}">{{title}}</a></li>
 {{/ledes}}
 </ul>
+<br>
+<br>
+<br>
+<br>
+<!--Lede. Don't Follow.-->

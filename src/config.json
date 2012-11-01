@@ -30,6 +30,10 @@
       {
         "category": "recommender",
         "type": "console"
+      },
+      {
+        "category": "notifier",
+        "type": "console"
       }
     ],
     "levels": {
@@ -37,7 +41,8 @@
       "scheduler": "INFO",
       "discoverer": "INFO",
       "web": "INFO",
-      "recommender": "INFO"
+      "recommender": "INFO",
+      "notifier": "INFO"
     }
   },
 
@@ -67,6 +72,7 @@
   },
 
   "notifier": {
+    "service": "SendGrid",
     "host": "smtp.sendgrid.net",
     "port": "587",
     "domain": "unburythelede.com",
