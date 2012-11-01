@@ -7,14 +7,20 @@ var _ = require('underscore');
 function generateDailyEmails(numberOfLedes) {
 	// Get all users
 
-	// For each user:
-	// <async> getLedesForUser, 
+	// For each unique user:
+	// <async> fetchLedesForUser (callback: fetchLedesforUser)
 
 } 
 
-function getLedesForUser(user, getRelevantPostsForLead) {
-
+function fetchLedesForUser(user, resolveLedesCallback) {
+  // For the given user, get all the ledes from the database (callback: resolveLedesToPosts)
 }
+
+function resolveLedesToPosts(ledes, getTopRelatedPosts) {
+  // 
+}
+
+
 
 // Handle top-level exceptions
 process.on('uncaughtException',function(error) {
