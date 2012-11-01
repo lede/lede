@@ -16,14 +16,22 @@ function extractLinks(post) {
       }
 
       // might want to directly reference the attribs instead of just links
-      var links = select(dom, 'a');
-      var attribs = _.pluck(links, "attribs");
+      var anchors = select(dom, 'a');
+      //log.info(util.inspect(links[0]));
+      links = _.compact(_.map(anchors, function(link) {
+        if ('attribs' in link && 'href' in link.attribs) {
+          return { text: link.children[0].data, href: link.attribs.href };
+        } else {
+          return null;
+        }
+      }));
+      /*var attribs = _.pluck(links, "attribs");
       var hrefs = _.pluck(_.compact(attribs), "href");
-      hrefs = _.compact(hrefs);
+      hrefs = _.compact(hrefs);*/
 
-      _.each(hrefs, function(href) {
-        var parsedUrl = url.parse(href);
-        var resolvedUrl = href;
+      _.each(links, function(link) {
+        var parsedUrl = url.parse(link.href);
+        var resolvedUrl = link.href;
 
         // detect relative urls by seeing if the url has a host
         if(! parsedUrl.hostname) {
@@ -32,9 +40,9 @@ function extractLinks(post) {
           //If we have real path info or a real query, try to resolve the url
           if(parsedUrl.pathname || parsedUrl.query) {
             log.debug("Created resolved url " + resolvedUrl);
-            resolvedUrl = url.resolve(post.uri, href);
+            resolvedUrl = url.resolve(post.uri, link.href);
           } else {
-            log.debug("Failed to resolve url " + href);
+            log.debug("Failed to resolve url " + link.href);
             resolvedUrl = null;
           }
         }
@@ -48,7 +56,7 @@ function extractLinks(post) {
         validator.checkUrlValid(resolvedUrl, function(isValid) {
           if(isValid) {
             log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
-            addLink(post.id, resolvedUrl);
+            addLink(post.id, link.text, resolvedUrl);
             log.debug("Enqueing discover job for url " + resolvedUrl);
             queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl});
           } else {
@@ -66,9 +74,10 @@ function extractLinks(post) {
   }
 }
 
-function addLink(postId, url) {
+function addLink(postId, linkText, url) {
   var linkContent = {
     from_post_id: postId,
+    link_text: linkText,
     uri: url
   };
 
