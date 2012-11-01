@@ -10,13 +10,14 @@ exports.create = function(req, res) {
   // ensure we have a valid request
   if(!req.body.target) {
     // invalid request, say so:
+    res.status = 500;
     res.send({ result: 'Failed', message: 'Not all required request fields were present.', original_request: req.body });
     return;
   }
 
   
   // create a Lede that points at the post we either created or found
-  Lede.create({ post_id: req.body.target, user_id: req.session.user_id }, no_err(res, function(results) {
+  Lede.create({ post_id: req.body.target, user_id: req.body.user.id }, no_err(res, function(results) {
 
     // let the client know we're done here.
     console.log('Created a new Lede with ID: ' + results.rows[0].id);
