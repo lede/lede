@@ -131,6 +131,8 @@ function fetchFeed(source, done, options) {
             done(new errors.ConnectionError("Received HTTP status code " + response.statusCode));
             break;
         }
+
+        request.abort();
         return;
       }
 
