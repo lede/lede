@@ -60,9 +60,9 @@ namespace :deploy do
   task :web_launch do
     update_code
     update_dependencies
-    rebuild_bookmarklet
     migrate
     symlink # FIXME: danger - at this point static assets are updated but dynamic code isn't reloaded
+    rebuild_bookmarklet
     relink_core
     fast_restart
   end
