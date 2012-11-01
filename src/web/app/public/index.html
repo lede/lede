@@ -21,7 +21,7 @@
       function register() {
         $.ajax('/api/user/register', {
           data: {
-            'email': $('#email').val()
+            'user_email': $('#email').val()
           },
           type: 'PUT',
           success: function() {
