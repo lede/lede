@@ -45,7 +45,7 @@ h1 {
 div.logo {
   overflow: hidden;
   height: 180px;
-  width: 700px;
+  width: 520px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 100px;
@@ -53,7 +53,7 @@ div.logo {
 
 p.tagline {
   font-size: 60px;
-  width: 700px;
+  width: 530px;
   margin-top: -20px;
   margin-left: 30%;
   color: #555;
