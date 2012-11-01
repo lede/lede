@@ -6,12 +6,12 @@ var crypto = require('crypto');
 function randomPass() {
   var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
   var string_length = 8;
-  var randomstring = '';
+  var random_string = '';
   for (var i = 0; i < string_length; i++) {
       var rnum = Math.floor(Math.random() * chars.length);
-      randomstring += chars.substring(rnum, rnum + 1);
+      random_string += chars.substring(rnum, rnum + 1);
   }
-  return randomString;
+  return random_string;
 }
 
 // FIXME: currently insecure login, will let you access any account with a username
