@@ -33,16 +33,14 @@
         evt.preventDefault();
       });
 
-      $('a#bookmarklet').bind('drag dragstart', function(evt) {
+      $('a#bookmarklet').bind('dragend', function(evt) {
+        $('#step-3').fadeIn(500);
         setTimeout(function() {
-          $('#step-3').fadeIn(500);
+          $('#step-4').fadeIn(500);
           setTimeout(function() {
-            $('#step-4').fadeIn(500);
-            setTimeout(function() {
-              $('.thanks').fadeIn(500);
-            }, 1000);
-          }, 2300);
-        }, 1000);
+            $('.thanks').fadeIn(500);
+          }, 1000);
+        }, 2300);
       });
     });
   </script>
