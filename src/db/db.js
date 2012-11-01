@@ -16,4 +16,4 @@ exports.run = function(query, cb) {
       });
     }
   });
-}
+};

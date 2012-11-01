@@ -37,7 +37,7 @@
   },
 
   "scheduler": {
-    "checkInterval": 60
+    "checkInterval": 36000
   },
 
   "indexer": {
