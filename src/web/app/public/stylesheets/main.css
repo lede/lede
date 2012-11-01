@@ -102,3 +102,7 @@ a.button:hover {
 div.thanks p {
   font-size: 1.4em;
 }
+
+div.fun {
+  margin-top: 60px;
+}
