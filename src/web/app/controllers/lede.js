@@ -10,6 +10,7 @@ exports.create = function(req, res) {
   // ensure we have a valid request
   if(!req.body.target) {
     // invalid request, say so:
+    res.status = 500;
     res.send({ result: 'Failed', message: 'Not all required request fields were present.', original_request: req.body });
     return;
   }
