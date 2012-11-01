@@ -1,5 +1,18 @@
 var User = require('../../../core/datalayer').User;
 var no_err = require('../helpers/core').no_err;
+var crypto = require('crypto');
+
+// HACK: break this out into some util library
+function randomPass() {
+  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+  var string_length = 8;
+  var random_string = '';
+  for (var i = 0; i < string_length; i++) {
+      var rnum = Math.floor(Math.random() * chars.length);
+      random_string += chars.substring(rnum, rnum + 1);
+  }
+  return random_string;
+}
 
 // FIXME: currently insecure login, will let you access any account with a username
 // just for testing
@@ -52,7 +65,10 @@ exports.register = function(req, res) {
       } else {
 
         // create the new user
-        User.create({ email: req.body.user_email }, no_err(res, function(created_users) {
+        password = randomPass(); // HACK: send random password to user in email
+        sha_sum = crypto.createHash('sha1');
+        sha_sum.update(password);
+        User.create({ email: req.body.user_email, password_hash: sha_sum.digest('hex')  }, no_err(res, function(created_users) {
           res.send({ result: 'User created for ' + req.body.user_email });
         }));
       }
