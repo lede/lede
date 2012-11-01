@@ -69,6 +69,7 @@ exports.register = function(req, res) {
         sha_sum = crypto.createHash('sha1');
         sha_sum.update(password);
         User.create({ email: req.body.user_email, password_hash: sha_sum.digest('hex')  }, no_err(res, function(created_users) {
+          req.session.user_id = created_users.rows[0].id;
           res.send({ result: 'User created for ' + req.body.user_email });
         }));
       }

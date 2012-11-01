@@ -1,4 +1,4 @@
-SERVER_ADDRESS=localhost
+SERVER_ADDRESS=unburythelede.com
 
 all: build/bundle.js boot.html
 

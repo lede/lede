@@ -3,7 +3,7 @@ Hey {{firstname}}! Welcome to Lede.
 Based your interest, we think that you might enjoy the following Ledes.
 
 <ul>
-{{#each ledes}}
-  <li><a href="{{this.url}}" alt="{{this.title}}">{{this.title}}</a></li>
-{{/each}}
+{{#ledes}}
+  <li><a href="{{uri}}" alt="{{title}}">{{title}}</a></li>
+{{/ledes}}
 </ul>
