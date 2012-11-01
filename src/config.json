@@ -26,13 +26,18 @@
       {
         "category": "web",
         "type": "console"
+      },
+      {
+        "category": "recommender",
+        "type": "console"
       }
     ],
     "levels": {
       "indexer": "INFO",
       "scheduler": "INFO",
       "discoverer": "INFO",
-      "web": "INFO"
+      "web": "INFO",
+      "recommender": "INFO"
     }
   },
 
@@ -68,6 +73,9 @@
     "authentication": "login",
     "username": "lede",
     "password": "Passw0rd!"
+  },
+
+  "recommender": {
   },
 
   "defaultSourceIndexInterval": 3600

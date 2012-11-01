@@ -32,7 +32,7 @@ div.mark div.line {
   border-radius: 4px;
 }
 
-h1 {
+div.logo h1 {
   float: left;
   clear: none;
   margin: 0px;
@@ -60,4 +60,49 @@ p.tagline {
   letter-spacing: 0.29em; 
   margin-left: auto;
   margin-right: auto;
+}
+
+div.signup-wrapper {
+ width: 510px;
+ margin: 60px auto;
+}
+
+div.signup-wrapper ol {
+  font-size: 1.4em;
+  line-height: 1.2em;
+}
+
+div.signup-wrapper li {
+  margin-bottom: 1.2em;
+}
+
+input {
+  border: 1px solid #ddd;
+  box-shadow: 0px 0px 2px rgba(0,0,0,0.5) inset;
+  padding: 3px;
+  font-size: 0.8em;
+}
+
+a.button {
+  padding: 5px 10px;
+  background: #C80815;
+  color: #fff;
+  box-shadow: 0px 1px rgba(255,255,255,0.3) inset, 0px -2px rgba(0,0,0,0.5) inset;
+  text-shadow: 0px -1px rgba(0,0,0,0.3);
+  border-radius: 3px;
+  text-decoration: none;
+  font-size: 0.8em;
+  margin-right: 5px;
+}
+
+a.button:hover {
+  text-decoration: none;
+}
+
+div.thanks p {
+  font-size: 1.4em;
+}
+
+div.fun {
+  margin-top: 60px;
 }

@@ -27,10 +27,23 @@
           },
           type: 'PUT',
           success: function() {
-            $('.signup-wrapper').html('<h1> Thanks! </h1>');
           }
         });
+        $('#step-2').fadeIn(500);
         evt.preventDefault();
+      });
+
+      $('a#bookmarklet').bind('dragend', function(evt) {
+        $('#step-3').fadeIn(500);
+        setTimeout(function() {
+          $('#step-4').fadeIn(500);
+          setTimeout(function() {
+            $('.thanks').fadeIn(500);
+            setTimeout(function() {
+              $('.fun').fadeIn(500);
+            }, 15000);
+          }, 1000);
+        }, 2300);
       });
     });
   </script>
@@ -48,12 +61,36 @@
     <p class='tagline' style='display:none'>don't follow</p>
   </div>
   <div class='signup-wrapper' style='display:none'>
-    <h1> Start to lede. </h1>
-    <h2> This is a subheading </h2>
+    <h1> Thanks for helping us develop Lede! </h1>
+    <h2> To get started: </h2>
     <form id='signup'>
-      <input type='text' id='email' placeholder='email'> </input>
-      <a href='#' id='signup-button'> Get Started </a>
+      <ol>
+        <li> 
+          Enter your
+          <input type='text' id='email' placeholder='email'></input>
+          <a href='#' id='signup-button' class='button'> Ready! </a>
+        </li>
+        <li style='display:none' id='step-2'>
+          Drag the <a href='#' id='bookmarklet' class='button'> Lede This! </a> button to your bookmarklet bar.
+        </li>
+        <li style='display:none' id='step-3'>
+          When you read something you like in your daily browsing, click the bookmarklet.
+        </li>
+      </ol>
     </form>
+    <div class='thanks' style='display:none'>
+      <p>
+        In return we'll deliver a special package to your inbox each morning.
+        <br/><br/>
+        Cheers!
+        <br/>
+        &nbsp;&nbsp;&nbsp;&mdash; The Lede Team
+      </p>
+    </div>
+    <div class='fun' style='display:none'>
+      <h2> What are you still doing here? </h2>
+      <h3> Go read something! </h3>
+    </div>
   </div>
 </body>
 </html>
