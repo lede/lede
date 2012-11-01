@@ -39,7 +39,10 @@
           $('#step-3').fadeIn(500);
           setTimeout(function() {
             $('#step-4').fadeIn(500);
-          }, 3000);
+            setTimeout(function() {
+              $('.thanks').fadeIn(500);
+            }, 1000);
+          }, 2300);
         }, 1000);
       });
     });
@@ -78,6 +81,11 @@
         </li>
       </ol>
     </form>
+    <h2 class='thanks' style='display:none'> 
+      Cheers!
+      <br/>
+      &nbsp;&nbsp;&nbsp;- The Lede Team
+    </h2>
   </div>
 </body>
 </html>
