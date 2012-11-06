@@ -9,6 +9,7 @@ var express = require('express')
   , routes = require('./routes')
   , http = require('http')
   , path = require('path')
+  , util = require('util')
   , lede = require('./controllers/lede')
   , posts_dashboard = require('./controllers/posts_dashboard')
   , sources_dashboard = require('./controllers/sources_dashboard')
@@ -85,4 +86,7 @@ app.put('/api/user/register', user.register);
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));
+  if(process.env['DEBUG']) {
+    log.info("Using settings: " + util.inspect(settings));
+  }
 });
