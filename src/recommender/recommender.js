@@ -19,9 +19,10 @@ function generateDailyEmails(numberOfLedes, done) {
       log.error('Error getting user ids: ' + err);
     } else {
       log.info('Got result from user id lookup, found : ' + util.inspect(result.rows));
+      // HACK: use step or something similar here - also note this wouldn't be necessary at all if we weren't getting magically daemonized by some unseen evil in the settings stuff
       var outstanding = result.rows.length;
       _.each(
-        _.map(result.rows, function(row) { return row.id; }),
+        _.pluck(result.rows, 'id'),
         function(userId) { 
           fetchLedesForUser(userId, numberOfLedes, function() {
             outstanding--;
@@ -45,7 +46,7 @@ function fetchLedesForUser(userId, limit, done) {
       log.error('Error finding backlinks for user: ' + userId + ' : ' + err);
     } else {
       log.info('Sending email to ' + userId + ' with : ' + result.rows.length + ' links');
-      notifier.send_daily(userId, _.map(result.rows, function(row) { return row.id; }));
+      notifier.send_daily(userId, _.pluck(result.rows, 'id'));
     }
     done();
   });
