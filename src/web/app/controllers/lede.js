@@ -4,13 +4,15 @@ var _ = require('underscore');
 var util = require('util');
 var no_err = require('../helpers/core').no_err;
 
+
 exports.create = function(req, res) {
-  
+
   // clean this up, but:
   // ensure we have a valid request
   if(!req.body.target) {
     // invalid request, say so:
-    res.status = 500;
+    log.warn('Malformed bookmarklet request: ' + util.inspect(req.body) );
+    res.status(500);
     res.send({ result: 'Failed', message: 'Not all required request fields were present.', original_request: req.body });
     return;
   }

@@ -20,7 +20,7 @@ exports.login = function(req, res) {
   if(req.body.user_email) {
     User.findOne({email: req.body.user_email}, no_err(res, function(user) {
       if(!user) {
-        res.status = 500;
+        res.status(500);
         res.send({ result: 'Specified username does not exist' });
       } else {
         req.session.user_id = user.id;
@@ -28,7 +28,7 @@ exports.login = function(req, res) {
       }
     }));
   } else {
-    res.status = 500;
+    res.status(500);
     res.send({ result: 'User name is required but was not specified' });
   }
 };
@@ -60,7 +60,7 @@ exports.register = function(req, res) {
 
       // duplicate user, yell
       if(user) {
-        res.status = 500;
+        res.status(500);
         res.send({ result: 'Specified user email already exists, not re-registering.' });
       } else {
 
@@ -77,7 +77,7 @@ exports.register = function(req, res) {
   } else {
 
     // yell about missing required email param
-    res.status = 500;
+    res.status(500);
     res.send({ result: 'An email must be specified to register an account' });
   }
 };
