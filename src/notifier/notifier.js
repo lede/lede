@@ -57,9 +57,9 @@ function generate_welcome_options (user,temp_password) {
   var mail_html = template({password: temp_password, username: user.email});
 
   var mail_options = {
-    from: "jon@unburythelede.com",
+    from: "hello@unburythelede.com",
     to: user.email,
-    subject: "Test from Dev: Lede",
+    subject: "Welcome to Lede!",
     html: mail_html
   };
 
