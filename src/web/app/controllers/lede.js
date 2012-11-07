@@ -4,6 +4,8 @@ var _ = require('underscore');
 var util = require('util');
 var no_err = require('../helpers/core').no_err;
 var path = require('path');
+var queues = require('../../../core/resque-queues');
+
 
 
 exports.create = function(req, res) {
@@ -20,6 +22,8 @@ exports.create = function(req, res) {
 
   log.info('Bookmarklet request looks ok, processing...');
 
+  // don't pass parent id since there's no meaning to it here and discoverer seems to ignore it anyway
+  queues.fastDiscover.enqueue({ parentId: null, url: req.query.target});
   
   // create a Lede that points at the post we either created or found
   Lede.create({ uri: req.query.target, user_id: req.body.user.id }, no_err(res, function(results) {
