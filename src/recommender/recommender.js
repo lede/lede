@@ -7,10 +7,10 @@ var notifier = require('../notifier/notifier');
 var util = require('util');
 
 function backlinksQuery(userId, limit) {
-  return "SELECT posts.id FROM posts JOIN links ON links.from_post_id = posts.id JOIN ledes ON links.uri = ledes.uri WHERE ledes.user_id = " + parseInt(userId) + " AND links.created_at > now() - interval '1 day' ORDER BY links.created_at DESC LIMIT " + parseInt(limit);
+  return "SELECT posts.id FROM posts JOIN links ON links.from_post_id = posts.id JOIN ledes ON links.uri = ledes.uri WHERE ledes.user_id = " + userId + " AND (links.created_at > now() - interval '1 day') ORDER BY links.created_at DESC LIMIT " + limit;
 }
 
-function generateDailyEmails(numberOfLedes) {
+function generateDailyEmails(numberOfLedes, done) {
 	// Get all users
   log.info('Starting email generation process for all users...');
 
@@ -19,29 +19,36 @@ function generateDailyEmails(numberOfLedes) {
       log.error('Error getting user ids: ' + err);
     } else {
       log.info('Got result from user id lookup, found : ' + util.inspect(result.rows));
+      // HACK: use step or something similar here - also note this wouldn't be necessary at all if we weren't getting magically daemonized by some unseen evil in the settings stuff
+      var outstanding = result.rows.length;
       _.each(
-        _.map(result.row, function(row) { return row['id']; }),
+        _.pluck(result.rows, 'id'),
         function(userId) { 
-          log.info('Fetching ledes for user: ' + userId);
-          fetchLedesForUser(userId, numberOfLedes); 
+          fetchLedesForUser(userId, numberOfLedes, function() {
+            outstanding--;
+            if(outstanding === 0) {
+              done();
+            }
+          });
         }
       );
-      log.info('Done sending daily emails!');
+      if(outstanding === 0) { done(); }
     }
   });
 } 
 
-function fetchLedesForUser(userId, limit) {
+function fetchLedesForUser(userId, limit, done) {
 
   log.info('Fetching ledes for user: ' + userId);
 
-  orm.emit('query', backLinksQuery(userId, limit), function(err, result) {
+  orm.emit('query', backlinksQuery(userId, limit), function(err, result) {
     if(err) {
       log.error('Error finding backlinks for user: ' + userId + ' : ' + err);
     } else {
       log.info('Sending email to ' + userId + ' with : ' + result.rows.length + ' links');
-      notifier.send_daily(userId, _.map(result.rows, function(row) { return row['id']; }));
+      notifier.send_daily(userId, _.pluck(result.rows, 'id'));
     }
+    done();
   });
 }
 
@@ -56,4 +63,9 @@ process.on('uncaughtException',function(error) {
   }, 10000);
 });
 
-generateDailyEmails(settings.numberOfPosts);
+var NUMBER_OF_POSTS_PER_EMAIL = 3; // HACK: get from settings
+
+generateDailyEmails(NUMBER_OF_POSTS_PER_EMAIL, function() { 
+  log.info('Done sending daily emails!');
+  process.exit(0); 
+});
