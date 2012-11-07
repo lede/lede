@@ -7,7 +7,7 @@ var notifier = require('../notifier/notifier');
 var util = require('util');
 
 function backlinksQuery(userId, limit) {
-  return "SELECT posts.id FROM posts JOIN links ON links.from_post_id = posts.id JOIN ledes ON links.uri = ledes.uri WHERE ledes.user_id = " + userId + " AND (links.created_at > now() - interval '1 day') ORDER BY links.created_at DESC LIMIT " + limit;
+  return "SELECT posts.id FROM posts JOIN links ON links.from_post_id = posts.id JOIN ledes ON lower(links.uri) = lower(ledes.uri) WHERE ledes.user_id = " + userId + " AND (links.created_at > now() - interval '1 day') ORDER BY links.created_at DESC LIMIT " + limit;
 }
 
 function generateDailyEmails(numberOfLedes, done) {
