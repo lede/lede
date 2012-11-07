@@ -32,7 +32,7 @@ function get_posts(postids, cb){
 
 //use the user and posts informtion to generate the content of the email
 function generate_daily_options (user,posts) {
-  var source = fs.readFileSync('views/notification.hjs', 'utf8');
+  var source = fs.readFileSync(__dirname + '/views/notification.hjs', 'utf8');
   var template = handlebars.compile(source);
   var mail_html = template({ledes: posts});
 
@@ -48,7 +48,7 @@ function generate_daily_options (user,posts) {
 
 //use the user and posts informtion to generate the content of the email
 function generate_welcome_options (user,temp_password) {
-  var source = fs.readFileSync('views/welcome.hjs', 'utf8');
+  var source = fs.readFileSync(__dirname + '/views/welcome.hjs', 'utf8');
   var template = handlebars.compile(source);
   var mail_html = template({password: temp_password, username: user.email});
 
@@ -107,3 +107,6 @@ exports.send_welcome = function(userid, temp_password) {
     send_email(mail_options);
   });
 };
+
+
+exports.send_daily(6, [5,6,7,8]);
