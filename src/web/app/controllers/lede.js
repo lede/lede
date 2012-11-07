@@ -21,7 +21,7 @@ exports.create = function(req, res) {
 
   
   // create a Lede that points at the post we either created or found
-  Lede.create({ post_id: req.query.target, user_id: req.body.user.id }, no_err(res, function(results) {
+  Lede.create({ uri: req.query.target, user_id: req.body.user.id }, no_err(res, function(results) {
 
     // let the client know we're done here.
     log.info('Created a new Lede with ID: ' + results.rows[0].id);
