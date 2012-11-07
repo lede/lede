@@ -41,9 +41,9 @@ function generate_daily_options (user,posts) {
   var mail_html = template({ledes: posts});
 
   var mail_options = {
-    from: "jon@unburythelede.com",
+    from: "hello@unburythelede.com",
     to: user.email,
-    subject: "Test from Dev: Lede",
+    subject: "Your New Ledes",
     html: mail_html
   };
 
