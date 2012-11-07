@@ -1,4 +1,7 @@
+<h1>Thanks for using Lede!</h1>
+<h2>
 Based your interest, we think that you might enjoy the following Ledes.
+</h2>
 
 <ul>
 {{#ledes}}
