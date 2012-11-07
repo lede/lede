@@ -1,0 +1,17 @@
+{
+    "name": "lede-recommender",
+    "description": "Lede Recommender",
+    "version": "0.1.0",
+    "author" : "Lede Team",
+    "homepage": "http://github.com/lede/lede",
+    "repository" : {
+        "type" : "git",
+        "url" : "http://github.com/lede/lede.git"
+    },
+    "main" : "./recommender",
+    "dependencies": {
+        "underscore": "*"
+    },
+    "engine": [ "node >=0.8.8" ],
+    "keywords": [ "lede", "dontfollow" ]
+}
