@@ -27,6 +27,7 @@ set :core_path, "src/core"
 set :discoverer_path, "src/discoverer"
 set :indexer_path, "src/indexer"
 set :notifier_path, "src/notifier"
+set :recommender_path, "src/recommender"
 set :scheduler_path, "src/scheduler"
 set :bookmarklet_source_path, "src/bookmarklet"
 set :migration_path, "src/db"
@@ -121,6 +122,11 @@ namespace :deploy do
   task :update_notifier_dependencies do
     run "cd #{latest_release}/#{notifier_path} && npm install"
   end
+
+  task :update_recommender_dependencies do
+    run "cd #{latest_release}/#{recommender_path} && npm install"
+  end
+
 
   task :update_scheduler_dependencies do
     run "cd #{latest_release}/#{scheduler_path} && npm install"
