@@ -107,6 +107,3 @@ exports.send_welcome = function(userid, temp_password) {
     send_email(mail_options);
   });
 };
-
-
-exports.send_daily(6, [5,6,7,8]);
