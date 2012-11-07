@@ -25,7 +25,7 @@ exports.create = function(req, res) {
 
     // let the client know we're done here.
     log.info('Created a new Lede with ID: ' + results.rows[0].id);
-    res.sendfile('/public/images/response_pixel.gif');
+    res.sendfile('../public/images/response_pixel.gif');
 
   }));
 
