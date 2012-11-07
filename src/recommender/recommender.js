@@ -1,28 +1,48 @@
 settings = require('../core/settings').get("recommender");
 log = require('../core/logger').getLogger("recommender");
-ledefactor = require(ledefactor);
-var dataLayer = require('../core/datalayer');
+var User = require('../core/datalayer').User;
 var _ = require('underscore');
+var orm = require('../core/datalayer').client;
+var notifier = require('../notifier/notifier');
+var util = require('util');
+
+function backlinksQuery(userId, limit) {
+  return "SELECT posts.id FROM posts JOIN links ON links.from_post_id = posts.id JOIN ledes ON links.uri = ledes.uri WHERE ledes.user_id = " + parseInt(userId) + " AND links.created_at > now() - interval '1 day' ORDER BY links.created_at DESC LIMIT " + parseInt(limit);
+}
 
 function generateDailyEmails(numberOfLedes) {
 	// Get all users
+  log.info('Starting email generation process for all users...');
 
-	// For each unique user:
-	// <async> fetchLedesForUser
-
+  orm.emit("query", "SELECT id FROM users", function(err, result) {
+    if(err) {
+      log.error('Error getting user ids: ' + err);
+    } else {
+      log.info('Got result from user id lookup, found : ' + util.inspect(result.rows));
+      _.each(
+        _.map(result.row, function(row) { return row['id']; }),
+        function(userId) { 
+          log.info('Fetching ledes for user: ' + userId);
+          fetchLedesForUser(userId, numberOfLedes); 
+        }
+      );
+      log.info('Done sending daily emails!');
+    }
+  });
 } 
 
-function fetchLedesForUser(user) {
-  // For the given user, get all the ledes from the database (callback: resolveLedesToPosts)
-}
+function fetchLedesForUser(userId, limit) {
 
-function resolveLedesToPosts(ledes) {
-  // Check posts database for lede url (callback: getTopRelatedPosts)
-}
+  log.info('Fetching ledes for user: ' + userId);
 
-function getTopRelatedPosts(post) {
-  // Step over this for each top related post and get all the results into an array. Flatten the array, and take the top 5 highest ledefactor posts.
-  ledefactor.getTopRelatedPosts(post, parallel());
+  orm.emit('query', backLinksQuery(userId, limit), function(err, result) {
+    if(err) {
+      log.error('Error finding backlinks for user: ' + userId + ' : ' + err);
+    } else {
+      log.info('Sending email to ' + userId + ' with : ' + result.rows.length + ' links');
+      notifier.send_daily(userId, _.map(result.rows, function(row) { return row['id']; }));
+    }
+  });
 }
 
 // Handle top-level exceptions
@@ -35,3 +55,5 @@ process.on('uncaughtException',function(error) {
     process.exit(1);
   }, 10000);
 });
+
+generateDailyEmails(settings.numberOfPosts);
