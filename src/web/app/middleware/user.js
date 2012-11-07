@@ -1,6 +1,7 @@
 var User = require('../../../core/datalayer').User;
 var no_err = require('../helpers/core').no_err;
 var log = require('../../../core/logger').getLogger("web");
+var util = require('util');
 
 
 exports.ensure_user = function (req, res, next) {
