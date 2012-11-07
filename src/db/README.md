@@ -4,7 +4,7 @@
 ### Create a new migration
 
     cd lede/src/db
-    ./node_moduls/migrate/bin/migrate create <migration_name>
+    ./node_modules/migrate/bin/migrate create <migration_name>
 
 This will create:
 
