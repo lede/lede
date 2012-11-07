@@ -21,6 +21,10 @@ function get_user(userid, cb) {
 
 //resolve an array of post ids to an array of post objects (culled for id,uri,title)
 function get_posts(postids, cb){
+  if(_.isEmpty(postids)) {
+    log.error("Attempted to resolve empty list of post IDs");
+    return;
+  }
   dataLayer.Post.find(postids, {only: ['id','uri','title']}, function(err, posts) {
     if(err) {
       log.error(err);
