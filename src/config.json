@@ -41,8 +41,8 @@
       "scheduler": "INFO",
       "discoverer": "INFO",
       "web": "INFO",
-      "recommender": "INFO",
-      "notifier": "INFO"
+      "recommender": "DEBUG",
+      "notifier": "DEBUG"
     }
   },
 
