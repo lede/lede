@@ -73,6 +73,7 @@ namespace :deploy do
     update_discoverer_dependencies
     update_indexer_dependencies
     update_notifier_dependencies
+    update_recommender_dependencies
     update_scheduler_dependencies
     discoverer_restart
     indexer_restart
