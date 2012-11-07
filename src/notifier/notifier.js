@@ -63,7 +63,7 @@ function generate_welcome_options (user,temp_password) {
 }
 
 //actually call the mailer to hit sendgrid
-function send_email(mailOptions) {
+function send_email(mailOptions, callback) {
   // set up mailer
   var smtpTransport = nodemailer.createTransport("SMTP", {
     service: settings.notifier.service,
@@ -78,7 +78,7 @@ function send_email(mailOptions) {
       log.error(err);
     } else {
       log.info("Message sent: " + res.message);
-      return;
+      callback();
     }
   });
 
@@ -86,24 +86,24 @@ function send_email(mailOptions) {
 }
 
 // wrap it all up.  resolve userid and postids, generate email and send it
-exports.send_daily = function(userid, postids) {
+exports.send_daily = function(userid, postids, callback) {
   get_user(userid, function(user) {
     log.debug('Found user ' + user.email);
     get_posts(postids, function(posts) {
       log.debug('Found posts');
       var mail_options = generate_daily_options(user,posts);
       log.debug(mail_options);
-      send_email(mail_options);
+      send_email(mail_options, callback);
     });
   });
 };
 
 // wrap it all up.  resolve userid, generate email and send it
-exports.send_welcome = function(userid, temp_password) {
+exports.send_welcome = function(userid, temp_password, callback) {
   get_user(userid, function(user) {
     log.debug('Found user ' + user.email);
     var mail_options = generate_welcome_options(user,temp_password);
     log.debug(mail_options);
-    send_email(mail_options);
+    send_email(mail_options, callback);
   });
 };

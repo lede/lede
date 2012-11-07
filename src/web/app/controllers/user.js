@@ -74,8 +74,9 @@ exports.register = function(req, res) {
         User.create({ email: req.body.user_email, password_hash: sha_sum.digest('hex')  }, no_err(res, function(created_users) {
           req.session.user_id = created_users.rows[0].id;
           log.info('Logging in as new user: ' + util.inspect(created_users.rows[0]));
-          log.info('Sending welcome email');
-          notifier.send_welcome(created_users.rows[0].id, password);
+          notifier.send_welcome(created_users.rows[0].id, password, function() {
+            log.info('Sent welcome email for ' + created_users.rows[0].id);
+          });
           res.send({ result: 'User created for ' + req.body.user_email });
         }));
       }
