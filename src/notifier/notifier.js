@@ -8,19 +8,6 @@ var nodemailer = require('nodemailer');
 var dataLayer = require('../core/datalayer');
 var errors = require('../core/errors.js');
 
-// set up mailer
-var smtpTransport = nodemailer.createTransport("SMTP", {
-  service: settings.notifier.service,
-  auth: {
-    user: settings.notifier.username,
-    pass: settings.notifier.password
-  }
-});
-
-//Hack: aribritrary data
-create_email(1,[41,42,43,44,45]);
-smtpTransport.close();
-
 //resolve a user id to a user object
 function get_user(userid, cb) {
   dataLayer.User.findOne(userid, {only: ['id','email']}, function(err, user) {
@@ -44,7 +31,7 @@ function get_posts(postids, cb){
 }
 
 //use the user and posts informtion to generate the content of the email
-function generate_mail_options (user,posts) {
+function generate_daily_options (user,posts) {
   var source = fs.readFileSync('views/notification.hjs', 'utf8');
   var template = handlebars.compile(source);
   var mail_html = template({ledes: posts});
@@ -59,8 +46,33 @@ function generate_mail_options (user,posts) {
   return mail_options;
 }
 
+//use the user and posts informtion to generate the content of the email
+function generate_welcome_options (user,temp_password) {
+  var source = fs.readFileSync('views/welcome.hjs', 'utf8');
+  var template = handlebars.compile(source);
+  var mail_html = template({password: temp_password, username: user.email});
+
+  var mail_options = {
+    from: "jon@unburythelede.com",
+    to: user.email,
+    subject: "Test from Dev: Lede",
+    html: mail_html
+  };
+
+  return mail_options;
+}
+
 //actually call the mailer to hit sendgrid
-function send_notification(mailOptions) {
+function send_email(mailOptions) {
+  // set up mailer
+  var smtpTransport = nodemailer.createTransport("SMTP", {
+    service: settings.notifier.service,
+    auth: {
+      user: settings.notifier.username,
+      pass: settings.notifier.password
+    }
+  });
+
   smtpTransport.sendMail(mailOptions, function(err, res) {
     if(err) {
       log.error(err);
@@ -69,17 +81,29 @@ function send_notification(mailOptions) {
       return;
     }
   });
+
+  smtpTransport.close();
 }
 
 // wrap it all up.  resolve userid and postids, generate email and send it
-function create_email(userid, postids) {
+exports.send_daily = function(userid, postids) {
   get_user(userid, function(user) {
     log.debug('Found user ' + user.email);
     get_posts(postids, function(posts) {
       log.debug('Found posts');
-      var mail_options = generate_mail_options(user,posts);
+      var mail_options = generate_daily_options(user,posts);
       log.debug(mail_options);
-      send_notification(mail_options);
+      send_email(mail_options);
     });
   });
-}
+};
+
+// wrap it all up.  resolve userid, generate email and send it
+exports.send_welcome = function(userid, temp_password) {
+  get_user(userid, function(user) {
+    log.debug('Found user ' + user.email);
+    var mail_options = generate_welcome_options(user,temp_password);
+    log.debug(mail_options);
+    send_email(mail_options);
+  });
+};

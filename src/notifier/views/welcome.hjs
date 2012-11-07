@@ -1,0 +1,23 @@
+<h1>Hey-</h1>
+
+<h2>Thanks for helping us develop Lede!</h2>
+
+<p>When you read something you like in your daily browsing, click the bookmarklet.<br>
+In return we'll deliver a special package to your inbox each morning.</p>
+
+<p>
+<a href="http://unburythelede.com">http://unburythelede.com</a>
+</p>
+
+<p style="font-weight: bold">Temporary Credentials</p>
+<p>Username: {{username}}</p>
+<p>Password: {{password}}</p>
+<br>
+<p>Cheers!</p>
+<p>— The Lede Team</p>
+ 
+<br>
+<br>
+<br>
+<br>
+<!--Lede. Don't Follow.-->
