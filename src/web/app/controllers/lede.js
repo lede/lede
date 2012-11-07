@@ -3,6 +3,7 @@ var Post = require('../../../core/datalayer').Post;
 var _ = require('underscore');
 var util = require('util');
 var no_err = require('../helpers/core').no_err;
+var path = require('path');
 
 
 exports.create = function(req, res) {
@@ -25,7 +26,8 @@ exports.create = function(req, res) {
 
     // let the client know we're done here.
     log.info('Created a new Lede with ID: ' + results.rows[0].id);
-    res.sendfile('../public/images/response_pixel.gif');
+    var response_pixel_path = path.resolve('public/images/response_pixel.gif');
+    res.sendfile(response_pixel_path);
 
   }));
 
