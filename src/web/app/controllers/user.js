@@ -1,6 +1,8 @@
 var User = require('../../../core/datalayer').User;
 var no_err = require('../helpers/core').no_err;
 var crypto = require('crypto');
+var log = require('../../../core/logger').getLogger("web");
+var util = require('util');
 
 // HACK: break this out into some util library
 function randomPass() {
@@ -70,6 +72,7 @@ exports.register = function(req, res) {
         sha_sum.update(password);
         User.create({ email: req.body.user_email, password_hash: sha_sum.digest('hex')  }, no_err(res, function(created_users) {
           req.session.user_id = created_users.rows[0].id;
+          log.info('Logging in as new user: ' + util.inspect(created_users.rows[0]));
           res.send({ result: 'User created for ' + req.body.user_email });
         }));
       }
