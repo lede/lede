@@ -25,6 +25,7 @@ function generateDailyEmails(numberOfLedes, done) {
         _.pluck(result.rows, 'id'),
         function(userId) { 
           fetchLedesForUser(userId, numberOfLedes, function() {
+            log.info('Completed ledes for ' + userId);
             outstanding--;
             if(outstanding === 0) {
               done();
@@ -44,11 +45,11 @@ function fetchLedesForUser(userId, limit, done) {
   orm.emit('query', backlinksQuery(userId, limit), function(err, result) {
     if(err) {
       log.error('Error finding backlinks for user: ' + userId + ' : ' + err);
+      done();
     } else {
       log.info('Sending email to ' + userId + ' with : ' + result.rows.length + ' links');
-      notifier.send_daily(userId, _.pluck(result.rows, 'id'));
+      notifier.send_daily(userId, _.pluck(result.rows, 'id'), done);
     }
-    done();
   });
 }
 
