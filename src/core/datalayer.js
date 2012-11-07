@@ -55,11 +55,7 @@ exports.Lede = FastLegS.Base.extend({
   primaryKey: "id",
   updateTimestamp: "updated_at",
   createTimestamp: "created_at",
-  belongsTo: [{
-    post: exports.Post,
-    joinOn: 'post_id'
-  },
-  {
+  belongsTo: [  {
     user: exports.User,
     joinOn: 'user_id'
   }]
