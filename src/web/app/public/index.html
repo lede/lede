@@ -8,15 +8,15 @@
     $(function() {
 
       // animation
-      $('.logo').fadeIn(500, function() {
-        $('.tagline').fadeIn(500, function() {
+      setTimeout(function() {
+        $('.tagline').fadeIn(1000, function() {
           setTimeout(function() {
             $('.logo-wrapper').fadeOut(500, function() {
               $('.signup-wrapper').fadeIn(500);
             });
-          }, 1000);
-        });
-      });
+          }, 500);
+        })
+      }, 500);
 
       function register() {
         $.ajax('/api/user/register', {
@@ -59,7 +59,7 @@
 </head>
 <body>
   <div class='logo-wrapper'>
-    <div class='logo' style='display:none'>
+    <div class='logo'>
       <div class='mark'>
         <div class='box'></div>
         <div class='line'></div>
