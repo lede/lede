@@ -5,7 +5,7 @@
   },
 
   "redisConnectionParams": {
-    "host": "ec2-23-23-52-139.compute-1.amazonaws.com",
+    "host": "unburythelede.com",
     "port": 6379
   },
 
