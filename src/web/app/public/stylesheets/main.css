@@ -106,3 +106,8 @@ div.thanks p {
 div.fun {
   margin-top: 60px;
 }
+
+div.signin-link {
+  float: right;
+  font-size: 0.8em;
+}
