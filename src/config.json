@@ -5,7 +5,7 @@
   },
 
   "redisConnectionParams": {
-    "host": "localhost",
+    "host": "ec2-23-23-52-139.compute-1.amazonaws.com",
     "port": 6379
   },
 
