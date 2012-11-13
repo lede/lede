@@ -43,7 +43,7 @@ function generate_daily_options (user,posts) {
   var mail_options = {
     from: "hello@unburythelede.com",
     to: user.email,
-    subject: "Your New Ledes",
+    subject: "Your new Ledes",
     html: mail_html
   };
 
