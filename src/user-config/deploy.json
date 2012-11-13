@@ -56,7 +56,7 @@
   "discoverer": {
     "throttleInterval": 60,
     "workers": {
-      "fast_discovery,slow_discovery: 4096
+      "fast_discovery,slow_discovery": 4096
     }
   }
 }
