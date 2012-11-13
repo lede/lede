@@ -50,7 +50,9 @@ function parseOfferedFeedUrls(siteBody, done) {
   }
 }
 
-// searches the database for a feed with the given URL
+/**
+ * Searches the database for a feed with the given URL
+ */
 function lookupFeed(feedUrl, done) {
   dataLayer.Source.findOne(
     { url: feedUrl }, 
@@ -58,7 +60,8 @@ function lookupFeed(feedUrl, done) {
     done);
 }
 
-/** find the feed by URL if it exists in the DB, or insert it if it doesn't exist.
+/** 
+ * Find the feed by URL if it exists in the DB, or insert it if it doesn't exist.
  * @param url  URL of the source to add
  * @param done  receives error or result.  the result will be the feed info (not an actual Source object; "id", "title", "description", "url") 
  */
@@ -107,7 +110,8 @@ function fetchWebPage(url, done) {
   feedFetcher.fetchFeed({ url: url }, done, fetchOptions);
 }
 
-/** perform the actual discover task from the resque
+/** 
+ * Perform the actual discover task from the resque
  */
 function discover(fast, jobParams, job) {
   log.info("Performing discovery for '" + jobParams.url + "'");
