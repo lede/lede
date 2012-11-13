@@ -12,5 +12,13 @@ div.pop-down {
 
   div.pop-down h1 {
     margin:10px;
+    margin-top: 29px;
+    margin-left: 30px;
+    font-size: 36px;
+    float: left;
+  }
+
+  div.pop-down img {
+    float: left;
   }
 
