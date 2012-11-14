@@ -194,10 +194,11 @@ function checkForUpdatedPosts(source, articles, callback) {
     function findUpdated(err, results) {
       if (err) {
         //console.log("findUpdated error" + err.message);
+        log.error("findUpdated error: " + err);
         throw err;
       }
       
-      log.debug("Found " + results.length + " existing posts matching URIs");
+      log.debug("Found " + results.length + " existing posts matching URIs for " + articles.length + " candidates");
       // TODO we can probably improve this from O(n^2) to O(nlogn) by building
       // a hash of URIs
 
@@ -227,6 +228,8 @@ function parseFeed(source, xml, done) {
         done(err);
         return;
       }
+
+      log.debug("Checking " + articles.length + "articles for updated ones");
       
       checkForUpdatedPosts(source, articles, function(err, updatedPosts) {
         if (err) {
