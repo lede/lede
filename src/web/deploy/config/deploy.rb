@@ -166,7 +166,11 @@ namespace :deploy do
     rescue => e
       p "Looks like the server wasn't running, we'll just start it."
     end
-    run "cd #{server_path} && LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
+    if ENV['DEBUG']
+      run "cd #{server_path} && DEBUG=true LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
+    else
+      run "cd #{server_path} && LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
+    end
   end
 
   task :notifier_restart, :roles => [:crawler] do
