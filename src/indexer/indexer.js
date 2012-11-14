@@ -16,17 +16,19 @@ var queues = require('../core/resque-queues');
 var errors = require('../core/errors.js');
 
 // handle top-level exceptions
-process.on('uncaughtException',function(error){
-  log.fatal('Top-Level Uncaught Exception: ' + error);
-  console.log('Top-Level Uncaught Exception: ' + error);
-  log.fatal(error.stack);
-  log.fatal('Exiting in 10 seconds...');
-  setTimeout(function() {
-    log.fatal('Exiting after Fatal timeout for: ' + error);
-    log.fatal('Trace: ' + error.stack);
-    process.exit(1);
-  }, 10000);
-});
+if(!process.env['DEBUG']) {
+  process.on('uncaughtException',function(error){
+    log.fatal('Top-Level Uncaught Exception: ' + error);
+    console.log('Top-Level Uncaught Exception: ' + error);
+    log.fatal(util.inspect(error.stack));
+    log.fatal('Exiting in 10 seconds...');
+    setTimeout(function() {
+      log.fatal('Exiting after Fatal timeout for: ' + error);
+      log.fatal('Trace: ' + util.inspect(error.stack));
+      process.exit(1);
+    }, 10000);
+  });
+}
 
 var contentTypeFilter = feedFetcher.createContentTypeFilter(['applicaton/rss+xml', 'application/atom+xml']);
 
