@@ -1,8 +1,3 @@
-// support hardcore long-trace debug-mode
-if(process.env['DEBUG']) {
-  require('long-stack-traces');
-}
-
 // do lots of setup stuff
 settings = require('../core/settings').get("indexer");
 log = require('../core/logger').getLogger("indexer");
