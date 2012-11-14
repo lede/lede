@@ -18,6 +18,7 @@ process.on('uncaughtException',function(error){
   log.fatal('Exiting in 10 seconds...');
   setTimeout(function() {
     log.fatal('Exiting after Fatal timeout for: ' + error);
+    log.fatal('Trace: ' + error.stack);
     process.exit(1);
   }, 10000);
 });
