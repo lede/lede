@@ -178,6 +178,7 @@ function checkForUpdatedPosts(source, articles, callback) {
 
   Step(
     function readPosts() {
+      log.debug("Attempting to read matching posts for " + articles.length + " articles on source " + source.id);
       if (articles.length > 0) {
         dataLayer.Post.find(
           {
@@ -229,7 +230,7 @@ function parseFeed(source, xml, done) {
         return;
       }
 
-      log.debug("Checking " + articles.length + "articles for updated ones");
+      log.debug("Checking " + articles.length + " articles for updated ones on source " + source.id);
       
       checkForUpdatedPosts(source, articles, function(err, updatedPosts) {
         if (err) {
