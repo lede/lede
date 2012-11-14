@@ -32,6 +32,8 @@ function redisJobCompleteCallback(callbackId, status) {
 }
 
 function fetchAndParse(source, done) {
+  done(true);
+  /*
   feedFetcher.fetchFeed(source, function (err, results) { //crash
     if (err) {
       done(err);
@@ -39,6 +41,7 @@ function fetchAndParse(source, done) {
       feedProcessor.parseFeed(results.source, results.body, done);
     }
   });
+  */
 }
 
 function markNotIndexable(source, reason, callback) {
