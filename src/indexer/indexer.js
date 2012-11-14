@@ -13,10 +13,11 @@ var errors = require('../core/errors.js');
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
   log.fatal('Top-Level Uncaught Exception: ' + error);
+  console.log('Top-Level Uncaught Exception: ' + error);
   log.fatal(error.stack);
   log.fatal('Exiting in 10 seconds...');
   setTimeout(function() {
-    log.fatal('Exiting.');
+    log.fatal('Exiting after Fatal timeout for: ' + error);
     process.exit(1);
   }, 10000);
 });
