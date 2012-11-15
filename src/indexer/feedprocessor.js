@@ -29,6 +29,8 @@ function parseFeed(source, xml, done) {
 
           // TODO: linktracker stuff, see: linkTracker.processPostContent(postCreated.rows[0]);
 
+          done(null, result);
+
         });
       }
 
