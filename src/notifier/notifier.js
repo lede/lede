@@ -98,7 +98,7 @@ function send_welcome_email (user, temp_password, callback) {
 }
 
 // Sent the constructed email to the customer through the email service provider
-function send_email(mailOptions, callback) {
+function send_email(mail_options, callback) {
   log.debug(mail_options);
 
   // Set up mailer
@@ -110,7 +110,7 @@ function send_email(mailOptions, callback) {
     }
   });
 
-  smtpTransport.sendMail(mailOptions, function(err, res) {
+  smtpTransport.sendMail(mail_options, function(err, res) {
     if(err) {
       log.error(err);
     } else {
