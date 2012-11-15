@@ -37,7 +37,7 @@
       }
     ],
     "levels": {
-      "indexer": "INFO",
+      "indexer": "TRACE",
       "scheduler": "INFO",
       "discoverer": "INFO",
       "web": "INFO",
