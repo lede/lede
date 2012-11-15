@@ -177,46 +177,43 @@ function createOrUpdatePosts(source, indexTime, updatedArticles, done) {
 // Callback takes an array of the items that were updated
 function checkForUpdatedPosts(source, articles, callback) {
 
-  var article_set = articles;
-  Step(
-    function readPosts() {
-      log.debug("Attempting to read matching posts for " + articles.length + " articles on source " + source.id);
-      if (articles.length > 0) {
-        dataLayer.Post.find(
-          {
-            "uri.in": _.pluck(articles, 'link')
-          },
-          {
-            only: [ 'id', 'uri', 'source_id' ],
-          },
-          this);
-      } else {
-        return [];
-      }
-    },
-    function findUpdated(err, results) {
-      if (err) {
-        //console.log("findUpdated error" + err.message);
-        log.error("findUpdated error: " + err);
-        throw err;
-      }
-      
-      log.debug("Found " + results.length + " existing posts matching URIs for " + article_set.length + " candidates");
-      // TODO we can probably improve this from O(n^2) to O(nlogn) by building
-      // a hash of URIs
+  log.debug("Attempting to read matching posts for " + articles.length + " articles on source " + source.id);
 
-      var updatedItems = _.reject(articles, function (article) {
-        return _.find(results, function(postWithContent) {
-          // TODO check for updates as well as just new ones.  basing it just on the URI like we're doing currently means updateExistingPost() will always return false
-          return postWithContent.uri == article.link;
+  if (articles.length > 0) {
+    dataLayer.Post.find(
+      {
+        "uri.in": _.pluck(articles, 'link')
+      },
+      {
+        only: [ 'id', 'uri', 'source_id' ],
+      },
+      function findUpdated(err, results) {
+        if (err) {
+          //console.log("findUpdated error" + err.message);
+          log.error("findUpdated error: " + err);
+          callback(err, null);
+          return;
+        }
+        
+        log.debug("Found " + results.length + " existing posts matching URIs for " + articles.length + " candidates");
+        // TODO we can probably improve this from O(n^2) to O(nlogn) by building
+        // a hash of URIs
+
+        var updatedItems = _.reject(articles, function (article) {
+          return _.find(results, function(postWithContent) {
+            // TODO check for updates as well as just new ones.  basing it just on the URI like we're doing currently means updateExistingPost() will always return false
+            return postWithContent.uri == article.link;
+          });
         });
-      });
 
-      log.info("Found " + updatedItems.length + " updated item(s) for source " + source.id);
-      return updatedItems;
-    },
-    callback
-  );
+        log.info("Found " + updatedItems.length + " updated item(s) for source " + source.id);
+        callback(null, updatedItems);
+      }
+    );
+  } else {
+    callback(null, []);
+  }
+
 }
 
 function parseFeed(source, xml, done) {
