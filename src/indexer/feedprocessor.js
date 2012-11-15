@@ -159,10 +159,10 @@ function createOrUpdatePosts(source, indexTime, updatedArticles, done) {
                 return;
               }
 
-              // Since we're doing an insert, we only expect 1 result: rows[0]
-              linkTracker.processPostContent(postCreated.rows[0]);
-
-              callback(null, postCreated.rows[0].id);
+              linkTracker.processPostContent(postCreated.rows[0], function(err, results) {
+                // processPostContent does its own logging, and we don't want a link tracking error to fail an entire feed parsing, so we swallow the error here (we really need to implement warnings somehow).
+                callback(null, postCreated.rows[0].id);
+              });
             }); 
           } else {
             callback(null, postContentsId);
