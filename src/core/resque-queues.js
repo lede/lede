@@ -9,7 +9,7 @@ var resque = require('resque').connect({redis: redis});
 function queue(queueName, functionName) {
   this.queueName = queueName;
   this.functionName = functionName;
-  this.enqueue = function (obj) { return resque.enqueue(this.queueName, this.functionName, obj) };
+  this.enqueue = function (obj) { return resque.enqueue(this.queueName, this.functionName, obj) }; // TODO this should really take a callback, but our resque library doesn't offer one (the underlying redis library does, however)
 }
 
 exports.resque = resque;
