@@ -177,6 +177,7 @@ function createOrUpdatePosts(source, indexTime, updatedArticles, done) {
 // Callback takes an array of the items that were updated
 function checkForUpdatedPosts(source, articles, callback) {
 
+  var article_set = articles;
   Step(
     function readPosts() {
       log.debug("Attempting to read matching posts for " + articles.length + " articles on source " + source.id);
@@ -200,7 +201,7 @@ function checkForUpdatedPosts(source, articles, callback) {
         throw err;
       }
       
-      log.debug("Found " + results.length + " existing posts matching URIs for " + articles.length + " candidates");
+      log.debug("Found " + results.length + " existing posts matching URIs for " + article_set.length + " candidates");
       // TODO we can probably improve this from O(n^2) to O(nlogn) by building
       // a hash of URIs
 
