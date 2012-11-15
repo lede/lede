@@ -57,7 +57,7 @@ function generate_daily_email_with_ledes(user, posts, callback) {
 
 // Send the daily email formatted for use without ledes
 function generate_daily_email_without_ledes(user, callback) {
-  var source = fs.readFileSync(__dirname + '/views/daily_no_ledes.hjs', 'utf8');
+  var source = fs.readFileSync(__dirname + '/views/daily_no_ledes', 'utf8');
   var template = handlebars.compile(source);
 
   var links = 
@@ -69,7 +69,7 @@ function generate_daily_email_without_ledes(user, callback) {
 
   var mail_html = template({suggestions: links});
 
-  send_daily_email(user, mail.html, callback);
+  send_daily_email(user, mail_html, callback);
 }
 
 // Use the user and posts information to generate the content of the daily email and send it
