@@ -5,6 +5,11 @@
     "database": "production"
   },
 
+  "redisConnectionParams": {
+    "host": "unburythelede.com",
+    "port": 6379
+  },
+
   "log4jsConfig": {
     "appenders": [
       {
@@ -43,7 +48,10 @@
         "pollInterval": 15,
         "category": "web" 
       }
-    ]
+    ],
+    "levels": {
+      "indexer": "TRACE"
+    }
   },
 
   "indexer": {
