@@ -91,6 +91,7 @@ function updateExistingPost(article, source, indexTime, callback) {
     if (err) {
       callback(new dataLayer.DatabaseError("Error while finding existing post: " + err.message));
     } else if (post) { // NOTE this section will not execute until we fix the code in checkForUpdatedPosts() to actually give us updated posts instead of only new ones
+      log.debug("Found post to update");
       var updateFields = {};
 
       updatePostFields(updateFields, post, article);
@@ -236,6 +237,7 @@ function parseFeed(source, xml, done) {
         if (err) {
           done(err);
         } else {
+          log.debug("Check for updated found " + updatedPosts.length + " updated posts");
           Step(
             function() {
               var group = this.group();
