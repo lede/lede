@@ -9,98 +9,83 @@ var url = require('url');
 var Step = require('step');
 
 // TODO try to identify and longify tiny URLs and click-tracking URLs
-function extractLinks(post, callback) {
+function extractLinks(article, callback) {
   try {
     var handler = new htmlparser.DefaultHandler(function (err, dom) {
       if (err) {
         throw err;
       }
 
-      // might want to directly reference the attribs instead of just links
-      var anchors = select(dom, 'a');
-      links = _.compact(_.map(anchors, function(link) {
-        if ('attribs' in link && 'href' in link.attribs) {
-          return { text: link.children[0].data, href: link.attribs.href };
-        } else {
-          return null;
-        }
-      }));
-
-      Step(
-        function() {
-          var group = this.group();
-
-          _.each(links, function(link) {
-            var parsedUrl = url.parse(link.href);
-            var resolvedUrl = link.href;
-            var cb = group();
-
-            // detect relative urls by seeing if the url has a host
-            if(! parsedUrl.hostname) {
-              log.debug("Parsed relative url " + util.inspect(parsedUrl));
-
-              //If we have real path info or a real query, try to resolve the url
-              if(parsedUrl.pathname || parsedUrl.query) {
-                log.debug("Created resolved url " + resolvedUrl);
-                resolvedUrl = url.resolve(post.uri, link.href);
-              } else {
-                log.debug("Failed to resolve url " + link.href);
-                cb("Failed to resolve url " + link.href);
-                return;
-              }
+      // get the (reasonable looking and usable) links from the document
+      links = 
+      _.filter(
+        _.compact(
+          _.map(select(dom, 'a'), function(link) {
+            if ('attribs' in link && 'href' in link.attribs) {
+              return { text: link.children[0].data, href: link.attribs.href };
+            } else {
+              return null;
             }
+          })
+        ), 
 
-            // Check for not http(s) protocols, this handles javascript: and mailto: 
-            if (url.parse(resolvedUrl).protocol != 'http:' && url.parse(resolvedUrl).protocol != 'https:') {
-              log.debug("Detected link to non http(s) with " + resolvedUrl);
-              cb("Detected link to non http(s) with " + resolvedUrl);
-              return;
-            }
+      // filter out malformed / unusable links
+      function(link) {
+        return !!url.parse(link.href).hostname && ( // check that this link isn't relative
+          url.parse(link.href).protocol == 'http:' || url.parse(link.href).protocol == 'https:' // ensure we have a valide protocol
+        );
+      });
+      
+      // TODO: add back validator so that we can leverage blacklist!
+      // Need to find a performant one-pass way of doing this, ideally for links in bulk
+      // Maybe just validate before throwing to discoverer... fire and forget may give a nice boost
 
-            validator.checkUrlValid(resolvedUrl, function(isValid) {
-              if(isValid) {
-                log.info("Adding link from post " + post.id + ' to ' + resolvedUrl );
-                addLink(post.id, link.text, resolvedUrl, function(err, result) {
-                  log.debug("Enqueing discover job for url " + resolvedUrl);
-                  queues.slowDiscover.enqueue({ parentId: post.id, url: resolvedUrl}); // TODO if and when this offers a callback, use it
-                  cb(null, resolvedUrl);
-                });
-              } else {
-                log.debug("URL " + resolvedUrl + " has been tossed from indexer by blacklist, not trying to enqueue");
-                cb("URL " + resolvedUrl + " has been tossed from indexer by blacklist, not trying to enqueue", null); // TODO use a proper error object to make this more semantic
-              }
-            });
+      /*** query building stuff **/
 
-          });
-        },
-        callback
+      // the templatized fields we'll be using in our prepared statement..
+      var fields = ['uri', 'from_uri', 'link_text'];
+      
+      // the count of records we've build a query for (used for computing offsets)
+      var record_num = 0;
+
+      // generate the values: ($1, $2, $3, now(), now()), ($4, $5, $6, now(), now())
+      var prepared_links = _.map(links, function(link) {
+        return "(" + _.map(field, function(field, index) {
+          return "$" + ((index + 1) + (record_num * fields.length));
+        }).concat(['now()', 'now()']).join(', ') + ")";
+      }).join(', ');
+
+      // build up actual final query
+      var query = "INSERT INTO links (uri, from_uri, link_text, created_at, updated_at) VALUES " + prepared_links;  
+
+      // generate the array of arguments to the prepared statement
+      var prepared_arguments = _.flatten(
+        _.map(links, function(link) {
+          return [link.href, article.link, link.text];
+        })
       );
+
+      // run the query, inserting all of the links we found in this post
+      dbClient.query(query, prepared_arguments, function(err, result) {
+        if(err) {
+          log.fatal("Error running query: " + err);
+          log.fatal(query);
+          log.fatal(util.inspect(prepared_arguments));
+          throw err;
+        }
+
+        // say we're done, no error
+        callback(null);
+
+      });
     });
 
     var parser = new htmlparser.Parser(handler);
-    parser.parseComplete(post.content);
+    parser.parseComplete(article.contents);
   } catch (e) {
     log.error("Error while extracting links: " + util.inspect(e));
     callback(e);
   }
-}
-
-function addLink(postId, linkText, url, callback) {
-  var linkContent = {
-    from_post_id: postId,
-    link_text: linkText,
-    uri: url
-  };
-
-  dataLayer.Link.create(linkContent, function (err, linkCreated) {
-    if(err) {
-      log.error("Failed adding link to database" + err.message);
-    } else {
-      log.trace("Added link to database");
-    }
-
-    callback(err, linkCreated);
-  });
 }
 
 exports.processPostContent = function (post, callback) {
