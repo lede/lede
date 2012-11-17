@@ -28,6 +28,9 @@ function parseFeed(source, xml, done) {
           // TODO: linktracker stuff
 
           // TODO: linktracker stuff, see: linkTracker.processPostContent(postCreated.rows[0]);
+          // TODO: rewrite linktracker to not do one query per link, it is far too slow over a latent connection
+
+          log.debug(util.inspect(result));
 
           done(null, result);
 
@@ -62,7 +65,8 @@ function createNewPosts(source, articles, callback) {
   //
   var fields = {
     link: { name: 'uri', type: 'text' },
-    title: { name: 'title', type: 'text' }
+    title: { name: 'title', type: 'text' },
+    contents: { name: 'content', type: 'text' }
   }
 
 
