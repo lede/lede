@@ -35,7 +35,7 @@ function parseFeed(source, xml, done) {
           function(article) {
             linkTracker.processPostContent(article, function() {  
               processed_articles++;
-              if(processed_atricles >= created_uris.length) {
+              if(processed_articles >= created_uris.length) {
                 done(null, created_uris);
               }
             });

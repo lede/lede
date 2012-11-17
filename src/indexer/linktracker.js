@@ -35,6 +35,12 @@ function extractLinks(article, callback) {
         url.parse(link.href).protocol == 'http:' || url.parse(link.href).protocol == 'https:' // ensure we have a valide protocol
       );
     });
+
+    // short-circuit if we didn't find any useful links
+    if(links.length <= 0) {
+      callback(null);
+      return;
+    }
     
     // TODO: add back validator so that we can leverage blacklist!
     // Need to find a performant one-pass way of doing this, ideally for links in bulk
