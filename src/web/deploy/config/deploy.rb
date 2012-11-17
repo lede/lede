@@ -121,7 +121,7 @@ namespace :deploy do
     run "cd #{latest_release}/#{indexer_path} && npm install"
   end
 
-  task :update_notifier_dependencies, :roles => [:crawler, :web] do
+  task :update_notifier_dependencies, :roles => [:crawler, :web, :db] do
     run "cd #{latest_release}/#{notifier_path} && npm install"
   end
 

@@ -1,0 +1,26 @@
+<h1>
+  Thanks for using Lede!
+</h1>
+
+<h2>
+  Unfortunately, we were unable to find any Ledes that we knew you'd love.
+</h2>
+
+<p>
+  Help us out! When you read something that you like in your daily browsing, click your "Lede this!" bookmarklet. If you no longer have the bookmarklet, or if you are reading on a different device than the one you signed up with, visit <a href="http://unburythelede.com/">unburythelede.com</a> and log in.
+</p>
+
+<p>
+  Need some inspiration? Try some of these links:
+  <ul>
+      {{#suggestions}}
+        <li><a href="{{uri}}" alt="{{title}}">{{title}}</a></li>
+      {{/suggestions}}
+  </ul>
+</p>
+
+<br>
+<br>
+<br>
+<br>
+<!--Lede. Don't Follow.-->

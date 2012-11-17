@@ -5,7 +5,7 @@
   },
 
   "redisConnectionParams": {
-    "host": "unburythelede.com",
+    "host": "localhost",
     "port": 6379
   },
 
@@ -37,7 +37,7 @@
       }
     ],
     "levels": {
-      "indexer": "TRACE",
+      "indexer": "INFO",
       "scheduler": "INFO",
       "discoverer": "INFO",
       "web": "INFO",
@@ -47,14 +47,14 @@
   },
 
   "scheduler": {
-    "checkInterval": 36000
+    "checkInterval": 300
   },
 
   "indexer": {
     "maxFetchSize": 200000,
     "fetchTimeout": 10,
     "workers": {
-      "fast_index,slow_index": 32
+      "fast_index,slow_index": 1
     },
     "throttleInterval": 900,
     "maxIndexInterval": 86400,
