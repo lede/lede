@@ -42,6 +42,8 @@ function parseFeed(source, xml, done) {
           });
 
         });
+      } else {
+        done(null, []);
       }
 
     });
