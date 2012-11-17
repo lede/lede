@@ -9,7 +9,7 @@ set :application, "lede-app"
 set :repository, "ssh://git@github.com/lede/lede.git"
 
 server "#{domain}", :web, :db, :primary => true
-server "ec2-50-16-125-146.compute-1.amazonaws.com", :crawler
+server "ec2-184-73-151-163.compute-1.amazonaws.com", :crawler
 
 set :deploy_via, :copy
 set :copy_exclude, [".git", ".DS_Store"]
