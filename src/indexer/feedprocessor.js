@@ -25,14 +25,21 @@ function parseFeed(source, xml, done) {
 
           // TODO: update source metadata
           
-          // TODO: linktracker stuff
-
-          // TODO: linktracker stuff, see: linkTracker.processPostContent(postCreated.rows[0]);
-          // TODO: rewrite linktracker to not do one query per link, it is far too slow over a latent connection
-
-          log.debug(util.inspect(result));
-
-          done(null, result);
+          // for each article that we created, exctract links
+          var processed_articles = 0;
+          var created_uris = _.pluck(result.rows, 'uri');
+          _.each(
+            _.filter(articles, function(article) {
+              return _.contains(created_uris, article.link);
+            }),
+          function(article) {
+            linkTracker.processPostContent(article, function() {  
+              processed_articles++;
+              if(processed_atricles >= created_uris.length) {
+                done(null, created_uris);
+              }
+            });
+          });
 
         });
       }
@@ -171,7 +178,7 @@ function createNewPosts(source, articles, callback) {
         "SELECT uri FROM posts WHERE source_id =  $" + (prepared_arguments.length) + // the last argument is an extra source id 
       ") " +
     ") " + 
-    "INSERT INTO posts (" + insert_fields + ") SELECT * FROM articles; ";
+    "INSERT INTO posts (" + insert_fields + ") SELECT * FROM articles RETURNING uri;";
 
   // run it!
   log.debug("Running batch insert: " + query);
