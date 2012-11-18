@@ -42,10 +42,12 @@ function extractLinks(article, callback) {
       callback(null);
       return;
     }
-    
+
+    // throw the links to the discoverer    
     // TODO: add back validator so that we can leverage blacklist!
     // Need to find a performant one-pass way of doing this, ideally for links in bulk
     // Maybe just validate before throwing to discoverer... fire and forget may give a nice boost
+    _.each(links, function(link) { queues.slowDiscover.enqueue({ url: link.href }); });
 
     /*** query building stuff **/
 
