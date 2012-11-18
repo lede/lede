@@ -22,6 +22,7 @@ function extractLinks(article, callback) {
       _.compact(
         _.map(select(dom, 'a'), function(link) {
           if ('attribs' in link && 'href' in link.attribs) {
+            log.debug("Found a link!");
             return { text: link.children[0].data, href: link.attribs.href };
           } else {
             return null;
@@ -57,7 +58,7 @@ function extractLinks(article, callback) {
 
     // generate the values: ($1, $2, $3, now(), now()), ($4, $5, $6, now(), now())
     var prepared_links = _.map(links, function(link) {
-      return "(" + _.map(field, function(field, index) {
+      return "(" + _.map(fields, function(field, index) {
         return "$" + ((index + 1) + (record_num * fields.length));
       }).concat(['now()', 'now()']).join(', ') + ")";
     }).join(', ');
@@ -90,7 +91,7 @@ function extractLinks(article, callback) {
   });
 
   var parser = new htmlparser.Parser(handler);
-  parser.parseComplete(article.contents);
+  parser.parseComplete(article.description);
 }
 
 exports.processPostContent = function (post, callback) {

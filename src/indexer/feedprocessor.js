@@ -81,7 +81,7 @@ function createNewPosts(source, articles, callback) {
   var fields = {
     link: { name: 'uri', type: 'text' },
     title: { name: 'title', type: 'text' },
-    contents: { name: 'content', type: 'text' }
+    description: { name: 'content', type: 'text' }
   }
 
 
