@@ -22,7 +22,6 @@ function extractLinks(article, callback) {
       _.compact(
         _.map(select(dom, 'a'), function(link) {
           if ('attribs' in link && 'href' in link.attribs) {
-            log.debug("Found a link!");
             return { text: link.children[0].data, href: link.attribs.href };
           } else {
             return null;
