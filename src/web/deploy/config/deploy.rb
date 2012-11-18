@@ -169,7 +169,7 @@ namespace :deploy do
     if ENV['DEBUG']
       run "cd #{server_path} && DEBUG=true LEDE_DB=production LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
     else
-      run "cd #{server_path} && LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
+      run "cd #{server_path} && LEDE_DB=production LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
     end
   end
 
