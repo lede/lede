@@ -38,6 +38,7 @@ function extractLinks(article, callback) {
 
     // short-circuit if we didn't find any useful links
     if(links.length <= 0) {
+      log.debug("Found no links!");
       callback(null);
       return;
     }
@@ -63,6 +64,8 @@ function extractLinks(article, callback) {
 
     // build up actual final query
     var query = "INSERT INTO links (uri, from_uri, link_text, created_at, updated_at) VALUES " + prepared_links;  
+
+    log.debug("Running link insertion: " + query);
 
     // generate the array of arguments to the prepared statement
     var prepared_arguments = _.flatten(

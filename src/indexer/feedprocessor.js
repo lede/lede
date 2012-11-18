@@ -25,6 +25,12 @@ function parseFeed(source, xml, done) {
 
           // TODO: update source metadata
           
+          log.debug("Indexed " + result.rows.length + " new posts!");
+          if(results.length <= 0) {
+            done(null, []);
+            return;
+          }
+
           // for each article that we created, exctract links
           var processed_articles = 0;
           var created_uris = _.pluck(result.rows, 'uri');
