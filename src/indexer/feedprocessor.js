@@ -26,7 +26,7 @@ function parseFeed(source, xml, done) {
           // TODO: update source metadata
           
           log.debug("Indexed " + result.rows.length + " new posts!");
-          if(results.length <= 0) {
+          if(result.rows.length <= 0) {
             done(null, []);
             return;
           }
