@@ -58,9 +58,14 @@ function extractLinks(article, callback) {
 
     // generate the values: ($1, $2, $3, now(), now()), ($4, $5, $6, now(), now())
     var prepared_links = _.map(links, function(link) {
-      return "(" + _.map(fields, function(field, index) {
+
+      var prepared_link = "(" + _.map(fields, function(field, index) {
         return "$" + ((index + 1) + (record_num * fields.length));
       }).concat(['now()', 'now()']).join(', ') + ")";
+
+      record_num++;
+
+      return prepared_link;
     }).join(', ');
 
     // build up actual final query
