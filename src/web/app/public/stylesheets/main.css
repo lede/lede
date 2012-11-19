@@ -111,3 +111,11 @@ div.signin-link {
   float: right;
   font-size: 0.8em;
 }
+
+table {
+  border-collapse: collapse
+}
+
+table, th, td {
+  border: 1px solid black
+}

@@ -6,8 +6,28 @@ var orm = require('../core/datalayer').client;
 var notifier = require('../notifier/notifier');
 var util = require('util');
 
+//n-deep backlink tracking currently produces a list of from_uris
+//we treat encountering the same link row (id) as a loop and stop recursing
+//the path array holds a list of link IDs that represent the path traversed to get from from_uri to uri
 function backlinksQuery(userId, limit) {
-  return "SELECT posts.id FROM posts JOIN links ON links.from_post_id = posts.id JOIN ledes ON lower(links.uri) = lower(ledes.uri) WHERE ledes.user_id = " + userId + " AND (links.created_at > now() - interval '1 day') ORDER BY links.created_at DESC LIMIT " + limit;
+  return "WITH RECURSIVE "+
+    "search_links(id, uri, from_uri, link_text, created_at, updated_at, depth, path, cycle) AS "+ 
+    "( SELECT "+
+      "l.id, l.uri, l.from_uri, l.link_text, l.created_at, l.updated_at, 1, ARRAY[l.id], false "+
+      "FROM links l "+
+      "UNION ALL "+
+      "SELECT "+
+        "l.id, l.uri, l.from_uri, l.link_text, l.created_at, l.updated_at, sl.depth + 1, "+
+        "path || l.id, l.id = ANY(path) "+
+        "FROM links l, search_links sl "+
+        "WHERE l.uri = sl.from_uri AND NOT cycle AND l.uri != l.from_uri"+
+    ") "+
+    "SELECT sl.from_uri as uri, COALESCE(p.title, sl.from_uri) as title "+
+    "FROM search_links sl "+
+    "LEFT JOIN posts p ON sl.from_uri = p.uri "+
+    "JOIN ledes le ON sl.uri = le.uri "+
+    "WHERE le.user_id = " + userId + " AND (sl.created_at > now() - interval '1 day') "+
+    "ORDER BY sl.created_at DESC LIMIT "+ limit;
 }
 
 function generateDailyEmails(numberOfLedes, done) {
@@ -41,14 +61,14 @@ function generateDailyEmails(numberOfLedes, done) {
 function fetchLedesForUser(userId, limit, done) {
 
   log.info('Fetching ledes for user: ' + userId);
-
+  log.debug('query ' + backlinksQuery(userId, limit));
   orm.emit('query', backlinksQuery(userId, limit), function(err, result) {
     if(err) {
       log.error('Error finding backlinks for user: ' + userId + ' : ' + err);
       done();
     } else {
       log.info('Sending email to ' + userId + ' with : ' + result.rows.length + ' links');
-      notifier.send_daily(userId, _.pluck(result.rows, 'id'), done);
+      notifier.send_daily(userId, result.rows, done);
     }
   });
 }

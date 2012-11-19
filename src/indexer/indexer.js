@@ -9,7 +9,7 @@ var _ = require('underscore');
 var os = require('os');
 var queues = require('../core/resque-queues');
 var errors = require('../core/errors.js');
-var pg = require('pg');
+var pg = require('pg').native;
 
 // HACK: inline config to test straight SQL
 var config = require('../db/database.json')[process.env.LEDE_DB];
@@ -213,22 +213,17 @@ process.on('SIGINT', function() {
   process.exit(0);
 });
 
-// connect to pg then kick this thing off...
-pg.connect(conn_string, function(err, client) {
-
-  dbClient = client; // globalize
-
-  // ensure everything went ok establishing the connection, scream if it didn't
-  if(err) {
-    log.fatal("Could not connect to DB: " + err);
-    throw err;
-  }
-
-  // create workers per config file
-  _.each(_.keys(settings.indexer.workers), function(queue) {
-    _(settings.indexer.workers[queue]).times(function(i) {
-      startWorker(queue, os.hostname() + "-" + i);
-    });
+// helper for running a query through the pool
+dbQuery = function(query, args, callback) {
+  pg.connect(conn_string, function(err, client) {
+    client.query(query, args, callback);
   });
+}
 
+// create workers per config file
+_.each(_.keys(settings.indexer.workers), function(queue) {
+  _(settings.indexer.workers[queue]).times(function(i) {
+    startWorker(queue, os.hostname() + "-" + i);
+  });
 });
+
