@@ -61,7 +61,7 @@ function parseFeed(source, xml, done) {
 function createNewPosts(source, articles, callback) {
 
   if(articles.length <= 0) {
-    throw new Error("Postive number of articles required!");
+    callback(null);
   }
 
   /* Generate appropriate number of $1, $2, ... etc placeholders for articles */
