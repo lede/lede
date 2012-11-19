@@ -50,7 +50,7 @@
       }
     ],
     "levels": {
-      "indexer": "TRACE"
+      "indexer": "INFO"
     }
   },
 
