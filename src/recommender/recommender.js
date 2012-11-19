@@ -61,7 +61,7 @@ function generateDailyEmails(numberOfLedes, done) {
 function fetchLedesForUser(userId, limit, done) {
 
   log.info('Fetching ledes for user: ' + userId);
-
+  log.debug('query ' + backlinksQuery(userId, limit));
   orm.emit('query', backlinksQuery(userId, limit), function(err, result) {
     if(err) {
       log.error('Error finding backlinks for user: ' + userId + ' : ' + err);
