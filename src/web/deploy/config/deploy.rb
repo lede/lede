@@ -162,14 +162,14 @@ namespace :deploy do
 
   task :indexer_restart, :roles => [:crawler] do
     begin 
-      run "cd #{server_path} && LEDE_DB=production LEDE_HOME=#{current_path}/src node server.js stop #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
+      run "cd #{server_path} && LEDE_DB=production LEDE_HOME=#{current_path}/src node server.js stop #{current_path}/#{indexer_path}/indexer.js 2 /var/run/indexer-cluster.pid"
     rescue => e
       p "Looks like the server wasn't running, we'll just start it."
     end
     if ENV['DEBUG']
-      run "cd #{server_path} && DEBUG=true LEDE_DB=production LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
+      run "cd #{server_path} && DEBUG=true LEDE_DB=production LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 2 /var/run/indexer-cluster.pid"
     else
-      run "cd #{server_path} && LEDE_DB=production LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 1 /var/run/indexer-cluster.pid"
+      run "cd #{server_path} && LEDE_DB=production LEDE_HOME=#{current_path}/src node server.js start #{current_path}/#{indexer_path}/indexer.js 2 /var/run/indexer-cluster.pid"
     end
   end
 
