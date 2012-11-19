@@ -32,7 +32,11 @@
         api.lede.list(function(res) {
           var html = "";
           $.each(res.ledes, function(index, row) {
-            html += "<tr><td>" + row.uri + "</td><td><a href='#'>Stop Leding</a></td></tr>";
+            html += "<tr>";
+            html += "<td>" + row.uri + "</td>";
+            html += "<td>" + row.created_at + "</td>";
+            html += "<td><a href='#'>Stop Leding</a></td>";
+            html += "</tr>";
           });
 
           $('#ledes-list tbody').replaceWith(html);
@@ -65,11 +69,12 @@
     <thead>
       <tr>
         <th>Lede</th>
+        <th>Created</th>
         <th>Actions</th>
       </tr>
     <tbody>
       <tr>
-       <td colspan="%">Loading...</td>
+       <td colspan="*">Loading...</td>
       </tr>
     </tbody>
   </table>
