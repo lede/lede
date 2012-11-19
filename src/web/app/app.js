@@ -66,6 +66,8 @@ app.get('/', routes.index);
 // NOTE: we have to accept GET here because we're using image requests as a cross-site hack
 app.all('/api/lede', ensure_user, lede.create);
 
+app.get('/api/ledes', ensure_user, lede.list);
+
 app.get('/dashboard/total_posts', posts_dashboard.total_posts);
 app.get('/dashboard/total_posts/:days', posts_dashboard.total_posts_by_day);
 

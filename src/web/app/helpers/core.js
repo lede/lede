@@ -5,7 +5,7 @@ function generic_error(res, err) {
   // TODO: better error message, status code
   log.error('Server Error: ' + err);
   res.status(500); // generic server fail
-  res.send({ result: 'Server Error: ' + err });
+  res.send({ error: 'Server Error: ' + err });
 }
 
 // functor to wrap a callback, automatically invoke a standard 500 error response on error,

@@ -4,6 +4,7 @@
   <link href='http://fonts.googleapis.com/css?family=Andada' rel='stylesheet' type='text/css'>
   <link href='/stylesheets/main.css' media='all' rel='stylesheet' type='text/css'>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
+  <script src="/javascripts/api.js"></script> 
   <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-36275380-1']);
@@ -27,17 +28,55 @@
         });
       }
 
+      function updateLedesList() {
+        api.lede.list(function(res) {
+          var html = "";
+          $.each(res.ledes, function(index, row) {
+            html += "<tr>";
+            html += "<td><a href='" + row.uri + "'>" + (row.title ? row.title : row.uri) + "</a></td>";
+            html += "<td>" + row.created_at + "</td>";
+            html += "<td><a href='#' onclick=\"alert('not implemented');\">Stop Leding</a></td>";
+            html += "</tr>";
+          });
+
+          $('#ledes-list tbody').replaceWith(html);
+        },
+        function(err) {
+        });
+      }
+
       // handlers for form
 
       $('a#logout-button').click(function(evt) {
         logout();
         evt.preventDefault();
       });
+
+      $('a#list').click(function(evt) {
+        updateLedesList();
+        evt.preventDefault();
+      });
+
+      updateLedesList();
     });
   </script>
 </head>
 <body>
   <h2>Manage your Ledes</h2>
-  <a href='#' id='logout-button' class='button'> Log Out </a>
+  <a href='#' id='logout-button' class='button'> Log Out </a><br/>
+
+  <table id='ledes-list'>
+    <thead>
+      <tr>
+        <th>Lede</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    <tbody>
+      <tr>
+       <td colspan="*">Loading...</td>
+      </tr>
+    </tbody>
+  </table>
 </body>
 </html>
