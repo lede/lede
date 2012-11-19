@@ -33,9 +33,9 @@
           var html = "";
           $.each(res.ledes, function(index, row) {
             html += "<tr>";
-            html += "<td>" + row.uri + "</td>";
+            html += "<td><a href='" + row.uri + "'>" + (row.title ? row.title : row.uri) + "</a></td>";
             html += "<td>" + row.created_at + "</td>";
-            html += "<td><a href='#'>Stop Leding</a></td>";
+            html += "<td><a href='#' onclick=\"alert('not implemented');\">Stop Leding</a></td>";
             html += "</tr>";
           });
 
@@ -78,7 +78,5 @@
       </tr>
     </tbody>
   </table>
-
-  <a href='#' id='list'>list ledes</a>
 </body>
 </html>
