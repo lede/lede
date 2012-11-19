@@ -21,7 +21,7 @@ function parseFeed(source, xml, done) {
 
       if(articles.length > 0) {
         // Insert any new posts
-        createNewPosts(source, articles, function(err, result) {
+        createNewPosts(source, _.reject(articles, function(article) { return !article.link; }), function(err, result) {
 
           // TODO: update source metadata
           
