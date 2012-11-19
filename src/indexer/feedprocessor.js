@@ -19,17 +19,20 @@ function parseFeed(source, xml, done) {
         return;
       }
 
+      var articles = _.reject(articles, function(article) { return !article.link; });
       if(articles.length > 0) {
         // Insert any new posts
-        createNewPosts(source, _.reject(articles, function(article) { return !article.link; }), function(err, result) {
+        createNewPosts(source, articles, function(err, result) {
 
           // TODO: update source metadata
-          
-          log.debug("Indexed " + result.rows.length + " new posts!");
-          if(result.rows.length <= 0) {
+
+
+          if(!result || result.rows.length <= 0) {
             done(null, []);
             return;
           }
+          
+          log.debug("Indexed " + result.rows.length + " new posts!");
 
           // for each article that we created, exctract links
           var processed_articles = 0;
@@ -61,7 +64,7 @@ function parseFeed(source, xml, done) {
 function createNewPosts(source, articles, callback) {
 
   if(articles.length <= 0) {
-    throw new Error("Postive number of articles required!");
+    callback(null);
   }
 
   /* Generate appropriate number of $1, $2, ... etc placeholders for articles */
