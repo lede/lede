@@ -21,7 +21,7 @@ function extractLinks(article, callback) {
     _.filter(
       _.compact(
         _.map(select(dom, 'a'), function(link) {
-          if ('attribs' in link && 'href' in link.attribs) {
+          if ('attribs' in link && 'href' in link.attribs && link.children && link.children[0]) {
             return { text: link.children[0].data, href: link.attribs.href };
           } else {
             return null;
@@ -82,7 +82,7 @@ function extractLinks(article, callback) {
     );
 
     // run the query, inserting all of the links we found in this post
-    dbClient.query(query, prepared_arguments, function(err, result) {
+    dbQuery(query, prepared_arguments, function(err, result) {
       if(err) {
         log.fatal("Error running query: " + err);
         log.fatal(query);

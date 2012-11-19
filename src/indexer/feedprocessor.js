@@ -172,6 +172,8 @@ function createNewPosts(source, articles, callback) {
   }).concat(['source_id', 'created_at', 'updated_at']).join(', ');
 
 
+  //log.debug(dbClient.connection.stream);
+
   // Ok, we're done setting up the placeholders, so...
   // build up the final templatized query to run
   var query = "" + 
@@ -190,7 +192,7 @@ function createNewPosts(source, articles, callback) {
 
   // run it!
   log.debug("Running batch insert: " + query);
-  dbClient.query(query, prepared_arguments, function(err, result) {
+  dbQuery(query, prepared_arguments, function(err, result) {
     if(err) {
       log.fatal("Error running query: " + query);
       log.fatal("Prepared args were: " + util.inspect(prepared_arguments));
