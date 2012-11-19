@@ -24,12 +24,14 @@ function parseFeed(source, xml, done) {
         createNewPosts(source, _.reject(articles, function(article) { return !article.link; }), function(err, result) {
 
           // TODO: update source metadata
-          
-          log.debug("Indexed " + result.rows.length + " new posts!");
-          if(result.rows.length <= 0) {
+
+
+          if(!result || result.rows.length <= 0) {
             done(null, []);
             return;
           }
+          
+          log.debug("Indexed " + result.rows.length + " new posts!");
 
           // for each article that we created, exctract links
           var processed_articles = 0;
