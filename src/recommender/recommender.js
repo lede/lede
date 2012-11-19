@@ -16,13 +16,13 @@ function backlinksQuery(userId, limit) {
 //we treat encountering the same link row (id) as a loop and stop recursing
 function backlinksQuery(userId, limit) {
   return "WITH RECURSIVE "+
-    "search_links(id, uri, from_uri, link_text, depth, path, cycle) AS "+ 
+    "search_links(id, uri, from_uri, link_text, created_at, updated_at, depth, path, cycle) AS "+ 
     "( SELECT "+
-      "l.id, l.uri, l.from_uri, l.link_text, 1, ARRAY[l.id], false "+
+      "l.id, l.uri, l.from_uri, l.link_text, l.created_at, l.updated_at, 1, ARRAY[l.id], false "+
       "FROM links l "+
       "UNION ALL "+
       "SELECT "+
-        "l.id, l.uri, l.from_uri, l.link_text, sl.depth + 1, "+
+        "l.id, l.uri, l.from_uri, l.link_text, l.created_at, l.updated_at, sl.depth + 1, "+
         "path || l.id, l.id = ANY(path) "+
         "FROM links l, search_links sl "+
         "WHERE l.uri = sl.from_uri AND NOT cycle AND l.uri != l.from_uri"+
@@ -31,7 +31,8 @@ function backlinksQuery(userId, limit) {
     "FROM search_links sl "+
     "LEFT JOIN posts p ON sl.from_uri = p.uri "+
     "JOIN ledes le ON sl.uri = le.uri "+
-    "WHERE le.user_id = " + userId + " LIMIT "+ limit;
+    "WHERE le.user_id = " + userId + " AND (sl.created_at > now() - interval '1 day') "+
+    "ORDER BY sl.created_at DESC LIMIT "+ limit;
 }
 
 function generateDailyEmails(numberOfLedes, done) {
