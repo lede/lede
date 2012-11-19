@@ -26,7 +26,7 @@ exports.create = function(req, res) {
   queues.fastDiscover.enqueue({ parentId: null, url: req.query.target});
   
   // create a Lede that points at the post we either created or found
-  Lede.create({ uri: req.query.target, user_id: req.body.user.id }, no_err(res, function(results) {
+  Lede.create({ uri: req.query.target, title: req.query.title, user_id: req.body.user.id }, no_err(res, function(results) {
 
     // let the client know we're done here.
     log.info('Created a new Lede with ID: ' + results.rows[0].id);
