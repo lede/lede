@@ -20,5 +20,15 @@ var api = {
         error: error
       });
     }
+  },
+  lede: {
+    list: function logout(success, error) {
+      $.ajax({
+        url: '/api/ledes/',
+        dataType: "json",
+        success: success,
+        error: error
+      });
+    }
   }
 }

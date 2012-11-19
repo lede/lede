@@ -57,14 +57,14 @@
   "indexer": {
     "throttleInterval": 60,
     "workers": {
-      "fast_index,slow_index": 8192
+      "fast_index,slow_index": 20
     }
   },
 
   "discoverer": {
     "throttleInterval": 60,
     "workers": {
-      "fast_discovery,slow_discovery": 4096
+      "fast_discovery,slow_discovery": 10
     }
   }
 }

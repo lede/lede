@@ -2,47 +2,212 @@ var FeedParser = require('feedparser');
 var dataLayer = require('../core/datalayer');
 var linkTracker = require('./linktracker');
 var _ = require('underscore');
-var Step = require('step');
 var util = require('util');
 
 // NOTE: Throughout this file, 'post' refers to the post in the database, and 'article' refers to the article parsed from the external feed
 
-function updatePostFields(updateFields, post, article) {
-  function updateField(field, value) {
-    if (value && post[field] != value) {
-      updateFields[field] = value;
+function parseFeed(source, xml, done) {
+  try {
+    log.debug("Parsing source " + source.id);
+
+    var indexTime = new Date();
+
+    var parser = new FeedParser();
+    parser.parseString(xml, function(err, metadata, articles) {
+      if(err) {
+        done(err);
+        return;
+      }
+
+      if(articles.length > 0) {
+        // Insert any new posts
+        createNewPosts(source, articles, function(err, result) {
+
+          // TODO: update source metadata
+          
+          log.debug("Indexed " + result.rows.length + " new posts!");
+          if(result.rows.length <= 0) {
+            done(null, []);
+            return;
+          }
+
+          // for each article that we created, exctract links
+          var processed_articles = 0;
+          var created_uris = _.pluck(result.rows, 'uri');
+          _.each(
+            _.filter(articles, function(article) {
+              return _.contains(created_uris, article.link);
+            }),
+          function(article) {
+            linkTracker.processPostContent(article, function() {  
+              processed_articles++;
+              if(processed_articles >= created_uris.length) {
+                done(null, created_uris);
+              }
+            });
+          });
+
+        });
+      } else {
+        done(null, []);
+      }
+
+    });
+  } catch (e) {
+    done(e);
+  }
+}
+
+function createNewPosts(source, articles, callback) {
+
+  if(articles.length <= 0) {
+    throw new Error("Postive number of articles required!");
+  }
+
+  /* Generate appropriate number of $1, $2, ... etc placeholders for articles */
+
+  // Map of fields we care about in article to fields in post
+  //
+  // Specifically, this maps fields in article (the object returned by the feed parser)
+  // to descriptions of fields in the posts table in the database.
+  //
+  // Each field description is an object with two methods:
+  //  name - the name of the column in the posts
+  //  type - the postgres sql type name for the column
+  //
+  // TODO: add contents, author, published_at, etc
+  // TODO: add additional descriptor regarding quoting of fields (if necessary w/ prepared statements)
+  //
+  var fields = {
+    link: { name: 'uri', type: 'text' },
+    title: { name: 'title', type: 'text' },
+    description: { name: 'content', type: 'text' }
+  }
+
+
+  // Get number of fields so we don't have to hardcode/update as we change fields definition
+  // TODO: there is likely a nicer way to do this..
+  var field_count = 0;
+  _.each(fields, function() {
+    field_count++;
+  });
+
+
+  // little helper to generate global field offsets from a field index, article index, and field count
+  var field_offset = function(field_index, article_index) {
+    return article_index + field_index + (article_index * field_count) + 1;
+  }
+
+  // This gets a bit yucky.. build a prepared statement with properly numbered placeholders
+  // For context, the data structure here is an array of literal post records, materialized it looks like:
+  // 
+  // array[('foo.com'::text, 'Foo Title'::text, 10::int, now(), now()), ...]
+  // 
+  // Where the first postition is the uri, the second is the title, next is source id, then updated/created times
+  //
+  // Although, as far as we're going to get pre-prepared statement parser is:
+  //
+  // array[($1::text, $2::text, $3::int, now(), now()), ...]
+  //
+  // NOTE:  This is a bit hairy and you probably don't need to modify it.
+  //        Only one assumption is made, and that's that the last 3 fields are the source_id and timestamps.
+  //        Any changes as to what we're including, how we're pulling it out of the article object,
+  //        and in what order we're including it can be acheived via editing the fields = { } declaration above.
+
+  var article_placeholders = "array[" + _.map(articles, function(article, article_index) {
+
+    // build the internal record tuple, i.e: ($1::text, $2::text ...)
+    var field_index = 0;
+    return record = "(" + 
+      // actual array of fields + types from article.. ['$1::text', '$2::text']
+      _.map(fields, function(post_field_descriptor, article_field) {
+        var virtual_column = "$" + field_offset(field_index, article_index) + "::" + post_field_descriptor.type;
+        field_index++;
+        return virtual_column
+      }).concat(['$' + field_offset(field_index, article_index) + '::int', 'now()', 'now()']).join(', ') +  // we add the source_id and two timestamps always for now..
+    ")";
+
+  }).join(', ') + "]"; // join up the individual records to get the psql array: array[(...), (...), ...]
+
+
+  // Ok, now build the array of arguments to the prepared statement
+  // This is structurally the same as the above statement builder
+  // It just unrolls all of the necessary arguments into an array and joins them up after
+  // appending one final source id for a scoping where clause
+  var prepared_arguments = _.flatten(
+    _.map(articles, function(article, article_index) {
+
+      return _.map(fields, function(post_field_descriptor, article_field) {
+        return article[article_field];
+      }).concat([source.id]);
+
+    }).concat([source.id])
+
+  );
+
+  // build the tuple to describe the schema of our anonymous post-type to allow us to use our literals
+  //
+  // This is of the form:
+  // (name type, name type, ...)
+  //
+  // Again, this is completely driven by the fields = {...} declaration above
+  // assuming that the last three fields are source id and the timestamps
+
+  var record_fields = _.map(fields, function(post_field_descriptor, article_field) {
+    return post_field_descriptor.name + " " + post_field_descriptor.type;
+  }).concat(['source_id int', 'created_at timestamptz', 'updated_at timestamptz']).join(', ');
+
+
+  // build the tuple to describe fields we're inserting
+  //
+  // This is of the form:
+  // (name , name, ...)
+  //
+  // Again, this is completely driven by the fields = {...} declaration above
+  // assuming that the last three fields are source id and the timestamps
+
+  // TODO: use _.pluck
+  var insert_fields = _.map(fields, function(post_field_descriptor, article_field) {
+    return post_field_descriptor.name;
+  }).concat(['source_id', 'created_at', 'updated_at']).join(', ');
+
+
+  // Ok, we're done setting up the placeholders, so...
+  // build up the final templatized query to run
+  var query = "" + 
+    "WITH articles AS ( " +
+      "WITH articles AS ( " +
+        "SELECT (explode_array).* FROM explode_array( " +
+          article_placeholders + " " +
+        ") AS (" + record_fields + ") " +
+      ") " + 
+      "SELECT * FROM articles " + 
+      "WHERE articles.uri NOT IN ( " +
+        "SELECT uri FROM posts WHERE source_id =  $" + (prepared_arguments.length) + // the last argument is an extra source id 
+      ") " +
+    ") " + 
+    "INSERT INTO posts (" + insert_fields + ") SELECT * FROM articles RETURNING uri;";
+
+  // run it!
+  log.debug("Running batch insert: " + query);
+  dbClient.query(query, prepared_arguments, function(err, result) {
+    if(err) {
+      log.fatal("Error running query: " + query);
+      log.fatal("Prepared args were: " + util.inspect(prepared_arguments));
+      throw(err); // for now fail hard
     }
-  }
 
-  var contents = article.description;
-  var description = article.summary;
-  var title = article.title;
-  var link = article.link;
-  var author = article.author;
-  var date = article.pubdate;
+    log.debug("Success!");
 
-  updateField('content', contents);
-  updateField('description', description);
-  updateField('title', title);
-  updateField('uri', link);
-  updateField('author', author);
-  updateField('published_at', date);
+    // It worked!
+    // At this point we've inserted any new posts that we found from the feed.
+    // Call the callback with our result set to do any post processing
+    callback(null, result);
+  });
+
 }
 
-function calculateIndexInterval(indexInterval, updated) {
-  if (updated) {
-    // tweak index_interval to go a little faster since we got new content
-    return Math.max(Math.round(indexInterval * 0.9), settings.indexer.minIndexInterval);
-  } else {
-    // tweak index_interval to go a little slower since there was no new content
-    return Math.min(Math.round(indexInterval * 1.1), settings.indexer.maxIndexInterval);
-  }
-}
-
-function calculateNextIndexTime(indexInterval, indexTime) {
-  var nextIndexTime = new Date(indexTime);
-  nextIndexTime.setSeconds(nextIndexTime.getSeconds() + indexInterval);
-}
+/** Source updating helpers **/
 
 function updateSourceMetadata(source, metadata, indexTime, updated, done) {
   var updateFields = {};
@@ -79,181 +244,21 @@ function updateSourceMetadata(source, metadata, indexTime, updated, done) {
   dataLayer.Source.update(source.id, updateFields, done);
 }
 
-/** updates the existing post with the content if it finds it
- * @param callback  error or result.  result is the post ID if one was found/updated, or false if none was found
- */
-function updateExistingPost(article, source, indexTime, callback) {
-  // TODO handle multiple versions of a single post
-  dataLayer.Post.findOne({
-    uri: article.link // TODO improve this to be a little less draconian... we may want it to match if the trailing slash is omitted, or if the leading http:// is missing, or a whole bunch of things
-  },
-  function(err, post) {
-    if (err) {
-      callback(new dataLayer.DatabaseError("Error while finding existing post: " + err.message));
-    } else if (post) { // NOTE this section will not execute until we fix the code in checkForUpdatedPosts() to actually give us updated posts instead of only new ones
-      log.debug("Found post to update");
-      var updateFields = {};
-
-      updatePostFields(updateFields, post, article);
-
-      if (post.source_id != source.id) { // TODO maybe we should only change this if it is NULL?  in case the same article appears in multiple feeds
-        updateFields.source_id = source.id;
-      }
-
-      if (!_.isEmpty(updateFields)) {
-        updateFields.indexed_at = indexTime;
-        
-        // TODO if we're going to be tracking edits to articles, we might want to archive the old version in another table
-
-        dataLayer.Post.update(post.id, updateFields, function(err, post) {
-          if (err) {
-            //log.error("updateExistingPost error: " + err.message + "\npost title: " + post.getTitle() + "\nerror details: " + util.inspect(err));
-            callback(err);
-          } else {
-            //console.log("result: " + util.inspect(result));
-            callback(null, post.id);
-          }
-        });
-      } else {
-        callback(null, post.id);
-      }
-    } else {
-      callback(null, false);
-    }
-  });
-}
-
-/**
- * @param source  the source object from which these posts come
- * @param updatedArticles  an array of article objects which represent the new/updated posts.  this array may not be empty
- * @param done  callback
-*/
-function createOrUpdatePosts(source, indexTime, updatedArticles, done) {
-  Step(
-    function() {
-      var group = this.group();
-      _.each(updatedArticles, function(article) {
-        var callback = group(); // instantiate this here because we need to do it synchronously and the function where it is used is asynchronous
-
-        updateExistingPost(article, source, indexTime, function(err, postContentsId) {
-          if (err) {
-            callback(err)
-            return;
-          }
-
-          if (postContentsId === false) { // existing post wasn't found
-            log.debug("Identified post to crawl for links");
-
-            var postContent = {
-              indexed_at: indexTime,
-              source_id: source.id
-            }
-
-            updatePostFields(postContent, postContent, article);
-
-            dataLayer.Post.create(postContent, function(err, postCreated) {
-              log.trace("Added post to database, checking for internal links");
-
-               if(err) {
-                callback(err);
-                return;
-              }
-
-              linkTracker.processPostContent(postCreated.rows[0], function(err, results) {
-                // processPostContent does its own logging, and we don't want a link tracking error to fail an entire feed parsing, so we swallow the error here (we really need to implement warnings somehow).
-                callback(null, postCreated.rows[0].id);
-              });
-            }); 
-          } else {
-            callback(null, postContentsId);
-          }
-        });
-      });
-    },
-    done
-  );
-}
-
-// Callback takes an array of the items that were updated
-function checkForUpdatedPosts(source, articles, callback) {
-
-  log.debug("Attempting to read matching posts for " + articles.length + " articles on source " + source.id);
-
-  if (articles.length > 0) {
-    dataLayer.Post.find(
-      {
-        "uri.in": _.pluck(articles, 'link')
-      },
-      {
-        only: [ 'id', 'uri', 'source_id' ],
-      },
-      function findUpdated(err, results) {
-        if (err) {
-          //console.log("findUpdated error" + err.message);
-          log.error("findUpdated error: " + err);
-          callback(err, null);
-          return;
-        }
-        
-        log.debug("Found " + results.length + " existing posts matching URIs for " + articles.length + " candidates");
-        // TODO we can probably improve this from O(n^2) to O(nlogn) by building
-        // a hash of URIs
-
-        var updatedItems = _.reject(articles, function (article) {
-          return _.find(results, function(postWithContent) {
-            // TODO check for updates as well as just new ones.  basing it just on the URI like we're doing currently means updateExistingPost() will always return false
-            return postWithContent.uri == article.link;
-          });
-        });
-
-        log.info("Found " + updatedItems.length + " updated item(s) for source " + source.id);
-        callback(null, updatedItems);
-      }
-    );
+function calculateIndexInterval(indexInterval, updated) {
+  if (updated) {
+    // tweak index_interval to go a little faster since we got new content
+    return Math.max(Math.round(indexInterval * 0.9), settings.indexer.minIndexInterval);
   } else {
-    callback(null, []);
-  }
-
-}
-
-function parseFeed(source, xml, done) {
-  try {
-    log.debug("Parsing source " + source.id);
-
-    var indexTime = new Date();
-
-    var parser = new FeedParser();
-    parser.parseString(xml, function(err, metadata, articles) {
-      if(err) {
-        done(err);
-        return;
-      }
-
-      log.debug("Checking " + articles.length + " articles for updated ones on source " + source.id);
-      
-      checkForUpdatedPosts(source, articles, function(err, updatedPosts) {
-        if (err) {
-          done(err);
-        } else {
-          log.debug("Check for updated found " + updatedPosts.length + " updated posts");
-          Step(
-            function() {
-              var group = this.group();
-
-              if (updatedPosts.length > 0) {
-                createOrUpdatePosts(source, indexTime, updatedPosts, group());
-              }
-
-              updateSourceMetadata(source, metadata, indexTime, (updatedPosts.length > 0), group());
-            },
-            done
-          );
-        }
-      });
-    });
-  } catch (e) {
-    done(e);
+    // tweak index_interval to go a little slower since there was no new content
+    return Math.min(Math.round(indexInterval * 1.1), settings.indexer.maxIndexInterval);
   }
 }
 
+function calculateNextIndexTime(indexInterval, indexTime) {
+  var nextIndexTime = new Date(indexTime);
+  nextIndexTime.setSeconds(nextIndexTime.getSeconds() + indexInterval);
+}
+
+
+/** Exports **/
 exports.parseFeed = parseFeed;
