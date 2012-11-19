@@ -6,14 +6,9 @@ var orm = require('../core/datalayer').client;
 var notifier = require('../notifier/notifier');
 var util = require('util');
 
-/*
-function backlinksQuery(userId, limit) {
-  return "SELECT posts.id FROM posts JOIN links ON links.from_post_id = posts.id JOIN ledes ON lower(links.uri) = lower(ledes.uri) WHERE ledes.user_id = " + userId + " AND (links.created_at > now() - interval '1 day') ORDER BY links.created_at DESC LIMIT " + limit;
-}
-*/
-
 //n-deep backlink tracking currently produces a list of from_uris
 //we treat encountering the same link row (id) as a loop and stop recursing
+//the path array holds a list of link IDs that represent the path traversed to get from from_uri to uri
 function backlinksQuery(userId, limit) {
   return "WITH RECURSIVE "+
     "search_links(id, uri, from_uri, link_text, created_at, updated_at, depth, path, cycle) AS "+ 
