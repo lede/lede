@@ -54,7 +54,7 @@
     "maxFetchSize": 200000,
     "fetchTimeout": 10,
     "workers": {
-      "fast_index,slow_index": 1
+      "fast_index,slow_index": 512
     },
     "throttleInterval": 900,
     "maxIndexInterval": 86400,
