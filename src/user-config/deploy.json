@@ -57,7 +57,7 @@
   "indexer": {
     "throttleInterval": 60,
     "workers": {
-      "fast_index,slow_index": 20
+      "fast_index,slow_index": 200
     }
   },
 
