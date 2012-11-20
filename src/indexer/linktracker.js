@@ -43,13 +43,31 @@ function extractLinks(article, callback) {
       return;
     }
 
+    var processed_links = 0;
+
     // throw the links to the discoverer, add edges to graph db    
     // TODO: add back validator so that we can leverage blacklist!
     _.each(links, function(link) { 
       queues.slowDiscover.enqueue({ url: link.href }); 
+
+      var query = "" + 
+        "CREATE EDGE " +
+        "FROM " + article.rid + " " +
+        "TO (SELECT FROM OGraphVertex WHERE uri = '" + link.href + "')";
+
+      console.log("About to execute: " + query);
+
+      graphDatalayer.query(query, function(err, results) {
+        if(err) {
+          log.fatal(err);
+          throw err;
+        }
+        processed_links++;
+        if(processed_links >= links.length) {
+          callback(null);
+        }
+      });
     });
-
-
 
   });
 

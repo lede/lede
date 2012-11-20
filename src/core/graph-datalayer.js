@@ -18,11 +18,15 @@ exports.query = function(query, callback) {
   openClient(function(err, db) {
     if(err){
       callback(err);
+      db.close();
+      return;
     }
 
     db.command(query, function(err, results) {
       if(err){
-        console.log(err);
+        callback(err);
+        db.close();
+        return;
       }
 
       db.close();
