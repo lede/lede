@@ -6,10 +6,18 @@
   },
 
   "graphConnectionParams": {
-    "user": "production",
-    "password": "z!+A01--nXFAp@O=p",
+    "dbConfig": {
+      "user_name": "production",
+      "user_password": "z!+A01--nXFAp@O=p"
+    },
+    "serverConfig": {
+      "host": "unburythelede.com",
+      "port": 2424,
+      "user_name": "production",
+      "user_password": "z!+A01--nXFAp@O=p"
+    },
     "database": "production"
-  }
+  },
 
   "redisConnectionParams": {
     "host": "unburythelede.com",

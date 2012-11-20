@@ -7,7 +7,7 @@
 </h2>
 
 <p>
-  Help us out! When you read something that you like in your daily browsing, click your <b>Lede this!<b> bookmarklet. If you no longer have the bookmarklet, or if you are reading on a different device than the one you signed up with, visit <a href="http://unburythelede.com/">unburythelede.com</a> and log in.
+  Help us out! When you read something that you like in your daily browsing, click your <b>Lede this!</b> bookmarklet. 
 </p>
 
 <p>
@@ -18,9 +18,12 @@
       {{/suggestions}}
   </ul>
 </p>
-
-<br>
-<br>
-<br>
-<br>
+<br />
+<p>
+  If you no longer have the bookmarklet, or if you are reading on a different device than the one you signed up with, visit <a href="http://unburythelede.com/">unburythelede.com</a> and log in.
+</p>
+<br />
+<br />
+<br />
+<br />
 <!--Lede. Don't Follow.-->

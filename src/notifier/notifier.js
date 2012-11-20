@@ -20,12 +20,12 @@ function get_user(userid, cb) {
 }
 
 // Resolve an array of post ids to an array of post objects (culled for id,uri,title)
-// Not currently used.
 function get_posts(postids, cb){
   if(_.isEmpty(postids)) {
     log.error("Attempted to resolve empty list of post IDs");
     cb([]);
   }
+  
   dataLayer.Post.find(postids, {only: ['id','uri','title']}, function(err, posts) {
     if(err) {
       log.error(err);
@@ -48,10 +48,10 @@ function send_daily_email(user, mail_html, callback) {
 }
 
 // Send the daily email formatted for use with ledes
-function generate_daily_email_with_ledes(user, links, callback) {
+function generate_daily_email_with_ledes(user, posts, callback) {
   var source = fs.readFileSync(__dirname + '/views/daily.hjs', 'utf8');
   var template = handlebars.compile(source);
-  var mail_html = template({ledes: links});
+  var mail_html = template({ledes: posts});
 
   send_daily_email(user, mail_html, callback);
 }
@@ -61,24 +61,25 @@ function generate_daily_email_without_ledes(user, callback) {
   var source = fs.readFileSync(__dirname + '/views/daily_no_ledes.hjs', 'utf8'); 
   var template = handlebars.compile(source);
 
-  var links = [
+  var links = 
+  [
     {"uri": "http://cat-blog.tumblr.com/", "title": "A totally normal blog"},
     {"uri": "http://www.theonion.com/", "title": "Some super serious world news"},
     {"uri": "http://somerville.patch.com/", "title": "News from the Lede stomping ground"}
-  ];
+  ]
 
   var mail_html = template({suggestions: links});
 
   send_daily_email(user, mail_html, callback);
 }
 
-// Use the user and links information to generate the content of the daily email and send it
-function generate_and_send_daily_email (user, links, callback) {
-  if(links && links.length > 0) {
-    generate_daily_email_with_ledes(user, links, callback);
-  } else { 
-    generate_daily_email_without_ledes(user, callback);
-  }
+// Use the user and posts information to generate the content of the daily email and send it
+function generate_and_send_daily_email (user, posts, callback) {
+  if(posts && posts.length > 0) {
+    generate_daily_email_with_ledes(user, posts, callback);
+  } 
+
+  generate_daily_email_without_ledes(user, callback);
 }
 
 // Use the user and password informtion to generate a welcome email and send it
@@ -122,11 +123,14 @@ function send_email(mail_options, callback) {
   smtpTransport.close();
 }
 
-// Wrap it all up. Resolve userid, generate email, and send it
-exports.send_daily = function(userid, links, callback) {
+// Wrap it all up. Resolve userid and postids, generate email, and send it
+exports.send_daily = function(userid, postids, callback) {
   get_user(userid, function(user) {
     log.debug('Found user ' + user.email);
-    generate_and_send_daily_email(user, links, callback);
+    get_posts(postids, function(posts) {
+      log.debug('Found posts');
+      generate_and_send_daily_email(user, posts, callback);
+    });
   });
 };
 

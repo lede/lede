@@ -5,6 +5,20 @@
     "database": "dev_justin"
   },
 
+  "graphConnectionParams": {
+    "dbConfig": {
+      "user_name": "production",
+      "user_password": "z!+A01--nXFAp@O=p"
+    },
+    "serverConfig": {
+      "host": "unburythelede.com",
+      "port": 2424,
+      "user_name": "production",
+      "user_password": "z!+A01--nXFAp@O=p"
+    },
+    "database": "production"
+  },
+
   "log4jsConfig": {
     "levels": {
       "indexer": "INFO",
