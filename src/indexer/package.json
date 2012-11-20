@@ -16,7 +16,7 @@
         "step": ">=0.0.5",
         "underscore": ">=1.2.2",
         "soupselect": ">=0.2.0",
-        "htmlparser": "1.7.6",
+        "htmlparser": "1.7.6", 
         "pg": "*"
     },
     "engine": [ "node >=0.8.8" ],
