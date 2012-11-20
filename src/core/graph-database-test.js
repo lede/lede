@@ -1,5 +1,5 @@
 settings = require('./settings').get("indexer");
-var graphDatalayer = require('./graph-datalayer');
+var graphDatalayer = require('../core/graph-datalayer');
 
 var query = "SELECT FROM OGraphVertex";
 
