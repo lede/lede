@@ -17,16 +17,19 @@ exports.getClient = openClient;
 exports.query = function(query, callback) {
   openClient(function(err, db) {
     if(err) {
+      db.close();
       callback(err);
+      return;
     }
 
     db.command(query, function(err, results) {
       if(err) {
+        db.close();
         callback(err);
+        return;
       }
 
       db.close();
-
       callback(err, results);
     });
   });

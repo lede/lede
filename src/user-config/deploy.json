@@ -64,14 +64,14 @@
       }
     ],
     "levels": {
-      "indexer": "INFO"
+      "indexer": "TRACE"
     }
   },
 
   "indexer": {
     "throttleInterval": 60,
     "workers": {
-      "fast_index,slow_index": 20000
+      "fast_index,slow_index": 1
     }
   },
 

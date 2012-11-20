@@ -6,7 +6,7 @@ var queues = require('../core/resque-queues');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
 var url = require('url');
-var Step = require('step');
+var graphDatalayer = require('../core/graph-datalayer');
 
 // TODO try to identify and longify tiny URLs and click-tracking URLs
 function extractLinks(article, callback) {
@@ -43,57 +43,32 @@ function extractLinks(article, callback) {
       return;
     }
 
-    // throw the links to the discoverer    
+    var processed_links = 0;
+
+    // throw the links to the discoverer, add edges to graph db    
     // TODO: add back validator so that we can leverage blacklist!
-    // Need to find a performant one-pass way of doing this, ideally for links in bulk
-    // Maybe just validate before throwing to discoverer... fire and forget may give a nice boost
-    _.each(links, function(link) { queues.slowDiscover.enqueue({ url: link.href }); });
+    _.each(links, function(link) { 
+      queues.slowDiscover.enqueue({ url: link.href }); 
 
-    /*** query building stuff **/
+      var query = "" + 
+        "CREATE EDGE " +
+        "FROM " + article.rid + " " +
+        "TO (SELECT FROM OGraphVertex WHERE uri = '" + link.href + "')";
 
-    // the templatized fields we'll be using in our prepared statement..
-    var fields = ['uri', 'from_uri', 'link_text'];
-    
-    // the count of records we've build a query for (used for computing offsets)
-    var record_num = 0;
+      console.log("About to execute: " + query);
 
-    // generate the values: ($1, $2, $3, now(), now()), ($4, $5, $6, now(), now())
-    var prepared_links = _.map(links, function(link) {
-
-      var prepared_link = "(" + _.map(fields, function(field, index) {
-        return "$" + ((index + 1) + (record_num * fields.length));
-      }).concat(['now()', 'now()']).join(', ') + ")";
-
-      record_num++;
-
-      return prepared_link;
-    }).join(', ');
-
-    // build up actual final query
-    var query = "INSERT INTO links (uri, from_uri, link_text, created_at, updated_at) VALUES " + prepared_links;  
-
-    log.debug("Running link insertion: " + query);
-
-    // generate the array of arguments to the prepared statement
-    var prepared_arguments = _.flatten(
-      _.map(links, function(link) {
-        return [link.href, article.link, link.text];
-      })
-    );
-
-    // run the query, inserting all of the links we found in this post
-    dbQuery(query, prepared_arguments, function(err, result) {
-      if(err) {
-        log.fatal("Error running query: " + err);
-        log.fatal(query);
-        log.fatal(util.inspect(prepared_arguments));
-        throw err;
-      }
-
-      // say we're done, no error
-      callback(null);
-
+      graphDatalayer.query(query, function(err, results) {
+        if(err) {
+          log.fatal(err);
+          throw err;
+        }
+        processed_links++;
+        if(processed_links >= links.length) {
+          callback(null);
+        }
+      });
     });
+
   });
 
   var parser = new htmlparser.Parser(handler);
