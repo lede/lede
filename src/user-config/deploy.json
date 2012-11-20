@@ -5,6 +5,12 @@
     "database": "production"
   },
 
+  "graphConnectionParams": {
+    "user": "production",
+    "password": "z!+A01--nXFAp@O=p",
+    "database": "production"
+  }
+
   "redisConnectionParams": {
     "host": "unburythelede.com",
     "port": 6379
