@@ -28,8 +28,7 @@
             window.location.href = '/';
           },
           function(message) {
-            console.log(message);
-            $('#error').html(message.result);
+            $('#error').html(message.error);
           }
         );
       }

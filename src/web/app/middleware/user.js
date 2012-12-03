@@ -10,8 +10,8 @@ exports.ensure_user = function (req, res, next) {
   if(req.session.user_id) {
     User.findOne({id: req.session.user_id}, no_err(res, function(user) {
       if(!user) {
-        res.status(401); // not authenticated
-        res.send({ error: 'Invalid user id specified'});
+        res.status(403); // forbidden
+        res.send({ error: 'Invalid session, please log in again'});
       } else {
         req.body.user = user;
         next();
@@ -19,7 +19,7 @@ exports.ensure_user = function (req, res, next) {
     }));
   } else {
     log.info('A non-logged in session attempted to access a users-only endpoint');
-    res.status(401); // not authenticated
-    res.send({ error: 'User id is required but was not specified'});
+    res.status(403); // forbidden
+    res.send({ error: 'Valid session required, please log in'});
   }
 }

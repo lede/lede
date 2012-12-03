@@ -24,15 +24,15 @@ exports.login = function(req, res) {
     User.findOne({email: req.body.user_email}, no_err(res, function(user) {
       if(!user) {
         res.status(403); // forbidden
-        res.send({ result: 'Invalid username or password' });
+        res.send({ error: 'Invalid username or password' });
       } else {
         req.session.user_id = user.id;
-        res.send({ result: 'Logged in as: ' + user.email });
+        res.send({ error: 'Logged in as: ' + user.email });
       }
     }));
   } else {
     res.status(422); // unprocessable entity
-    res.send({ result: 'User name is required but was not specified' });
+    res.send({ error: 'User name is required but was not specified' });
   }
 };
 
@@ -64,7 +64,7 @@ exports.register = function(req, res) {
       // duplicate user, yell
       if(user) {
         res.status(409); // conflict
-        res.send({ result: 'Specified user email already exists, not re-registering.' });
+        res.send({ error: 'Specified user email already exists, not re-registering.' });
       } else {
 
         // create the new userult"
@@ -85,6 +85,6 @@ exports.register = function(req, res) {
 
     // yell about missing required email param
     res.status(422); // unprocessable entity
-    res.send({ result: 'An email must be specified to register an account' });
+    res.send({ error: 'An email must be specified to register an account' });
   }
 };
