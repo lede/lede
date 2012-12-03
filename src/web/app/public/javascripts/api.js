@@ -22,12 +22,26 @@ var api = {
     }
   },
   lede: {
-    list: function logout(success, error) {
+    list: function(success, error) {
       $.ajax({
         url: '/api/ledes/',
         dataType: "json",
         success: success,
         error: error
+      });
+    }
+  },
+  user: {
+    login: function(credentials, success, error) {
+      $.ajax({
+        url: '/api/user/login',
+        data: credentials,
+        type: 'POST',
+        dataType: "json",
+        success: success,
+        error: function (obj) {
+          error(JSON.parse(obj.responseText));
+        }
       });
     }
   }

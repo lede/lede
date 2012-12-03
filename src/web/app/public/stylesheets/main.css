@@ -119,3 +119,7 @@ table {
 table, th, td {
   border: 1px solid black
 }
+
+div.message {
+  background: #FF0000
+}

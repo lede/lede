@@ -23,8 +23,8 @@ exports.login = function(req, res) {
   if(req.body.user_email) {
     User.findOne({email: req.body.user_email}, no_err(res, function(user) {
       if(!user) {
-        res.status(500);
-        res.send({ result: 'Specified username does not exist' });
+        res.status(403); // forbidden
+        res.send({ result: 'Invalid username or password' });
       } else {
         req.session.user_id = user.id;
         res.send({ result: 'Logged in as: ' + user.email });
