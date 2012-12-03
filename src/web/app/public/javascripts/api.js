@@ -27,7 +27,9 @@ var api = {
         url: '/api/ledes/',
         dataType: "json",
         success: success,
-        error: error
+        error: function (obj) {
+          error(JSON.parse(obj.responseText));
+        }
       });
     }
   },

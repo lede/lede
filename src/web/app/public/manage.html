@@ -42,6 +42,7 @@
           $('#ledes-list tbody').html(html);
         },
         function(err) {
+          $('#error').html(err.error);
         });
       }
 
@@ -65,6 +66,8 @@
   <h2>Manage your Ledes</h2>
   <a href='#' id='logout-button' class='button'> Log Out </a><br/>
 
+  <div id='error' class='message'></div>
+
   <table id='ledes-list'>
     <thead>
       <tr>
@@ -73,9 +76,6 @@
         <th>Actions</th>
       </tr>
     <tbody>
-      <tr>
-       <td colspan="*">Loading...</td>
-      </tr>
     </tbody>
   </table>
 </body>
