@@ -7,6 +7,7 @@ var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
 var url = require('url');
 var graphDatalayer = require('../core/graph-datalayer');
+var stringFormat = require("util").format;
 
 // TODO try to identify and longify tiny URLs and click-tracking URLs
 function extractLinks(article, callback) {

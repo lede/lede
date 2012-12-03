@@ -66,9 +66,11 @@ function createNewPosts(source, articles, callback) {
       log.fatal(err);
       throw err;
     }
+
     var pages_created = 0;
     _.each(articles, function(article) {
-      db.command("CREATE VERTEX SET uri = '" + article.link + "'", function(err, results) {
+      var createVertexQueryFormat = "CREATE VERTEX SET uri = '%s'"
+      db.command(, function(err, results) {
         if(err) {
           log.fatal("Error running command: " + err);
           throw err;
@@ -83,7 +85,6 @@ function createNewPosts(source, articles, callback) {
   });
 
 }
-
 
 /** Exports **/
 exports.parseFeed = parseFeed;

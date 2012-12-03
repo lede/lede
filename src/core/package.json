@@ -16,7 +16,8 @@
         "resque": "*",
         "underscore": "*",
         "orientdb": "*",
-        "confuse": "*"
+        "confuse": "*",
+        "generic-pool": "*"
     },
     "engine": [ "node >=0.8.8" ],
     "keywords": [ "lede", "dontfollow" ]
