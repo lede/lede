@@ -17,24 +17,27 @@ var pool = pooler.Pool({
   
   destroy: function(client) { db.close(); },
   
-  max: 10,
+  max: settings.graphConnectionParams.maxPoolSize,
 
   // Make sure to drain()
-  min: 2, 
+  min: settings.graphConnectionParams.minPoolSize, 
 
   // How long a resource can stay idle in pool before being removed
-  idleTimeoutMillis : 30000,
+  idleTimeoutMillis : settings.graphConnectionParams.idleConnectionTimeout,
   
   // Logs via console.log - can also be a function
   log : true 
 });
 
 // Opens a database connection and calls the provided callback with the opened database connection and any errors that might have been encountered
-function openClient(callback) {
+exports.getClient = function openClient(callback) {
   pool.acquire(callback);
 };
 
-exports.getClient = openClient;
+// If you use openClient, MAKE SURE TO RELEASE THAT SHIT!!
+exports.releaseDb = function releaseDb(db) {
+  pool.releaseDb(db);
+};
 
 exports.query = function(query, callback) {
   pool.acquire(function(err, db) {

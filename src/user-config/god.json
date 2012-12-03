@@ -16,7 +16,10 @@
       "user_name": "production",
       "user_password": "z!+A01--nXFAp@O=p"
     },
-    "database": "production"
+    "database": "production",
+    "minPoolSize": 2,
+    "maxPoolSize": 10,
+    "idleConnectionTimeout": 15000
   },
 
   "log4jsConfig": {
