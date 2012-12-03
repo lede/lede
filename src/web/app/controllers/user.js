@@ -31,7 +31,7 @@ exports.login = function(req, res) {
       }
     }));
   } else {
-    res.status(500);
+    res.status(422); // unprocessable entity
     res.send({ result: 'User name is required but was not specified' });
   }
 };
@@ -63,11 +63,11 @@ exports.register = function(req, res) {
 
       // duplicate user, yell
       if(user) {
-        res.status(500);
+        res.status(409); // conflict
         res.send({ result: 'Specified user email already exists, not re-registering.' });
       } else {
 
-        // create the new user
+        // create the new userult"
         password = randomPass(); // HACK: send random password to user in email
         sha_sum = crypto.createHash('sha1');
         sha_sum.update(password);
@@ -84,7 +84,7 @@ exports.register = function(req, res) {
   } else {
 
     // yell about missing required email param
-    res.status(500);
+    res.status(422); // unprocessable entity
     res.send({ result: 'An email must be specified to register an account' });
   }
 };

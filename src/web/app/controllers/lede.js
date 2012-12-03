@@ -15,7 +15,7 @@ exports.create = function(req, res) {
   if(!req.query.target) {
     // invalid request, say so:
     log.warn('Malformed bookmarklet request: ' + util.inspect(req.query));
-    res.status(500);
+    res.status(422); // unprocessable entity
     res.send({ result: 'Failed', message: 'Not all required request fields were present.', original_request: req.query });
     return;
   }
