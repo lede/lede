@@ -69,8 +69,8 @@ function createNewPosts(source, articles, callback) {
 
     var pages_created = 0;
     _.each(articles, function(article) {
-      var createVertexQueryFormat = "CREATE VERTEX SET uri = '%s'"
-      db.command(, function(err, results) {
+      var createVertexQueryFormat = "INSERT INTO Page (uri) VALUES ('%s')"
+      db.command(createVertexQueryFormat, function(err, results) {
         if(err) {
           log.fatal("Error running command: " + err);
           throw err;
