@@ -94,7 +94,7 @@ function fetchFeed(source, done, options) {
   }
   
   requestParams.headers = {
-    "User-Agent": "Feedfetcher-Lede; (+http://unburythelede.com/feedfetcher.html" + (source.id ? "; source-id=" + source.id : "") + ")"
+    "User-Agent": "Lede; (+http://unburythelede.com/indexer.html" + (source.id ? "; source-id=" + source.id : "") + ")"
   };
 
   log.debug("Connecting to: " + util.inspect(requestParams));
