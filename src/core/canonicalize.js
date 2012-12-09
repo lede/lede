@@ -3,6 +3,7 @@ var https = require('https');
 var urlParser = require('url');
 var util = require('util');
 var errors = require('./errors.js');
+var _ = require('underscore');
 
 // getter objects for different protocols
 var schemes = {
@@ -19,17 +20,17 @@ function followLink(url, callback) {
   var requestParams = urlParser.parse(url);
 
   if (!requestParams.hostname) { // check for invalid hostnames (at this time, that really just means null, but maybe we should make it more robust in the future)
-    done(new URIError("Hostname was not specified (or it couldn't be parsed)"));
+    callback(new URIError("Hostname was not specified (or it couldn't be parsed)"));
     return;
   }
 
   if (!requestParams.protocol) {
-    done(new URIError("Protocol was not specified (or it couldn't be parsed)"));
+    callback(new URIError("Protocol was not specified (or it couldn't be parsed)"));
     return;
   }
 
   if (!schemes[requestParams.protocol]) {
-    done(new URIError("Unknown scheme '" + requestParams.protocol + "'"));
+    callback(new URIError("Unknown scheme '" + requestParams.protocol + "'"));
     return;
   }
   
@@ -48,13 +49,13 @@ function followLink(url, callback) {
 
       switch (response.statusCode) {
         case 200:
-          callback(null, { statusCode: response.statusCode });
+          callback(null, { statusCode: response.statusCode, url: url });
           break;
 
         case 301:
         case 302:
         case 307:
-          callback(null, { statusCode: response.statusCode, destination: response.headers['location'] });
+          callback(null, { statusCode: response.statusCode, url: url, next: response.headers['location'] });
           break;
 
         default:
@@ -84,18 +85,19 @@ function followLink(url, callback) {
 }
 
 exports.canonicalize = function(url, callback) {
-  var urlStack = [{ destination: url }];
+  var urlStack = [];
 
   function recursiveFollow(url, cb) {
     followLink(url, function(err, result) {
       if (err) {
         cb(err);
       } else {
+        urlStack.push(result);
+
         if (result.statusCode == 200) {
           cb(null);
         } else {
-          urlStack.push(result);
-          recursiveFollow(result.destination, cb);
+          recursiveFollow(result.next, cb);
         }
       }
     });
