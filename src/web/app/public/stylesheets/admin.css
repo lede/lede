@@ -53,23 +53,45 @@ table {
 body {
   height: 100%;
   min-width: 1000px;
-  font-family: 'Andada', sans-serif; font-weight: lighter;
-  background: url('/images/brillant.png');
+  font-family: 'Istok Web', sans-serif; font-weight: lighter;
+  background: url('/images/dark-background.png');
+  color: #AAA;
+}
+
+a {
+  color: #AAA;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #AAA;
+  text-decoration: underline;
 }
 
 h1 {
-  color: #C80815;
+  color: #FFF;
   font-size: 40px;
 }
 
 h2 {
-  color: #333;
+  color: #FFF;
   font-size: 20px;
   padding: 2% 0;
 }
 
 input {
   border: 1px solid #CCC;
+  margin-bottom: 5px;
+}
+
+button {
+  background: #C80815;
+  padding: 2px 5px;
+  margin: 5px 0;
+  color: #FFF;
+  border: none;
+  border-radius: 3px;
+  font-size: 15px;
 }
 
 div.admin-header {
@@ -100,6 +122,10 @@ div.user-list {
 
 div.user-list ul {
   width: 100%;
+}
+
+div.user-list ul  li {
+  padding: 5px 0;
 }
 
 div.user-list input {
@@ -133,12 +159,15 @@ div.add-lede {
   padding: 0 1%
 }
 
+div.add-lede ul  li {
+  padding: 5px 0;
+}
 div.add-lede input {
   width: 100%;
 }
 
 div.last-email-sent {
-  float: left;
+  float: right;
   text-align: right;
   height: 100%;
   width: 20%;
