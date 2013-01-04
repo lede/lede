@@ -55,7 +55,7 @@ function extractLinks(article, callback) {
       var query = "" + 
         "CREATE EDGE " +
         "FROM " + article.rid + " " +
-        "TO (SELECT FROM OGraphVertex WHERE uri = '" + link.href + "')";
+        "TO (SELECT FROM Page WHERE uri = '" + link.href + "')";
 
       console.log("About to execute: " + query);
 
