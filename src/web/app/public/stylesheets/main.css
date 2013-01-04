@@ -1,13 +1,22 @@
 body {
   font-family: 'Andada', sans-serif; font-weight: lighter;
-  background: url('/images/brillant.png');
+  background: url('/images/news_stand.jpeg');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  margin: 0px;
+}
+
+div.logo-wrapper {
+  background: rgba(0,0,0,0.8);
+  box-shadow: 0px 1px 2px rgba(255,200,200,0.07);
 }
 
 div.mark {
   overflow: hidden;
   float: left;
+  margin-top: 6px;
   height: 100%;
-  width: 100px;
+  width: 32px;
   padding: 5px;
   -webkit-box-sizing: border-box;
 }
@@ -16,19 +25,19 @@ div.mark div.box {
   display: inline;
   float: left;
   clear: none;
-  border: 10px solid #C80815;
-  height: 80px;
+  border: 2px solid #C80815;
+  height: 20px;
   width: 100%;
   -webkit-box-sizing: border-box;
   border-radius: 4px;
 }
 
 div.mark div.line {
-  border-bottom: 10px solid #C80815;
+  border-bottom: 2px solid #C80815;
   float: left;
   clear: left;
   width: 100%;
-  margin-top: 22px;
+  margin-top: 6px;
   border-radius: 4px;
 }
 
@@ -36,30 +45,66 @@ div.logo h1 {
   float: left;
   clear: none;
   margin: 0px;
-  margin-top: -37px;
-  font-size: 200px;
+  font-size: 50px;
   font-weight: lighter;
-  color: #333;
+  color: #FFF;
 }
 
 div.logo {
   overflow: hidden;
-  height: 180px;
-  width: 520px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 100px;
+  height: 65px;
+  padding-left: 20px;
+  padding-top: 10px;
 }
 
-p.tagline {
-  font-size: 60px;
-  width: 530px;
-  margin-top: -20px;
-  margin-left: 30%;
-  color: #555;
-  letter-spacing: 0.29em; 
+div.tagline {
+  color: #fff;
+  font-family: 'Source Sans Pro', sans-serif;
+  text-align: center;
+}
+
+div.land-section {
+  margin-top: 96px;
+}
+
+div.tagline h2 {
+  font-size: 2.5em;
+  margin-bottom: 0px;
+  font-weight: 300;
+}
+
+div.tagline h3 {
+  font-size: 1.5em;
+  margin-top: 8px;
+  font-weight: 300;
+}
+
+div.learn-more {
+  text-align: center;
+  padding-top: 30px;
+}
+
+div.more-info {
+  width: 988px;
   margin-left: auto;
   margin-right: auto;
+  background: rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+div.more-info div.step {
+  float: left;
+  width: 280px;
+  height: 285px;
+  margin: 20px;
+  font-family: 'Source Sans Pro';
+  font-weight: 300;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+div.more-info div.step span.step-description {
+  background: rgba(0,0,0,0.8);
 }
 
 div.signup-wrapper {
@@ -84,14 +129,14 @@ input {
 }
 
 a.button {
-  padding: 5px 10px;
+  font-family: 'Source Sans Pro';
+  font-weight: 300;
+  font-size: 1.5em;
+  padding: 5px 20px 9px 20px;
   background: #C80815;
   color: #fff;
-  box-shadow: 0px 1px rgba(255,255,255,0.4) inset, 0px -2px rgba(0,0,0,0.2) inset;
-  text-shadow: 0px -1px rgba(0,0,0,0.3);
   border-radius: 3px;
   text-decoration: none;
-  font-size: 0.8em;
   margin-right: 5px;
 }
 
@@ -109,20 +154,26 @@ div.fun {
 
 div.signin-link {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 0.8em;
-  color: #444;
+  top: 26px;
+  right: 30px;
 }
 
-div.signin-link a {
-  color: #C80815;
+a.signin {
+  font-family: 'Source Sans Pro';
+  font-weight: 400;
+  font-size: 1em;
+  color: #999;
   text-decoration: none;
 }
 
+a.signin:hover {
+  color: #ccc;
+  text-decoration: none;
+}
 
-div.signin-link a:hover {
-  text-decoration: underline;
+div.more-info {
+  color: #fff;
+  display: none;
 }
 
 table {
