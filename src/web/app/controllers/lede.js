@@ -40,7 +40,7 @@ exports.create = function(req, res) {
 exports.list = function(req, res) {
 
   // create a Lede that points at the post we either created or found
-  Lede.find({ user_id: req.body.user.id }, no_err(res, function(results) {
+  Lede.find({ user_id: req.query.userid }, no_err(res, function(results) {
     log.info("Listed Ledes for user " + req.body.user.id);
     res.send({ ledes: results });
   }));

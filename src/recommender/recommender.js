@@ -10,6 +10,7 @@ var util = require('util');
 //we treat encountering the same link row (id) as a loop and stop recursing
 //the path array holds a list of link IDs that represent the path traversed to get from from_uri to uri
 function backlinksQuery(userId, limit) {
+
   return "WITH RECURSIVE "+
     "search_links(id, uri, from_uri, link_text, created_at, updated_at, depth, path, cycle) AS "+ 
     "( SELECT "+
@@ -20,14 +21,15 @@ function backlinksQuery(userId, limit) {
         "l.id, l.uri, l.from_uri, l.link_text, l.created_at, l.updated_at, sl.depth + 1, "+
         "path || l.id, l.id = ANY(path) "+
         "FROM links l, search_links sl "+
-        "WHERE l.uri = sl.from_uri AND NOT cycle AND l.uri != l.from_uri"+
+        "WHERE lower(l.uri) = lower(sl.from_uri) AND NOT cycle AND lower(l.uri) != lower(l.from_uri)"+
     ") "+
     "SELECT sl.from_uri as uri, COALESCE(p.title, sl.from_uri) as title "+
     "FROM search_links sl "+
-    "LEFT JOIN posts p ON sl.from_uri = p.uri "+
-    "JOIN ledes le ON sl.uri = le.uri "+
+    "LEFT JOIN posts p ON lower(sl.from_uri) = lower(p.uri) "+
+    "JOIN ledes le ON lower(sl.uri) = lower(le.uri) "+
     "WHERE le.user_id = " + userId + " AND (sl.created_at > now() - interval '1 day') "+
     "ORDER BY sl.created_at DESC LIMIT "+ limit;
+
 }
 
 function generateDailyEmails(numberOfLedes, done) {

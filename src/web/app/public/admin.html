@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lede</title>
+  <link href='http://fonts.googleapis.com/css?family=Istok+Web' rel='stylesheet' type='text/css'>
+  <link href='/stylesheets/admin.css' media='all' rel='stylesheet' type='text/css'>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
+  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script> 
+  <script src="//cdnjs.cloudflare.com/ajax/libs/js-signals/0.8.1/js-signals.min.js"></script>
+  <script src="/javascripts/hasher.min.js"></script>
+  <script src="/javascripts/api.js"></script> 
+  <script type='text/javascript'>
+
+    // grab the list of users from the backend
+    function initPage() {
+      api.user.list(function(users) {
+        _.each(users, function(user) {
+          $('.user-list ul').append('<li><a href="#user/'+user.id+'">'+user.email+'</a></li>');
+        });
+      });
+      $('#user-details').hide();
+    }
+
+    // render up the user details 
+    function renderUserDetails(userid) {
+      $('#user-details').fadeOut(200);
+      $('.recent-bookmarklets ul').html('');
+      api.lede.list(userid, function(ledes) {
+        _.each(ledes, function(lede) {
+          $('.recent-bookmarklets ul').append('<li><a href="'+lede.uri+'" target="_blank">'+lede.uri+'</a></li>');
+        });
+        $('#user-details').fadeIn(300);
+      });
+    }
+
+    $(function() {
+
+      //naive route handling
+      function route(newHash, oldHash) {
+        if(newHash.match(/user\/[0-9]+/)) {
+          var userid = newHash.split('/')[1];
+          renderUserDetails(userid);
+        }
+      }
+
+      hasher.changed.add(route);
+      hasher.initialized.add(route);
+      hasher.init();
+
+      initPage();
+    });
+
+  </script>
+</head>
+<body>
+ <div id="admin-header" class="admin-header">
+   <h1>Lede Admin Panel</h1>
+ </div>
+
+  <div id="user-admin" class="user-admin">
+    <div id="user-list" class="user-list">
+      <h2>Users</h2>
+      <input type="text" name="user-search" placeholder="Search">
+      <ul>
+      </ul>
+    </div>
+
+    <div id="user-details" class="user-details">
+
+      <div id="recent-bookmarklets" class="recent-bookmarklets">
+        <h2>Recent Bookmarklets</h2>
+        <ul>
+          <li>http://someplace.com</li>
+          <li>http://someplace.com</li>
+          <li>http://someplace.com</li>
+          <li>http://someplace.com</li>
+          <li>http://someplace.com</li>
+        </ul>
+      </div>
+
+
+      <div id="add-lede" class="add-lede">
+        <h2>Add Lede</h2>
+        <form id="add-lede-form">
+          <input type="text" name="lede-url" placeholder="Lede URL">
+          <input type="text" name="lede-description" placeholder="Lede Description">
+          <button type="submit">Add Lede</button>
+        </form>
+
+        <h2>Queued Ledes</h2>
+        <ul>
+          <li>http://greatscott.com</li>
+          <li>http://greatscott.com</li>
+          <li>http://greatscott.com</li>
+          <li>http://greatscott.com</li>
+        </ul>
+      </div>
+
+      <div id="last-email-sent" class="last-email-sent">
+        Last email sent : %s by %s
+        <form id="send-email-form">
+          <button id="send-email">Send Email</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="admin-dashboard" class="admin-dashboard">
+    <h1>Up and to the right</h1>
+    <img style="float: right" src="/images/steps/news.png"></img>
+  </div>
+  
+<!-- Don't need GA yet, but keeping here for the near future :)
+ <script>
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+-->
+</body>
+</html>

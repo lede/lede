@@ -8,8 +8,8 @@ var api = {
         dataType: "json",
         success: success,
         error: error
-      })
-    },
+      });
+    }
   },
   post: {
     get: function(id, success, error) {
@@ -22,11 +22,14 @@ var api = {
     }
   },
   lede: {
-    list: function(success, error) {
+    list: function(userid, success, error) {
       $.ajax({
-        url: '/api/ledes/',
+        url: '/api/ledes',
+        data: {userid: userid},
         dataType: "json",
-        success: success,
+        success: function(data) {
+          success(data.ledes);
+        },
         error: function (obj) {
           error(JSON.parse(obj.responseText));
         }
@@ -45,6 +48,16 @@ var api = {
           error(JSON.parse(obj.responseText));
         }
       });
+    },
+    list: function(success, error) {
+      $.ajax({
+        url: '/api/user',
+        type: 'GET',
+        success: success,
+        error: function (obj) {
+          error(JSON.parse(obj.responseText));
+        }
+      });
     }
   }
-}
+};

@@ -85,6 +85,8 @@ app.post('/api/user/login', user.login);
 app.post('/api/user/logout', ensure_user, user.logout);
 app.get('/api/user/whoami', ensure_user, user.whoami);
 app.put('/api/user/register', user.register);
+app.get('/api/user', ensure_user, user.findAll);
+
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));
