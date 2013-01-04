@@ -2,64 +2,25 @@
 <head>
   <title>Lede</title>
   <link href='http://fonts.googleapis.com/css?family=Andada' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400' rel='stylesheet' type='text/css'>
   <link href='/stylesheets/main.css' media='all' rel='stylesheet' type='text/css'>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
   <script type='text/javascript'>
     $(function() {
 
-      // animation
-      setTimeout(function() {
-        $('.tagline').fadeIn(1000, function() {
-          setTimeout(function() {
-            $('.logo-wrapper').fadeOut(500, function() {
-              $('.signup-wrapper').fadeIn(500);
-            });
-          }, 500);
-        })
-      }, 500);
-
-      function register() {
-        $.ajax('/api/user/register', {
-          data: {
-            'user_email': $('#email').val()
-          },
-          type: 'PUT',
-          success: function() {
-          }
+        $('a.learn-more').click(function(evt) {
+          $('a.learn-more').fadeOut(200, function() {
+            $('div.more-info').fadeIn();
+          });
+          evt.preventDefault();
         });
-        $('#step-2').fadeIn(500);
-      }
 
-      // handlers for form
-
-      $('a#signup-button').click(function(evt) {
-        register();
-        evt.preventDefault();
-      });
-
-      $('form#signup').submit(function(evt) {
-        register();
-        evt.preventDefault();
-      });
-
-      $('a#bookmarklet').bind('dragend', function(evt) {
-        $('#step-3').fadeIn(500);
-        setTimeout(function() {
-          $('#step-4').fadeIn(500);
-          setTimeout(function() {
-            $('.thanks').fadeIn(500);
-            setTimeout(function() {
-              $('.fun').fadeIn(500);
-            }, 10000);
-          }, 1000);
-        }, 2300);
-      });
     });
   </script>
 </head>
 <body>
   <div class='signin-link'>
-    Already a Lede-er?  <a href='login.html'>Log in</a>.
+    <a class='signin' href='login.html'>Log in</a>.
   </div>
   <div class='logo-wrapper'>
     <div class='logo'>
@@ -70,42 +31,37 @@
       </div> 
       <h1> Lede </h1>
     </div>
-    <p class='tagline' style='display:none'>don't follow</p>
   </div>
-  <div class='signup-wrapper' style='display:none'>
-    <h1> Thanks for helping us develop Lede! </h1>
-    <h2> To get started: </h2>
-    <form id='signup'>
-      <ol>
-        <li> 
-          Enter your
-          <input type='text' id='email' placeholder='email'></input>
-          <a href='#' id='signup-button' class='button'> Ready! </a>
-        </li>
-        <li style='display:none' id='step-2'>
-          Drag the
-          <a href="javascript:(function(){var js_loader = function(source) {var script = document.createElement('SCRIPT');script.type = 'text/javascript';script.src = source;document.getElementsByTagName('head')[0].appendChild(script);}; js_loader('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js');js_loader('http://unburythelede.com/bookmarklet/bundle.js');setTimeout(function() { var img = new Image(); var query = '?target=' + encodeURIComponent(window.location.href) + '&title=' + encodeURIComponent(document.title) + '&no_cache=' + Math.random(); img.src = 'http://unburythelede.com/api/lede' + query; document.body.appendChild(img)}, 500)})();" class='button' id='bookmarklet'> Lede This! </a>
-          button to your bookmarklet bar.
-        </li>
-        <li style='display:none' id='step-3'>
-          When you read something you like in your daily browsing, click the bookmarklet.
-        </li>
-      </ol>
-    </form>
-    <div class='thanks' style='display:none'>
-      <p>
-        In return we'll deliver a special package to your inbox each morning.
-        <br/><br/>
-        Cheers!
-        <br/>
-        &nbsp;&nbsp;&nbsp;&mdash; The Lede Team
-      </p>
+
+  <div class='land land-section'>
+    <div class='tagline'>
+      <h2> Don't follow. </h2>
+      <h3> The news you want, when you want it. </h3>
     </div>
-    <div class='fun' style='display:none'>
-      <h2> What are you still doing here? </h2>
-      <h3> Go Lede <a href='http://somerville.patch.com/'>something</a>! </h3>
+
+    <div class='learn-more'>
+      <a class='learn-more button' href='#'>
+        Learn More
+      </a>
     </div>
   </div>
+
+  <div class='more-info'>
+    <div class='step'>
+      <img class='step-pic' src='/images/steps/news.png' />
+      <span class='step-description'> Read a great article. </span>
+    </div>
+    <div class='step'>
+      <img class='step-pic' src='/images/steps/watch.png' />
+      <span class='step-description'> Cover it with Lede. </span>
+    </div>
+    <div class='step'>
+      <img class='step-pic' src='/images/steps/email.png' />
+      <span class='step-description'> Get daily updates. </span>
+    </div>
+  </div>
+
+
   <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-36275380-1']);
