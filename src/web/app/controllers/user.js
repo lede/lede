@@ -17,6 +17,12 @@ function randomPass() {
   return random_string;
 }
 
+exports.findAll = function(req, res) {
+  User.find({}, no_err(res, function(users) {
+    res.send(users);
+  }));
+};
+
 // FIXME: currently insecure login, will let you access any account with a username
 // just for testing
 exports.login = function(req, res) {
