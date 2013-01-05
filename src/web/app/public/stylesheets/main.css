@@ -1,9 +1,11 @@
 body {
   font-family: 'Andada', sans-serif; font-weight: lighter;
-  background: url('/images/choices.jpeg');
+  background: #000;
+  background-image: url('/images/choices.jpeg');
   background-repeat: no-repeat;
-  background-size: 100%;
+  background-size: 100% 900px;
   margin: 0px;
+  height: 2000px;
 }
 
 div.logo-wrapper {
@@ -88,11 +90,6 @@ div.learn-more {
 }
 
 div.more-info {
-  width: 988px;
-  margin-left: auto;
-  margin-right: auto;
-  background: rgba(0,0,0,0.5);
-  overflow: hidden;
 }
 
 div.more-info div.step {
