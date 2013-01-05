@@ -184,8 +184,30 @@ form.error {
   box-shadow: 0px 1px 4px rgba(255,150,150,0.3) inset, 0px -1px 5px rgba(255,150,150,0.1) inset, 0px 0px 10px rgba(255,150,150,0.3) !important;
 }
 
+form.invisible {
+  box-shadow: none !important;
+}
+
 input:focus {
   outline: none;
+}
+
+a#install-bookmarklet img {
+  padding-top: 50px;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+
+a#install-bookmarklet img.glow {
+  opacity: 0.4;
+}
+
+img#install-arrow {
+  position: relative;
+  top: -600px;
+  left: 297px;
 }
 
 a.button {

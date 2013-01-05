@@ -44,8 +44,32 @@
           console.log('submitting...');
           $('form').removeClass('error');
           $('form label').html('Creating your account...');
+
+          // glow effect
+          setInterval(function() {
+            console.log('glowing...');
+            if($('a#install-bookmarklet img').hasClass('glow')) {
+              $('a#install-bookmarklet img').removeClass('glow');
+            } else {
+              $('a#install-bookmarklet img').addClass('glow');
+            }
+          }, 1000);
+
           $('form input, form a.button').fadeOut(250, function() {
             $('img#signup-loader').fadeIn();
+
+            // just for testing next step..
+            setTimeout(function() {
+              $('form label').html('Drag the bookmarklet to your bar and you\'re all set.');
+              $('img#signup-loader').fadeOut(250, function() { 
+                $('div#get-started h2').html('Your custom bookmarklet is ready.');
+                $('div#get-started h3').html('Install it to start covering stories with Lede.');
+                $('a#install-bookmarklet').fadeIn(250);
+                $('img#install-arrow').fadeIn(250);
+                $('form').addClass('invisible');
+
+              });
+            }, 2000);
           });
         }
         evt.preventDefault();
@@ -126,7 +150,11 @@
         <input id='email' spellcheck='false'></input>
         <a href='#' class='button signup'> Install Bookmarklet </a>
         <img src='/images/ajax-loader.gif' style='display:none' id='signup-loader'></img>
+        <a href='#' id='install-bookmarklet' style='display:none'>
+          <img src='/images/bookmark_add.png'></img>
+        </a>
       </form>
+      <img id='install-arrow' src='/images/install_arrow.png' style='display:none'></img>
     </div>
   </div>
 
