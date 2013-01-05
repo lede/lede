@@ -78,3 +78,18 @@ exports.Blacklist = FastLegS.Base.extend({
     joinOn: 'reason_id'
   }]
 });
+
+exports.Recommendation = FastLegS.Base.extend({
+  tableName: "recommendations",
+  primaryKey: "id",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at",
+  belongsTo: [{
+    user: exports.User,
+    joinOn: 'user_id'
+  },
+  {
+    user: exports.User,
+    joinOn: 'created_by_user_id'
+  }]
+});
