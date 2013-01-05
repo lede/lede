@@ -42,6 +42,7 @@
           }, 300);
         } else {
           console.log('submitting...');
+          $('form').removeClass('error');
           $('form label').html('Creating your account...');
           $('form input, form a.button').fadeOut(250, function() {
             $('img#signup-loader').fadeIn();
