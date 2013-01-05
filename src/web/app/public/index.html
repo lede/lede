@@ -24,6 +24,9 @@
       // section jump for get started
       $('a.get-started').click(function(evt) {
         showSection('#get-started', evt);
+        setTimeout(function() {
+          $('#email').focus();
+        }, 500);
       });
 
     });
@@ -60,7 +63,7 @@
 
   <div class='hero' id='cover-it'>
     <h2> Keep up to date on the stories you care about. </h2> 
-    <h3> Reading a story and want to know what's going to happen next? </h3>
+    <h3> Reading a story and want to know what happens next? </h3>
 
     <div class='steps'>
       <div class='step'>
@@ -90,7 +93,15 @@
 
   <div class='hero' id='get-started'>
     <h2> Get the bookmarklet to start covering stories. </h2>
-    <h3> The Lede bookmarklet is the easiest way to track the stories you care about. </h3>
+    <h3> The easiest way to follow the stories you care about. </h3>
+
+    <div class='signup'>
+      <form id='signup'>
+        <label for='email'> Let us know where to send your daily Ledes: </label>
+        <input id='email' spellcheck='false'></input>
+        <a href='#' class='button signup'> Install Bookmarklet </a>
+      </form>
+    </div>
   </div>
 
   <script type="text/javascript">
