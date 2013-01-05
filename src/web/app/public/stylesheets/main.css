@@ -184,8 +184,22 @@ form.error {
   box-shadow: 0px 1px 4px rgba(255,150,150,0.3) inset, 0px -1px 5px rgba(255,150,150,0.1) inset, 0px 0px 10px rgba(255,150,150,0.3) !important;
 }
 
+form.invisible {
+  box-shadow: none !important;
+}
+
 input:focus {
   outline: none;
+}
+
+a#install-bookmarklet img {
+  padding-top: 40px;
+}
+
+img#install-arrow {
+  position: relative;
+  top: -600px;
+  left: 297px;
 }
 
 a.button {
