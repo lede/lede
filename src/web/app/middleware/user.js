@@ -13,7 +13,7 @@ exports.ensure_user = function (req, res, next) {
         res.status(403); // forbidden
         res.send({ error: 'Invalid session, please log in again'});
       } else {
-        req.body.user = user;
+        req.user = user;
         next();
       }
     }));

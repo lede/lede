@@ -58,6 +58,32 @@ var api = {
           error(JSON.parse(obj.responseText));
         }
       });
+    },
+    check: function(success, error) {
+      $.ajax({
+        url: '/api/user/whoami',
+        success: success,
+        error: error
+      });
+    }
+  },
+  recommendation: {
+    list: function(options, success, error) {
+      $.ajax({
+        url: '/api/recommendation',
+        data: options,
+        success: success,
+        error: error
+      });
+    },
+    create: function(recommendation, success, error) {
+      $.ajax({
+        url: '/api/recommendation',
+        datatype: 'json',
+        data: recommendation,
+        success: success,
+        error: error
+      });
     }
   }
 };

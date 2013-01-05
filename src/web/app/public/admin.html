@@ -13,12 +13,12 @@
 
     // grab the list of users from the backend
     function initPage() {
+      $('#user-details').hide();
       api.user.list(function(users) {
         _.each(users, function(user) {
           $('.user-list ul').append('<li><a href="#user/'+user.id+'">'+user.email+'</a></li>');
         });
       });
-      $('#user-details').hide();
     }
 
     // render up the user details 
@@ -30,6 +30,14 @@
           $('.recent-bookmarklets ul').append('<li><a href="'+lede.uri+'" target="_blank">'+lede.uri+'</a></li>');
         });
         $('#user-details').fadeIn(300);
+      });
+
+      $('.add-lede ul').html('');
+      api.recommendation.list({user_id: userid}, function(recommendations) {
+        console.log(recommendations);
+        _.each(recommendations, function(recommendation) {
+          $('.add-lede ul').append('<li>' + recommendation.uri + '</li>');
+        });
       });
     }
 
