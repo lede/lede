@@ -6,14 +6,25 @@
   <link href='/stylesheets/main.css' media='all' rel='stylesheet' type='text/css'>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
   <script type='text/javascript'>
+
+    function showSection(section, evt) {
+      $('html, body').animate({
+        scrollTop: $(section).offset().top - 20
+      }, 500);
+      evt.preventDefault();
+    }
+
     $(function() {
 
-        $('a.learn-more').click(function(evt) {
-          $('html, body').animate({
-            scrollTop: $('#cover-it').offset().top - 20
-          }, 500);
-          evt.preventDefault();
-        });
+      // section jump for learn more
+      $('a.learn-more').click(function(evt) {
+        showSection('#cover-it', evt);
+      });
+
+      // section jump for get started
+      $('a.get-started').click(function(evt) {
+        showSection('#get-started', evt);
+      });
 
     });
   </script>
@@ -52,15 +63,35 @@
     <h3> Reading a story and want to know what's going to happen next? </h3>
 
     <div class='steps'>
-      <img class='step' src='/images/steps/news.png'></img>
+      <div class='step'>
+        <img class='step' src='/images/steps/news.png'></img>
+        <br/>
+        <span class='step-description'> Read a great story </span>
+      </div>
       <img class='next-step' src='/images/steps/next_step.png'></img>
-      <img class='step' src='/images/steps/watch.png'></img>
+      <div class='step'>
+        <img class='step' src='/images/steps/watch.png'></img>
+        <br/>
+        <span class='step-description'> Tell us to cover it </span>
+      </div>
       <img class='next-step' src='/images/steps/next_step.png'></img>
-      <img class='step' src='/images/steps/email.png'></img>
+      <div class='step'>
+        <img class='step' src='/images/steps/email.png'></img>
+        <br/>
+        <span class='step-description'> Get daily, relevant updates </span>
+      </div>
+    </div>
+
+    <div class='get-bookmarklet'>
+      <a class='button get-started' href='#'> Get Started </a>
     </div>
   </div>
 
 
+  <div class='hero' id='get-started'>
+    <h2> Get the bookmarklet to start covering stories. </h2>
+    <h3> The Lede bookmarklet is the easiest way to track the stories you care about. </h3>
+  </div>
 
   <script type="text/javascript">
     var _gaq = _gaq || [];

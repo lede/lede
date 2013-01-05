@@ -5,7 +5,7 @@ body {
   background-repeat: no-repeat;
   background-size: 100% 900px;
   margin: 0px;
-  height: 2000px;
+  height: 3000px;
 }
 
 div.logo-wrapper {
@@ -98,16 +98,28 @@ div.hero {
   text-align: center;
 }
 
-div.steps {
-  overflow: hidden;
-  width: 1020px;
+div.steps, div.get-bookmarklet {
+  width: 1028px;
   margin-left: auto;
   margin-right: auto;
+}
+
+div.steps {
+  font-weight: 400;
+  overflow: hidden;
   padding-top: 40px;
 }
 
-img.step, img.next-step {
+div.get-bookmarklet {
+  padding-top: 90px;
+}
+
+div.step, img.next-step {
   float: left;
+}
+
+div.step {
+  text-align: center;
 }
 
 img.next-step {
@@ -117,6 +129,10 @@ img.next-step {
 }
 
 div#cover-it {
+  margin-top: 500px;
+}
+
+div#get-started {
   margin-top: 500px;
 }
 
