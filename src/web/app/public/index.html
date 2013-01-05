@@ -8,9 +8,9 @@
   <script src='/javascripts/jquery.jrumble.1.3.js'></script>
   <script type='text/javascript'>
 
-    function showSection(section, evt) {
+    function showSection(section, evt, offset) {
       $('html, body').animate({
-        scrollTop: $(section).offset().top - 20
+        scrollTop: $(section).offset().top - (offset || 20)
       }, 500);
       evt.preventDefault();
     }
@@ -24,7 +24,7 @@
 
       // section jump for get started
       $('a.get-started').click(function(evt) {
-        showSection('#get-started', evt);
+        showSection('#get-started', evt, 150);
         setTimeout(function() {
           $('#email').focus();
         }, 500);
