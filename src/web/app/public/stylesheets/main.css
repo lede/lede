@@ -72,13 +72,13 @@ div.land-section {
   margin-top: 96px;
 }
 
-div.tagline h2 {
+h2 {
   font-size: 2.5em;
   margin-bottom: 0px;
   font-weight: 300;
 }
 
-div.tagline h3 {
+h3 {
   font-size: 1.5em;
   margin-top: 8px;
   font-weight: 300;
@@ -92,20 +92,34 @@ div.learn-more {
 div.more-info {
 }
 
-div.more-info div.step {
-  float: left;
-  width: 280px;
-  height: 285px;
-  margin: 20px;
+div.hero {
   font-family: 'Source Sans Pro';
-  font-weight: 300;
-  font-size: 1.5em;
+  color: #fff;
   text-align: center;
 }
 
-div.more-info div.step span.step-description {
-  background: rgba(0,0,0,0.8);
+div.steps {
+  overflow: hidden;
+  width: 1020px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 40px;
 }
+
+img.step, img.next-step {
+  float: left;
+}
+
+img.next-step {
+  margin-top: 90px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+div#cover-it {
+  margin-top: 500px;
+}
+
 
 div.signup-wrapper {
  width: 510px;

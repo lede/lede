@@ -9,9 +9,9 @@
     $(function() {
 
         $('a.learn-more').click(function(evt) {
-          $('div.intro').fadeOut(200, function() {
-            $('div.more-info').fadeIn();
-          });
+          $('html, body').animate({
+            scrollTop: $('#cover-it').offset().top - 20
+          }, 500);
           evt.preventDefault();
         });
 
@@ -44,9 +44,20 @@
           </a>
         </div>
       </div>
-
     </div>
+  </div>
 
+  <div class='hero' id='cover-it'>
+    <h2> Keep up to date on the stories you care about. </h2> 
+    <h3> Reading a story and want to know what's going to happen next? </h3>
+
+    <div class='steps'>
+      <img class='step' src='/images/steps/news.png'></img>
+      <img class='next-step' src='/images/steps/next_step.png'></img>
+      <img class='step' src='/images/steps/watch.png'></img>
+      <img class='next-step' src='/images/steps/next_step.png'></img>
+      <img class='step' src='/images/steps/email.png'></img>
+    </div>
   </div>
 
 
