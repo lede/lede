@@ -44,6 +44,17 @@
           console.log('submitting...');
           $('form').removeClass('error');
           $('form label').html('Creating your account...');
+
+          // glow effect
+          setInterval(function() {
+            console.log('glowing...');
+            if($('a#install-bookmarklet img').hasClass('glow')) {
+              $('a#install-bookmarklet img').removeClass('glow');
+            } else {
+              $('a#install-bookmarklet img').addClass('glow');
+            }
+          }, 1000);
+
           $('form input, form a.button').fadeOut(250, function() {
             $('img#signup-loader').fadeIn();
 
@@ -51,9 +62,12 @@
             setTimeout(function() {
               $('form label').html('Drag the bookmarklet to your bar and you\'re all set.');
               $('img#signup-loader').fadeOut(250, function() { 
+                $('div#get-started h2').html('Your custom bookmarklet is ready.');
+                $('div#get-started h3').html('Install it to start covering stories with Lede.');
                 $('a#install-bookmarklet').fadeIn(250);
                 $('img#install-arrow').fadeIn(250);
                 $('form').addClass('invisible');
+
               });
             }, 2000);
           });

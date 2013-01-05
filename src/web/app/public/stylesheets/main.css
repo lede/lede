@@ -193,7 +193,15 @@ input:focus {
 }
 
 a#install-bookmarklet img {
-  padding-top: 40px;
+  padding-top: 50px;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+
+a#install-bookmarklet img.glow {
+  opacity: 0.4;
 }
 
 img#install-arrow {
