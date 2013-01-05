@@ -29,6 +29,12 @@
         }, 500);
       });
 
+      // just testing error styles
+      $('a.signup').click(function(evt) {
+        $('form').addClass('error');
+        evt.preventDefault();
+      });
+
     });
   </script>
 </head>
