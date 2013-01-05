@@ -71,6 +71,7 @@ a:hover {
 h1 {
   color: #FFF;
   font-size: 40px;
+  line-height: 50px;
 }
 
 h2 {
@@ -95,8 +96,9 @@ button {
 }
 
 div.admin-header {
-  padding: 1%;
-  height: 5%;
+  padding: 5px;
+  height: 50px;
+  background: rgba(0,0,0,0.5);
 }
 
 div.user-admin {
