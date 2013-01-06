@@ -29,6 +29,7 @@
       });
     }
 
+    // grab the list of ledes from the backend
     function updateRecommendations(userid, callback) {
       api.recommendation.list({user_id: userid}, function(recommendations) {
         var li = recommendations.length ? '' : '<li>Queue up some ledes!</li>'; 
@@ -47,6 +48,7 @@
       callback();
     }
 
+    // grab the list of bookmarklet hits from the backend
     function updateLedes(userid, callback) {
       api.lede.list(userid, function(ledes) {
         var li = ledes.length ? '' : '<li>No bookmarklet hits yet. Check back soon!</li>';
@@ -69,39 +71,40 @@
     // render up the user details 
     function renderUserDetails(userid) {
       var callbackCount = 2;
-      $('#user-details').hide();
-      $('.recent-bookmarklets ul').html('');
-      $('.add-lede ul').html('');
+      $('#user-details').fadeOut(300);
+
       updateLedes(userid, function(){
         callbackCount--;
         if(callbackCount === 0) {
           $('#user-details').fadeIn(200);
         }
       });
+
       updateRecommendations(userid, function(){
         callbackCount--;
         if(callbackCount === 0) {
           $('#user-details').fadeIn(200);
         }
       });
+
     }
 
     $(function() {
 
       //naive route handling
-      function route(newHash, oldHash) {
+      function router(newHash, oldHash) {
         if(newHash.match(/user\/[0-9]+/)) {
           var userid = newHash.split('/')[1];
           renderUserDetails(userid);
         }
       }
 
-      hasher.changed.add(route);
-      hasher.initialized.add(route);
+      hasher.changed.add(router);
+      hasher.initialized.add(router);
       hasher.init();
 
       api.user.check(function(user) {
-        activeUser = user;
+        activeUser = user.result;
       }, 
       function() {
         window.location='/login.html';

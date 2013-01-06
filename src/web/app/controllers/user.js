@@ -54,7 +54,7 @@ exports.logout = function(req, res) {
 // NOTE: we don't need to check for req.session.user because this should
 // always be behind an ensure_user middleware filter
 exports.whoami = function(req, res) {
-  res.send({ result: req.user.email });
+  res.send({ result: req.user });
 };
 
 // FIXME: hacked up registration that doesn't take or create a password
