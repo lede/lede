@@ -26,8 +26,8 @@ exports.findAll = function(req, res) {
 // FIXME: currently insecure login, will let you access any account with a username
 // just for testing
 exports.login = function(req, res) {
-  if(req.user_email) {
-    User.findOne({email: req.user_email}, no_err(res, function(user) {
+  if(req.body.user_email) {
+    User.findOne({email: req.body.user_email}, no_err(res, function(user) {
       if(!user) {
         res.status(403); // forbidden
         res.send({ error: 'Invalid username or password' });
@@ -54,7 +54,7 @@ exports.logout = function(req, res) {
 // NOTE: we don't need to check for req.session.user because this should
 // always be behind an ensure_user middleware filter
 exports.whoami = function(req, res) {
-  res.send({ result: req.user.email });
+  res.send({ result: req.user });
 };
 
 // FIXME: hacked up registration that doesn't take or create a password
@@ -62,10 +62,10 @@ exports.whoami = function(req, res) {
 exports.register = function(req, res) {
 
   // email param is required
-  if(req.user_email) {
+  if(req.body.user_email) {
 
     // ensure we don't already have a user with that email
-    User.findOne({email:  req.user_email}, no_err(res, function(user) {
+    User.findOne({email:  req.body.user_email}, no_err(res, function(user) {
 
       // duplicate user, yell
       if(user) {
@@ -77,13 +77,13 @@ exports.register = function(req, res) {
         password = randomPass(); // HACK: send random password to user in email
         sha_sum = crypto.createHash('sha1');
         sha_sum.update(password);
-        User.create({ email: req.user_email, password_hash: sha_sum.digest('hex')  }, no_err(res, function(created_users) {
+        User.create({ email: req.body.user_email, password_hash: sha_sum.digest('hex')  }, no_err(res, function(created_users) {
           req.session.user_id = created_users.rows[0].id;
           log.info('Logging in as new user: ' + util.inspect(created_users.rows[0]));
           notifier.send_welcome(created_users.rows[0].id, password, function() {
             log.info('Sent welcome email for ' + created_users.rows[0].id);
           });
-          res.send({ result: 'User created for ' + req.user_email });
+          res.send({ result: 'User created for ' + req.body.user_email });
         }));
       }
     }));
