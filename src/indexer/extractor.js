@@ -2,6 +2,11 @@
 // representative image from a raw web page, for use when there is no RSS feed
 // available
 
+var util = require('util');
+var _ = require('underscore');
+var htmlparser = require('htmlparser');
+var select = require('soupselect').select;
+
 /** extract the content from the web page, using some basic heuristics and metadata to figure out which parts are the parts that we seek.  the result object contains properties for 'title', 'image' and 'description'.
  */
 function extractContent(siteBody, done) {
@@ -17,11 +22,7 @@ function extractContent(siteBody, done) {
           description: extractDescription(dom)
         };
 
-        // paragraph
-
-        done(null, _.map(links, function(e) {
-          return e.attribs.href;
-        }));
+        done(null, result);
       }
     }));
     log.trace("Built parser");
@@ -81,22 +82,24 @@ function extractTitle(dom) {
   
   // h1
   var h1Tags = _.filter(select(dom, "body h1"), function(e) {
-    return e.string != "";
+    log.info(util.inspect(e));
+    return findFirstTextChild(e);
   });
 
+  log.info("tags object: " + util.inspect(h1Tags));
   if (h1Tags.length) {
     log.debug("using h1 tag");
-    return h1Tags[0].string;
+    return findFirstTextChild(h1Tags[0]).data;
   }
 
   // h2
   var h2Tags = _.filter(select(dom, "body h2"), function(e) {
-    return e.string != "";
+    return findFirstTextChild(e);
   });
 
   if (h2Tags.length) {
     log.debug("using h2 tag");
-    return h2Tags[0].string;
+    return findFirstTextChild(h2Tags[0]).data;
   }
   
   // give up
@@ -117,15 +120,29 @@ function extractDescription(dom) {
   
   // first P tag of the body
   var pTags = _.filter(select(dom, "body p"), function(e) {
-    return e.string != "";
+    return findFirstTextChild(e);
   });
 
   if (pTags.length) {
     log.debug("using body P tag");
-    return pTags[0].string;
+    return findFirstTextChild(pTags[0]).data;
   }
   
   // give up
   log.debug("unable to find description");
   return null;
 }
+
+function findFirstTextChild(element) {
+  if (!element.children) {
+    return null;
+  }
+
+  var textChildren = _.filter(element.children, function(c) {
+    return c.type == 'text';
+  });
+
+  return textChildren.length ? textChildren[0] : null;
+}
+
+exports.extractContent = extractContent;
