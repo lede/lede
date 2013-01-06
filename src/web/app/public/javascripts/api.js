@@ -79,6 +79,7 @@ var api = {
     create: function(recommendation, success, error) {
       $.ajax({
         url: '/api/recommendation',
+        type: 'POST',
         datatype: 'json',
         data: recommendation,
         success: success,

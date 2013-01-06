@@ -92,9 +92,10 @@
     $(function() {
 
       //naive route handling
+      var userid;
       function router(newHash, oldHash) {
         if(newHash.match(/user\/[0-9]+/)) {
-          var userid = newHash.split('/')[1];
+          userid = newHash.split('/')[1];
           renderUserDetails(userid);
         }
       }
@@ -111,6 +112,23 @@
       });
 
       initPage();
+
+      $('#add-lede-form').submit(function(evt) {
+        evt.preventDefault();
+
+        var recommendation = { 
+          user_id: userid,
+          created_by_user_id: activeUser.id,
+          uri: $('input[name=lede-url]').val(),
+          title: $('input[name=lede-description]').val(),
+          sent: false
+        };
+console.log(recommendation);
+        api.recommendation.create(recommendation, function() {
+          updateRecommendations(userid, function() {
+          });
+        });
+      });
     });
 
   </script>
