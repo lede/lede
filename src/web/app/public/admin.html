@@ -11,44 +11,78 @@
   <script src="/javascripts/api.js"></script> 
   <script type='text/javascript'>
 
+    var activeUser = {};
+
     // grab the list of users from the backend
     function initPage() {
       $('#user-details').hide();
       api.user.list(function(users) {
         _.each(users, function(user) {
-          $('.user-list ul').append('<li><a href="#user/'+user.id+'">'+user.email+'</a></li>');
+          $('.user-list ul').append(
+            '<li>'+
+              '<a href="#user/'+user.id+'">'+
+                user.email+
+              '</a>'+
+            '</li>'
+          );
         });
       });
     }
 
-    // render up the user details 
-    function renderUserDetails(userid) {
-      $('#user-details').fadeOut(200);
-
-      $('.recent-bookmarklets ul').html('');
-      api.lede.list(userid, function(ledes) {
-        if(ledes.length > 0) {
-          $('.recent-bookmarklets ul').html('');
-        } else {
-          $('.recent-bookmarklets ul').html('<li>No bookmarklet hits yet. Check back soon!</li>');
-        }
-        _.each(ledes, function(lede) {
-          $('.recent-bookmarklets ul').append('<li><a href="'+lede.uri+'" target="_blank">'+lede.uri+'</a></li>');
-        });
-        $('#user-details').fadeIn(200);
-      });
-
-      $('.add-lede ul').html('');
+    function updateRecommendations(userid, callback) {
       api.recommendation.list({user_id: userid}, function(recommendations) {
-        if(recommendations.length > 0) {
-          $('.add-lede ul').html('');
-        } else {
-          $('.add-lede ul').html('<li>Queue up some ledes!</li>');
-        }
+        var li = recommendations.length ? '' : '<li>Queue up some ledes!</li>'; 
+        $('.add-lede ul').html(li);
 
         _.each(recommendations, function(recommendation) {
-          $('.add-lede ul').append('<li>' + recommendation.uri + '</li>');
+          $('.add-lede ul').append(
+            '<li>'+
+              '<a href="' + recommendation.uri + '" target="_blank">'+
+                recommendation.title+
+              '</a>'+
+            '</li>'
+          );
         });
+      });
+      callback();
+    }
+
+    function updateLedes(userid, callback) {
+      api.lede.list(userid, function(ledes) {
+        var li = ledes.length ? '' : '<li>No bookmarklet hits yet. Check back soon!</li>';
+        $('.recent-bookmarklets ul').html(li);
+
+        _.each(ledes, function(lede) {
+          $('.recent-bookmarklets ul').append(
+            '<li>'+
+              '<a href="'+lede.uri+'" target="_blank">'+
+                lede.uri+
+              '</a>'+
+            '</li>'
+          );
+        });
+      });
+      callback();
+    }
+
+
+    // render up the user details 
+    function renderUserDetails(userid) {
+      var callbackCount = 2;
+      $('#user-details').hide();
+      $('.recent-bookmarklets ul').html('');
+      $('.add-lede ul').html('');
+      updateLedes(userid, function(){
+        callbackCount--;
+        if(callbackCount === 0) {
+          $('#user-details').fadeIn(200);
+        }
+      });
+      updateRecommendations(userid, function(){
+        callbackCount--;
+        if(callbackCount === 0) {
+          $('#user-details').fadeIn(200);
+        }
       });
     }
 
@@ -66,6 +100,13 @@
       hasher.initialized.add(route);
       hasher.init();
 
+      api.user.check(function(user) {
+        activeUser = user;
+      }, 
+      function() {
+        window.location='/login.html';
+      });
+
       initPage();
     });
 
@@ -73,11 +114,9 @@
 </head>
 <body>
  <div id="admin-header" class="admin-header">
-   
-   <img style="float: right; margin-top: -10px;" src="/images/control_panel_alt.png" width="64" height="64">
+   <img class="header" src="/images/control_panel_alt.png" width="64" height="64">
    <h1>Lede Panel</h1>
  </div>
-
   <div id="user-admin" class="user-admin">
     <div id="user-list" class="user-list">
       <h2>Users</h2>
@@ -85,21 +124,13 @@
       <ul>
       </ul>
     </div>
-
     <div id="user-details" class="user-details">
 
       <div id="recent-bookmarklets" class="recent-bookmarklets">
         <h2>Recent Bookmarklets</h2>
         <ul>
-          <li>http://someplace.com</li>
-          <li>http://someplace.com</li>
-          <li>http://someplace.com</li>
-          <li>http://someplace.com</li>
-          <li>http://someplace.com</li>
         </ul>
       </div>
-
-
       <div id="add-lede" class="add-lede">
         <h2>Add Lede</h2>
         <form id="add-lede-form">
@@ -110,26 +141,18 @@
 
         <h2>Queued Ledes</h2>
         <ul>
-          <li>http://greatscott.com</li>
-          <li>http://greatscott.com</li>
-          <li>http://greatscott.com</li>
-          <li>http://greatscott.com</li>
         </ul>
       </div>
-
       <div id="last-email-sent" class="last-email-sent">
         Last email sent : %s by %s
         <form id="send-email-form">
           <button id="send-email">Send Email</button>
         </form>
       </div>
-
     </div>
   </div>
-
   <div id="admin-dashboard" class="admin-dashboard">
-    <h1>Up and to the right</h1>
-    <img style="float: right" src="/images/steps/news.png"></img>
+    <img src="/images/chart.png"></img>
   </div>
   
 <!-- Don't need GA yet, but keeping here for the near future :)

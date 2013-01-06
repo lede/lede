@@ -101,6 +101,11 @@ div.admin-header {
   background: rgba(0,0,0,0.5);
 }
 
+img.header {
+  float: right; 
+  margin-top: -10px;
+}
+
 div.user-admin {
   position: relative;
   height: 45%;
