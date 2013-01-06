@@ -57,7 +57,17 @@ function extractImage(dom) {
   }
 
   // first image tag inside the body paragraph
-  var imgTags = select(dom, "body p img");
+  var imgPTags = select(dom, "body p img");
+
+  if (imgPTags.length) {
+    log.debug("using image tag in paragraph in body");
+    return imgPTags[0].attribs.src;
+  }
+
+  // first image tag inside the body 
+  var imgTags = select(dom, "img");
+
+  log.debug("img: " + util.inspect(imgTags));
 
   if (imgTags.length) {
     log.debug("using image tag in body");
@@ -79,14 +89,23 @@ function extractTitle(dom) {
     log.debug("using OG title meta");
     return ogTitleMetas[0].attribs.content;
   }
-  
-  // h1
-  var h1Tags = _.filter(select(dom, "body h1"), function(e) {
-    log.info(util.inspect(e));
+
+  // title tag
+  var titleTags = _.filter(select(dom, "head title"), function(e) {
     return findFirstTextChild(e);
   });
 
-  log.info("tags object: " + util.inspect(h1Tags));
+  if (titleTags.length) {
+    log.debug("using title tag");
+    return findFirstTextChild(titleTags[0]).data;
+  }
+  
+  // h1
+  var h1Tags = _.filter(select(dom, "body h1"), function(e) {
+    //log.info(util.inspect(e));
+    return findFirstTextChild(e);
+  });
+
   if (h1Tags.length) {
     log.debug("using h1 tag");
     return findFirstTextChild(h1Tags[0]).data;
@@ -139,7 +158,7 @@ function findFirstTextChild(element) {
   }
 
   var textChildren = _.filter(element.children, function(c) {
-    return c.type == 'text';
+    return c.type == 'text' && c.data != "";
   });
 
   return textChildren.length ? textChildren[0] : null;
