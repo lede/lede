@@ -7,7 +7,9 @@ var _ = require('underscore');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
 
-function extractContent(siteBody, done) {
+function extractContent(url, done) {
+  // TODO
+  done("not implemented");
 }
 
 /** extract the content from the web page, using some basic heuristics and metadata to figure out which parts are the parts that we seek.  the result object contains properties for 'title', 'image' and 'description'.
