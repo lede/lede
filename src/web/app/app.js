@@ -19,6 +19,7 @@ var express = require('express')
   , recommendation = require('./controllers/recommendation')
   , notifier = require('./controllers/notifier')
   , notification = require('./controllers/notification')
+  , extractor = require('./controllers/extractor')
   , _ = require('underscore')
   , redis_store = require('connect-redis')(express)
   , redis = require('redis').createClient()
@@ -91,15 +92,16 @@ app.put('/api/user/register', user.register);
 app.get('/api/user', ensure_user, user.findAll);
 app.get('/api/user/:user_id', ensure_user, user.findOne);
 
-/*
 app.get('/api/recommendation', ensure_user, recommendation.list);
 app.post('/api/recommendation', ensure_user, recommendation.create);
-*/
 
 app.get('/api/notification', ensure_user, notification.list);
 app.post('/api/notification', ensure_user, notification.create);
 
 app.post('/api/notifier/send_daily', ensure_user, notifier.send_daily);
+
+app.post('/api/extractor/extract', ensure_user, extractor.extract);
+app.post('/api/extractor/reformatImage', ensure_user, extractor.reformatImage);
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));
