@@ -12,6 +12,7 @@
   <script type='text/javascript'>
 
     var activeUser = {};
+    var adminUser = {};
 
     // grab the list of users from the backend
     function initPage() {
@@ -31,7 +32,7 @@
 
     // grab the list of ledes from the backend
     function updateRecommendations(userid, callback) {
-      api.recommendation.list({user_id: userid}, function(recommendations) {
+      api.recommendation.list({user_id: userid, sent: false}, function(recommendations) {
         var li = recommendations.length ? '' : '<li>Queue up some ledes!</li>'; 
         $('.add-lede ul').html(li);
 
@@ -96,7 +97,10 @@
       function router(newHash, oldHash) {
         if(newHash.match(/user\/[0-9]+/)) {
           userid = newHash.split('/')[1];
-          renderUserDetails(userid);
+          api.user.find(userid, function(user) {
+            activeUser = user;
+            renderUserDetails(user.id);
+          });
         }
       }
 
@@ -105,7 +109,7 @@
       hasher.init();
 
       api.user.check(function(user) {
-        activeUser = user.result;
+        adminUser = user.result;
       }, 
       function() {
         window.location='/login.html';
@@ -113,22 +117,42 @@
 
       initPage();
 
+      // Handler to add ledes
       $('#add-lede-form').submit(function(evt) {
         evt.preventDefault();
 
         var recommendation = { 
           user_id: userid,
-          created_by_user_id: activeUser.id,
+          created_by_user_id: adminUser.id,
           uri: $('input[name=lede-url]').val(),
           title: $('input[name=lede-description]').val(),
           sent: false
         };
-console.log(recommendation);
+
         api.recommendation.create(recommendation, function() {
           updateRecommendations(userid, function() {
+            $('input[name=lede-url]').val('');
+            $('input[name=lede-description]').val('');
           });
         });
       });
+
+      // Handler to send daily email
+      $('#send-email').click(function(evt) {
+        evt.preventDefault();
+        $('#notification').html(
+          '<p>Sending Email...</p>'+
+          '<img src="/images/ajax-loader.gif">'
+        );
+        $('#notification').fadeIn(200);
+        api.notifier.sendDaily(activeUser, function(r) {
+          updateRecommendations(userid, function() {
+            $('#notification').fadeOut(500);
+            $('#notification').html('');
+          });
+        });
+      });
+
     });
 
   </script>
@@ -173,7 +197,7 @@ console.log(recommendation);
     </div>
   </div>
   <div id="admin-dashboard" class="admin-dashboard">
-    <img src="/images/chart.png"></img>
+    <div id="notification" class="notification"></div>
   </div>
   
 <!-- Don't need GA yet, but keeping here for the near future :)

@@ -23,6 +23,17 @@ exports.findAll = function(req, res) {
   }));
 };
 
+exports.findOne = function(req, res) {
+  User.findOne({id: req.route.params.user_id}, function(err, user) {
+    if(err) {
+      res.status(404);
+      res.send({error: 'User with this id not found'});
+    } else if (user) {
+      res.send(user);
+    }
+  });
+};
+
 // FIXME: currently insecure login, will let you access any account with a username
 // just for testing
 exports.login = function(req, res) {
