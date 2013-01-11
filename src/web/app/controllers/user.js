@@ -81,7 +81,7 @@ exports.register = function(req, res) {
       // duplicate user, yell
       if(user) {
         res.status(409); // conflict
-        res.send({ error: 'Specified user email already exists, not re-registering.' });
+        res.send({ error: 'An account with that email already exists!' });
       } else {
 
         // create the new userult"
