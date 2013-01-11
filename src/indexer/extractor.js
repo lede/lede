@@ -6,15 +6,21 @@ var util = require('util');
 var _ = require('underscore');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
+var http = require('http-get');
 
 function extractContent(url, done) {
-  // TODO
-  done("not implemented");
+  http.get(url, function(err, result) {
+    if (err) {
+      done(err);
+    } else {
+      extractContentFromHtml(result.buffer, done);
+    }
+  });
 }
 
 /** extract the content from the web page, using some basic heuristics and metadata to figure out which parts are the parts that we seek.  the result object contains properties for 'title', 'image' and 'description'.
  */
-function extractContentFromBody(siteBody, done) {
+function extractContentFromHtml(siteBody, done) {
   try {
     var parser = new htmlparser.Parser(new htmlparser.DefaultHandler(function(err, dom) {
       if (err) {

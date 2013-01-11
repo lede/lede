@@ -17,7 +17,8 @@
         "underscore": ">=1.2.2",
         "soupselect": ">=0.2.0",
         "htmlparser": "1.7.6", 
-        "pg": "*"
+        "pg": "*",
+        "http-get": "*"
     },
     "engine": [ "node >=0.8.8" ],
     "keywords": ["rss", "feed", "atom", "parser", "indexer", "fetcher", "lede"]
