@@ -68,12 +68,22 @@ exports.whoami = function(req, res) {
   res.send({ result: req.user });
 };
 
-// FIXME: hacked up registration that doesn't take or create a password
-// just for testing
 exports.register = function(req, res) {
+
 
   // email param is required
   if(req.body.user_email) {
+
+    // validate email
+    // FIXME: this should probably go in a model validation, but we don't have those (yet)
+    // NOTE: validating emails according to the RFC with a regex is basically impossible,
+    // but this should handle all sane addresses, which is good enough for now.
+    var email_validator = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i;
+    if(!email_validator.test(req.body.user_email)) {
+      res.status(400); // bad request
+      res.send({ error: 'That email looks invalid!' });
+      return;
+    }
 
     // ensure we don't already have a user with that email
     User.findOne({email:  req.body.user_email}, no_err(res, function(user) {
