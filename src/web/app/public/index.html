@@ -33,6 +33,7 @@
 
       // validate and submit signup
       $('a.signup').click(function(evt) {
+        console.log('Clicked!');
         if($('form input#email').val().length == 0) {
           $('form').addClass('error');
           $('form.error').trigger('startRumble');
@@ -57,7 +58,9 @@
             }
           }, 1000);
 
-          $('form input, form a.button').fadeOut(250, function() {
+          $('form input').fadeOut(250);
+          $('form a.button').fadeOut(250, function() {
+            console.log('Registering...');
             $('img#signup-loader').fadeIn();
             api.user.register(
               $('form #email').val(),
