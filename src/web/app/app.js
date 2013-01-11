@@ -16,7 +16,7 @@ var express = require('express')
   , links_dashboard = require('./controllers/links_dashboard')
   , link = require('./controllers/link')
   , post = require('./controllers/post')
-  , recommendation = require('./controllers/recommendation')
+  //, recommendation = require('./controllers/recommendation')
   , _ = require('underscore')
   , redis_store = require('connect-redis')(express)
   , redis = require('redis').createClient()
@@ -88,8 +88,10 @@ app.get('/api/user/whoami', ensure_user, user.whoami);
 app.put('/api/user/register', user.register);
 app.get('/api/user', ensure_user, user.findAll);
 
+/*
 app.get('/api/recommendation', ensure_user, recommendation.list);
 app.post('/api/recommendation', ensure_user, recommendation.create);
+*/
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));

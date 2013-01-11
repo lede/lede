@@ -62,11 +62,21 @@
             setTimeout(function() {
               $('form label').html('Drag the bookmarklet to your bar and you\'re all set.');
               $('img#signup-loader').fadeOut(250, function() { 
-                $('div#get-started h2').html('Your custom bookmarklet is ready.');
-                $('div#get-started h3').html('Install it to start covering stories with Lede.');
-                $('a#install-bookmarklet').fadeIn(250);
-                $('img#install-arrow').fadeIn(250);
+                $('div#get-started h2, div#get-started h3, div#get-started label').fadeOut();
+                $('a#install-bookmarklet').show();
                 $('form').addClass('invisible');
+
+                setTimeout(function() { 
+                  $('div#get-started h2').html('Your custom bookmarklet is ready.');
+                  $('div#get-started h3').html('Install it to start covering stories with Lede.');
+                  $('div#get-started h2, div#get-started h3, div#get-started label').fadeIn();
+                  setTimeout(function() {
+                    $('a#install-bookmarklet img').addClass('fly-in');
+                    setTimeout(function() {
+                      $('img#install-arrow').fadeIn();
+                    }, 1000);
+                  }, 2000);
+                }, 1000);
 
               });
             }, 2000);
