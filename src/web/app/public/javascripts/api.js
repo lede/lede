@@ -75,6 +75,19 @@ var api = {
         success: success,
         error: error
       });
+    },
+    register: function(email, success, error) {
+      $.ajax({
+        url: '/api/user/register',
+        data: {
+          user_email: email
+        },
+        type: 'PUT',
+        success: success,
+        error: function(obj) {
+          error(JSON.parse(obj.responseText));
+        }
+      });
     }
   },
   recommendation: {

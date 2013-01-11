@@ -198,10 +198,22 @@ a#install-bookmarklet img {
   -moz-transition: all 1s ease-in-out;
   -o-transition: all 1s ease-in-out;
   transition: all 1s ease-in-out;
+  cursor: move;
+  position: relative;
+  left: -1000;
+  opacity: 0.4;
+  width: 48px;
+  height: 48px
+}
+
+a#install-bookmarklet img.fly-in {
+  left: 0;
 }
 
 a#install-bookmarklet img.glow {
-  opacity: 0.4;
+  opacity: 1.0;
+  width: 58px;
+  height: 58px
 }
 
 img#install-arrow {

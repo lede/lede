@@ -91,8 +91,10 @@ app.put('/api/user/register', user.register);
 app.get('/api/user', ensure_user, user.findAll);
 app.get('/api/user/:user_id', ensure_user, user.findOne);
 
+/*
 app.get('/api/recommendation', ensure_user, recommendation.list);
 app.post('/api/recommendation', ensure_user, recommendation.create);
+*/
 
 app.get('/api/notification', ensure_user, notification.list);
 app.post('/api/notification', ensure_user, notification.create);
