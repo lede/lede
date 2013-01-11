@@ -7,9 +7,14 @@ var _ = require('underscore');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
 
+function extractContent(url, done) {
+  // TODO
+  done("not implemented");
+}
+
 /** extract the content from the web page, using some basic heuristics and metadata to figure out which parts are the parts that we seek.  the result object contains properties for 'title', 'image' and 'description'.
  */
-function extractContent(siteBody, done) {
+function extractContentFromBody(siteBody, done) {
   try {
     var parser = new htmlparser.Parser(new htmlparser.DefaultHandler(function(err, dom) {
       if (err) {
@@ -164,4 +169,12 @@ function findFirstTextChild(element) {
   return textChildren.length ? textChildren[0] : null;
 }
 
+/** @brief reformat the image at the URL to fit our email format, which is 75x75 pixels.  this is not a very flexible function, but I figure we can generalize it later.  it then stores the image somewhere and the result will be a key to that store (probably a relational DB).
+ */
+function reformatImage(url, done) {
+  // TODO
+  done("not implemented");
+}
+
 exports.extractContent = extractContent;
+exports.reformatImage = reformatImage;
