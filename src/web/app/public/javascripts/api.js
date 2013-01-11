@@ -85,7 +85,8 @@ api = {
         type: 'PUT',
         success: success,
         error: function(obj) {
-          error(JSON.parse(obj.responseText));
+          console.log(obj.responseText);
+          error(obj);
         }
       });
     }
