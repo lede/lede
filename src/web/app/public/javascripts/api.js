@@ -1,6 +1,6 @@
 // API wrapper for express REST-y API
 // TODO: flesh out API
-var api = {
+api = {
   link: {
     fromPost: function(id, success, error) {
       $.ajax({
