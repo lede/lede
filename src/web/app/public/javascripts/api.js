@@ -86,7 +86,7 @@ api = {
         success: success,
         error: function(obj) {
           console.log(obj.responseText);
-          error(obj);
+          error(JSON.parse(obj.responseText));
         }
       });
     }

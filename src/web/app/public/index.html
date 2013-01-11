@@ -16,6 +16,22 @@
       evt.preventDefault();
     }
 
+    function registerError(message) {
+      $('form').addClass('error');
+      $('form.error').trigger('startRumble');
+      $('form label').html(message);
+      $('img#signup-loader').fadeOut(function() {
+        $('form label').fadeIn();
+        $('form input').fadeIn(function() { 
+          $('form input#email').focus();
+        });
+        $('form a.button').fadeIn();
+      });
+      setTimeout(function() {
+        $('form.error').trigger('stopRumble');
+      }, 300);
+    }
+
     $(function() {
 
       // section jump for learn more
@@ -30,6 +46,16 @@
           $('#email').focus();
         }, 500);
       });
+
+      // glow effect
+      setInterval(function() {
+        console.log('glowing...');
+        if($('a#install-bookmarklet img').hasClass('glow')) {
+          $('a#install-bookmarklet img').removeClass('glow');
+        } else {
+          $('a#install-bookmarklet img').addClass('glow');
+        }
+      }, 1000);
 
       // validate and submit signup
       $('a.signup').click(function(evt) {
@@ -48,15 +74,6 @@
           $('form').removeClass('error');
           $('form label').html('Creating your account...');
 
-          // glow effect
-          setInterval(function() {
-            console.log('glowing...');
-            if($('a#install-bookmarklet img').hasClass('glow')) {
-              $('a#install-bookmarklet img').removeClass('glow');
-            } else {
-              $('a#install-bookmarklet img').addClass('glow');
-            }
-          }, 1000);
 
           $('form input').fadeOut(250);
           $('form a.button').fadeOut(250, function() {
@@ -64,31 +81,37 @@
             $('img#signup-loader').fadeIn();
             api.user.register(
               $('form #email').val(),
+
+              // success!
               function() {
 
-                // just for testing next step..
-                setTimeout(function() {
-                  $('form label').html('Drag the bookmarklet to your bar and you\'re all set.');
-                  $('img#signup-loader').fadeOut(250, function() { 
-                    $('div#get-started h2, div#get-started h3, div#get-started label').fadeOut();
-                    $('a#install-bookmarklet').show();
-                    $('form').addClass('invisible');
+                $('img#signup-loader').fadeOut(250, function() { 
+                  $('div#get-started h2, div#get-started h3, div#get-started label').fadeOut();
+                  $('form').addClass('invisible');
 
-                    setTimeout(function() { 
-                      $('div#get-started h2').html('Your custom bookmarklet is ready.');
-                      $('div#get-started h3').html('Install it to start covering stories with Lede.');
-                      $('div#get-started h2, div#get-started h3, div#get-started label').fadeIn();
+                  setTimeout(function() { 
+                    $('div#get-started h2').html('Your custom bookmarklet is ready.');
+                    $('div#get-started h3').html('Install it to start covering stories with Lede.');
+                    $('form label').html('Drag the bookmarklet to your bar and you\'re all set.');
+                    $('div#get-started h2, div#get-started h3, div#get-started label').fadeIn();
+                    setTimeout(function() {
+                      $('a#install-bookmarklet').show();
+                      $('a#install-bookmarklet img').addClass('fly-in');
                       setTimeout(function() {
-                        $('a#install-bookmarklet img').addClass('fly-in');
-                        setTimeout(function() {
-                          $('img#install-arrow').fadeIn();
-                        }, 1000);
-                      }, 2000);
-                    }, 1000);
+                        $('img#install-arrow').fadeIn();
+                      }, 1000);
+                    }, 2000);
+                  }, 1000);
 
-                  });
-                }, 2000);
-              });
+                });
+              },
+
+              // registration error
+              function(error) {
+                console.log(error.error);
+                registerError(error.error);
+              }
+            );
             }
           );
         }
