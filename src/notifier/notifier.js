@@ -132,6 +132,6 @@ exports.send_daily = function(user, posts, callback) {
 exports.send_welcome = function(userid, temp_password, callback) {
   get_user(userid, function(user) {
     log.debug('Found user ' + user.email);
-    send_welcome_email(mail_options, callback);
+    send_welcome_email(user, temp_password, callback);
   });
 };
