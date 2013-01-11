@@ -66,7 +66,7 @@ function generate_daily_email_without_ledes(user, callback) {
     {"uri": "http://cat-blog.tumblr.com/", "title": "A totally normal blog"},
     {"uri": "http://www.theonion.com/", "title": "Some super serious world news"},
     {"uri": "http://somerville.patch.com/", "title": "News from the Lede stomping ground"}
-  ]
+  ];
 
   var mail_html = template({suggestions: links});
 
@@ -77,9 +77,9 @@ function generate_daily_email_without_ledes(user, callback) {
 function generate_and_send_daily_email (user, posts, callback) {
   if(posts && posts.length > 0) {
     generate_daily_email_with_ledes(user, posts, callback);
-  } 
-
-  generate_daily_email_without_ledes(user, callback);
+  } else { 
+    generate_daily_email_without_ledes(user, callback);
+  }
 }
 
 // Use the user and password informtion to generate a welcome email and send it
@@ -124,14 +124,8 @@ function send_email(mail_options, callback) {
 }
 
 // Wrap it all up. Resolve userid and postids, generate email, and send it
-exports.send_daily = function(userid, postids, callback) {
-  get_user(userid, function(user) {
-    log.debug('Found user ' + user.email);
-    get_posts(postids, function(posts) {
-      log.debug('Found posts');
-      generate_and_send_daily_email(user, posts, callback);
-    });
-  });
+exports.send_daily = function(user, posts, callback) {
+  generate_and_send_daily_email(user, posts, callback);
 };
 
 // Wrap it all up. Resolve userid, generate email, and send it

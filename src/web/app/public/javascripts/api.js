@@ -59,6 +59,16 @@ var api = {
         }
       });
     },
+    find: function(user_id, success, error) {
+      $.ajax({
+        url: '/api/user/' + user_id,
+        type: 'GET',
+        success: success,
+        error: function (obj) {
+          error(JSON.parse(obj.responseText));
+        }
+      });
+    },
     check: function(success, error) {
       $.ajax({
         url: '/api/user/whoami',
@@ -82,6 +92,38 @@ var api = {
         type: 'POST',
         datatype: 'json',
         data: recommendation,
+        success: success,
+        error: error
+      });
+    }
+  },
+  notification: {
+    list: function(options, success, error) {
+      $.ajax({
+        url: '/api/notification',
+        data: options,
+        success: success,
+        error: error
+      });
+    },
+    create: function(notification, success, error) {
+      $.ajax({
+        url: '/api/notification',
+        type: 'POST',
+        datatype: 'json',
+        data: notification,
+        success: success,
+        error: error
+      });
+    }
+  },
+  notifier: {
+    sendDaily: function(user, success, error) {
+      $.ajax({
+        url: '/api/notifier/send_daily',
+        type: 'POST',
+        datatype: 'json',
+        data: user,
         success: success,
         error: error
       });
