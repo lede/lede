@@ -79,7 +79,7 @@
         
         <table style="width: 100%;" bgcolor="">
           <tr>
-            <td class="small" width="20%" style="vertical-align:top; padding-right:10px;"><img style="max-width:100%;" src="image_url" /></td>
+            <td class="small" width="20%" style="vertical-align:top; padding-right:10px;"><img style="max-width:100%;" src="{{image_url}}" /></td>
             <td style="vertical-align:top; padding-top:0px;">
               <h4 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; margin-top:0px; color:#000000!important;font-weight:500!important; font-size: 23px!important;">{{title}} <small style="font-size: 60%; color: #6f6f6f; line-height: 1.4; text-transform: none;">{{author}}</small></h4>
               <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">{{description}}</p>
