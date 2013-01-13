@@ -17,8 +17,8 @@ exports.extract = function(req, res) {
   });
 };
 
-exports.reformatImage = function(req, res) {
-  Extractor.reformatImage(req.body.url, function(err, imageUri) {
+exports.createThumbnail = function(req, res) {
+  Extractor.createThumbnail(req.body.url, function(err, imageUri) {
     log.info("Got to the callback");
     if(err) {
       res.status(500);

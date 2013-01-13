@@ -101,7 +101,7 @@ app.post('/api/notification', ensure_user, notification.create);
 app.post('/api/notifier/send_daily', ensure_user, notifier.send_daily);
 
 app.post('/api/extractor/extract', ensure_user, extractor.extract);
-app.post('/api/extractor/reformatImage', ensure_user, extractor.reformatImage);
+app.post('/api/extractor/createThumbnail', ensure_user, extractor.createThumbnail);
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));
