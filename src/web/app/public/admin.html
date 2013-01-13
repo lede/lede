@@ -125,15 +125,39 @@
           user_id: userid,
           created_by_user_id: adminUser.id,
           uri: $('input[name=lede-url]').val(),
-          title: $('input[name=lede-description]').val(),
+          title: $('input[name=lede-title]').val(),
+          author: $('input[name=lede-author]').val(),
+          description: $('input[name=lede-description]').val(),
+          image_url: $('input[name=lede-image-url]').val(),
           sent: false
         };
 
         api.recommendation.create(recommendation, function() {
           updateRecommendations(userid, function() {
             $('input[name=lede-url]').val('');
+            $('input[name=lede-title]').val('');
+            $('input[name=lede-author]').val('');
             $('input[name=lede-description]').val('');
+            $('input[name=lede-image-url]').val('');
           });
+        });
+      });
+
+      // Handler to look up lede data
+      $('#lookup-lede').click(function(evt) {
+        evt.preventDefault();
+        $('#notification').html(
+          '<p>Extracting Lede Details...</p>'+
+          '<img src="/images/ajax-loader.gif">'
+        );
+        $('#notification').fadeIn(200);
+        api.extractor.extract({url: $('input[name=lede-url]').val()}, function(recommendation) {
+          $('input[name=lede-title]').val(recommendation.title);
+          $('input[name=lede-description]').val(recommendation.description);
+          $('input[name=lede-image-url]').val(recommendation.image);
+          $('#lede-image-preview').html('<img src="'+recommendation.image+'" width="75" height="75">');
+          $('#notification').fadeOut(500);
+          $('#notification').html('');
         });
       });
 
@@ -179,8 +203,12 @@
       <div id="add-lede" class="add-lede">
         <h2>Add Lede</h2>
         <form id="add-lede-form">
-          <input type="text" name="lede-url" placeholder="Lede URL">
-          <input type="text" name="lede-description" placeholder="Lede Description">
+          <input type="text" name="lede-url" placeholder="URL">
+          <input type="text" name="lede-title" placeholder="Title">
+          <input type="text" name="lede-author" placeholder="Author">
+          <input type="text" name="lede-description" placeholder="Description">
+          <input type="text" name="lede-image-url" placeholder="Image URL">
+          <button id="lookup-lede">Lookup Lede</button>
           <button type="submit">Add Lede</button>
         </form>
 
@@ -193,6 +221,8 @@
         <form id="send-email-form">
           <button id="send-email">Send Email</button>
         </form>
+        <div id="lede-image-preview" class="lede-image-preview">
+        </div>
       </div>
     </div>
   </div>

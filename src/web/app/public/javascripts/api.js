@@ -142,5 +142,27 @@ api = {
         error: error
       });
     }
+  },
+  extractor: {
+    extract: function(recommendation, success, error) {
+      $.ajax({
+        url: '/api/extractor/extract',
+        type: 'POST',
+        datatype: 'json',
+        data: recommendation,
+        success: success,
+        error: error
+      });
+    },
+    createThumbnail: function(image, success, error) {
+      $.ajax({
+        url: '/api/extractor/createThumbnail',
+        type: 'POST',
+        datatype: 'json',
+        data: image,
+        success: success,
+        error: error
+      });
+    }
   }
 };
