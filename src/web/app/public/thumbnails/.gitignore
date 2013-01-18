@@ -1,0 +1,5 @@
+# Ignore everything in this directory, because we don't want to accidentally submit thumbnails
+*
+# Don't ignore this file, because that would be stupid
+!.gitignore
+
