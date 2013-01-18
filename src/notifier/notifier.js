@@ -52,9 +52,15 @@ function send_daily_email(user, mail_html, callback) {
 
 // Send the daily email formatted for use with ledes
 function generate_daily_email(user, posts, callback) {
+  var subheader_copy = body_copy_with_ledes;
+
+  if(posts.length <= 0) {
+    subheader_copy = body_copy_without_ledes;
+  }
+
   var source = fs.readFileSync(__dirname + '/views/daily.hjs', 'utf8');
   var template = handlebars.compile(source);
-  var mail_html = template({ledes: posts});
+  var mail_html = template({ledes: posts, });
 
   send_daily_email(user, mail_html, callback);
 }
