@@ -47,7 +47,7 @@ function send_daily_email(user, mail_html, callback) {
     html: mail_html
   };
 
-  send_email(mail_options, callback);
+  send_email(user, mail_options, callback);
 }
 
 // Send the daily email formatted for use with ledes
@@ -60,7 +60,7 @@ function generate_daily_email(user, posts, callback) {
 
   var source = fs.readFileSync(__dirname + '/views/daily.hjs', 'utf8');
   var template = handlebars.compile(source);
-  var mail_html = template({ledes: posts, });
+  var mail_html = template({ledes: posts, subheader: subheader_copy});
 
   send_daily_email(user, mail_html, callback);
 }
@@ -83,12 +83,11 @@ function send_welcome_email (user, temp_password, callback) {
     html: mail_html
   };
 
-  send_email(mail_options, callback);
+  send_email(user, mail_options, callback);
 }
 
 // Sent the constructed email to the customer through the email service provider
-function send_email(mail_options, callback) {
-  log.debug(mail_options);
+function send_email(user, mail_options, callback) {
 
   // Set up mailer
   var smtpTransport = nodemailer.createTransport("SMTP", {
@@ -104,7 +103,16 @@ function send_email(mail_options, callback) {
       log.error(err);
     } else {
       log.info("Message sent: " + res.message);
-      callback();
+      //If we successfully send the message, then update the notifications table to reflect it
+      dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, res) {
+        if(err) {
+          log.error('Failed to create record in the notifications table');
+        } else if (res) {
+          log.info('Created record of notification');
+        }
+        //TODO: I think we want the callback regardless of whether the saving notification state worked or not
+        callback();
+      });
     }
   });
 
