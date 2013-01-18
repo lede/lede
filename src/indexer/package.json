@@ -18,7 +18,9 @@
         "soupselect": ">=0.2.0",
         "htmlparser": "1.7.6", 
         "pg": "*",
-        "http-get": "*"
+        "http-get": "*",
+        "gm": "*",
+        "node-uuid": "*"
     },
     "engine": [ "node >=0.8.8" ],
     "keywords": ["rss", "feed", "atom", "parser", "indexer", "fetcher", "lede"]
