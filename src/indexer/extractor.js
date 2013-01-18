@@ -10,6 +10,7 @@ var http = require('http-get');
 var gm = require('gm');
 var path = require('path');
 var uuid = require('node-uuid');
+var encoder = new require('node-html-encoder').Encoder('entity');
 
 function extractContent(url, done) {
   http.get(url, function(err, result) {
@@ -32,8 +33,8 @@ function extractContentFromHtml(siteBody, done) {
       } else {
         var result = {
           image: extractImage(dom),
-          title: extractTitle(dom),
-          description: extractDescription(dom)
+          title: stripAndDecodeHtml(extractTitle(dom)),
+          description: stripAndDecodeHtml(extractDescription(dom))
         };
 
         done(null, result);
@@ -195,5 +196,18 @@ function createThumbnail(url, done) {
   });
 }
 
+function stripAndDecodeHtml(html) {
+  if (!_.isString(html)) { // can't sanitize non-strings...
+    return html;
+  }
+
+  // strip HTML tags, suggested by http://stackoverflow.com/a/822464/10861
+  html = html.replace(/<(?:.|\n)*?>/gm, '');
+
+  // decode HTML entities
+  return encoder.htmlDecode(html);
+}
+
 exports.extractContent = extractContent;
 exports.createThumbnail = createThumbnail;
+exports.stripAndDecodeHtml = stripAndDecodeHtml;
