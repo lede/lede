@@ -85,5 +85,12 @@
     "numberOfPosts": 3
   },
 
+  "extractor": {
+    "thumbnailWidth": 75,
+    "thumbnailHeight": 75,
+    "thumbnailPath": "web/app/public/thumbnails",
+    "thumbnailUrl": "thumbnails"
+  },
+
   "defaultSourceIndexInterval": 3600
 }

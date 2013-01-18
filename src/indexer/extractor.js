@@ -7,6 +7,9 @@ var _ = require('underscore');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
 var http = require('http-get');
+var gm = require('gm');
+var path = require('path');
+var uuid = require('node-uuid');
 
 function extractContent(url, done) {
   http.get(url, function(err, result) {
@@ -177,10 +180,20 @@ function findFirstTextChild(element) {
 
 /** @brief reformat the image at the URL to fit our email format, which is 75x75 pixels.  this is not a very flexible function, but I figure we can generalize it later.  it then stores the image somewhere and the result will be a key to that store (probably a relational DB).
  */
-function reformatImage(url, done) {
-  // TODO
-  done("not implemented");
+function createThumbnail(url, done) {
+  http.get({ url: url, bufferType: 'buffer' }, function(err, result) {
+    if (err) {
+      done(err);
+    } else {
+      var outputFileName = uuid.v1() + path.extname(url);
+      var outputPath = path.resolve(settings.ledeHome, settings.extractor.thumbnailPath, outputFileName);
+      log.debug('thumbnail output path: ' + outputPath);
+      gm(result.buffer, url).thumb(settings.extractor.thumbnailWidth, settings.extractor.thumbnailHeight, outputPath, 100, 'center', function (err) {
+        done(err, outputFileName);
+      });
+    }
+  });
 }
 
 exports.extractContent = extractContent;
-exports.reformatImage = reformatImage;
+exports.createThumbnail = createThumbnail;
