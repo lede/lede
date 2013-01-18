@@ -60,7 +60,7 @@ function generate_daily_email(user, posts, callback) {
 
   var source = fs.readFileSync(__dirname + '/views/daily.hjs', 'utf8');
   var template = handlebars.compile(source);
-  var mail_html = template({ledes: posts, });
+  var mail_html = template({ledes: posts, subheader: subheader_copy});
 
   send_daily_email(user, mail_html, callback);
 }
