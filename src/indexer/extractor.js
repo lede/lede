@@ -11,20 +11,24 @@ var gm = require('gm');
 var path = require('path');
 var uuid = require('node-uuid');
 var encoder = new require('node-html-encoder').Encoder('entity');
+var urlParser = require('url');
 
 function extractContent(url, done) {
   http.get(url, function(err, result) {
     if (err) {
       done(err);
     } else {
-      extractContentFromHtml(result.buffer, done);
+      extractContentFromHtml(result.buffer, result.url, done);
     }
   });
 }
 
-/** extract the content from the web page, using some basic heuristics and metadata to figure out which parts are the parts that we seek.  the result object contains properties for 'title', 'image' and 'description'.
+/** extract the content from the web page, using some basic heuristics and metadata to figure out which parts are the parts that we seek.
+ * @param siteBody  the raw response content of the web page
+ * @param baseUrl  the URL of the web page, used to resolve relative links
+ * @param done  the callback.  the result object contains properties for 'title', 'image' and 'description'.
  */
-function extractContentFromHtml(siteBody, done) {
+function extractContentFromHtml(siteBody, baseUrl, done) {
   try {
     var parser = new htmlparser.Parser(new htmlparser.DefaultHandler(function(err, dom) {
       if (err) {
@@ -32,7 +36,7 @@ function extractContentFromHtml(siteBody, done) {
         done(err);
       } else {
         var result = {
-          image: extractImage(dom),
+          image: extractImage(dom, baseUrl),
           title: stripAndDecodeHtml(extractTitle(dom)),
           description: stripAndDecodeHtml(extractDescription(dom))
         };
@@ -48,9 +52,29 @@ function extractContentFromHtml(siteBody, done) {
   }  
 }
 
-function extractImage(dom) {
-  // TODO resolve relative URLs?
+/** extract a representative image from the DOM
+ * @param dom the DOM to search
+ * @param baseUrl the URL of the page that the DOM came from, so that we can resolve relative URLs to images
+ * @return a fully-qualified URL to an image
+ */
+function extractImage(dom, baseUrl) {
+  // TODO handle <base> tag which changes the base URL
+ 
+  var imageUrl = extractImageTag(dom);
 
+  var parsedUrl = urlParser.parse(imageUrl);
+
+  if (parsedUrl.host) {
+    return imageUrl;
+  } else if (parsedUrl.pathname || parsedUrl.query) {
+    return urlParser.resolve(baseUrl, imageUrl);
+  } else {
+    log.debug("unable to resolve relative URL");
+    return null;
+  }
+}
+
+function extractImageTag(dom) {
   // parse Facebook Open Graph image meta tag
   var ogImageMetas = _.filter(select(dom, "head meta"), function(e) {
     return /og:image/i.test(e.attribs.property);
