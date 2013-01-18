@@ -20,7 +20,8 @@
         "pg": "*",
         "http-get": "*",
         "gm": "*",
-        "node-uuid": "*"
+        "node-uuid": "*",
+        "node-html-encoder": "*"
     },
     "engine": [ "node >=0.8.8" ],
     "keywords": ["rss", "feed", "atom", "parser", "indexer", "fetcher", "lede"]
