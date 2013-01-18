@@ -8,6 +8,9 @@ var nodemailer = require('nodemailer');
 var dataLayer = require('../core/datalayer');
 var errors = require('../core/errors.js');
 
+var body_copy_with_ledes = "Based on your interest, we think that you might enjoy the following Ledes"
+var body_copy_without_ledes = "Unfortunately, we were unable to find any Ledes that we knew you'd love.  Help us out! When you read something that you like in your daily browsing, click your <b>Lede this!</b> bookmarklet.";
+
 // Resolve a user id to a user object
 function get_user(userid, cb) {
   dataLayer.User.findOne(userid, {only: ['id','email']}, function(err, user) {
@@ -48,38 +51,23 @@ function send_daily_email(user, mail_html, callback) {
 }
 
 // Send the daily email formatted for use with ledes
-function generate_daily_email_with_ledes(user, posts, callback) {
+function generate_daily_email(user, posts, callback) {
+  var subheader_copy = body_copy_with_ledes;
+
+  if(posts.length <= 0) {
+    subheader_copy = body_copy_without_ledes;
+  }
+
   var source = fs.readFileSync(__dirname + '/views/daily.hjs', 'utf8');
   var template = handlebars.compile(source);
-  var mail_html = template({ledes: posts});
-
-  send_daily_email(user, mail_html, callback);
-}
-
-// Send the daily email formatted for use without ledes
-function generate_daily_email_without_ledes(user, callback) {
-  var source = fs.readFileSync(__dirname + '/views/daily_no_ledes.hjs', 'utf8'); 
-  var template = handlebars.compile(source);
-
-  var links = 
-  [
-    {"uri": "http://cat-blog.tumblr.com/", "title": "A totally normal blog"},
-    {"uri": "http://www.theonion.com/", "title": "Some super serious world news"},
-    {"uri": "http://somerville.patch.com/", "title": "News from the Lede stomping ground"}
-  ];
-
-  var mail_html = template({suggestions: links});
+  var mail_html = template({ledes: posts, });
 
   send_daily_email(user, mail_html, callback);
 }
 
 // Use the user and posts information to generate the content of the daily email and send it
 function generate_and_send_daily_email (user, posts, callback) {
-  if(posts && posts.length > 0) {
-    generate_daily_email_with_ledes(user, posts, callback);
-  } else { 
-    generate_daily_email_without_ledes(user, callback);
-  }
+    generate_daily_email(user, posts, callback);
 }
 
 // Use the user and password informtion to generate a welcome email and send it
