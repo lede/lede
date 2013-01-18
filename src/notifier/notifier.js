@@ -8,9 +8,6 @@ var nodemailer = require('nodemailer');
 var dataLayer = require('../core/datalayer');
 var errors = require('../core/errors.js');
 
-var body_copy_with_ledes = "Based on your interest, we think that you might enjoy the following Ledes"
-var body_copy_without_ledes = "Unfortunately, we were unable to find any Ledes that we knew you'd love.  Help us out! When you read something that you like in your daily browsing, click your <b>Lede this!</b> bookmarklet.";
-
 // Resolve a user id to a user object
 function get_user(userid, cb) {
   dataLayer.User.findOne(userid, {only: ['id','email']}, function(err, user) {
@@ -52,15 +49,18 @@ function send_daily_email(user, mail_html, callback) {
 
 // Send the daily email formatted for use with ledes
 function generate_daily_email(user, posts, callback) {
-  var subheader_copy = body_copy_with_ledes;
+  var header_filename = "daily_header_with_ledes";
 
   if(posts.length <= 0) {
-    subheader_copy = body_copy_without_ledes;
+    header_filename = "daily_header_without_ledes";
   }
+
+  var header_source = fs.readFileSync(__dirname + '/views/' + header_filename + '.hjs', 'utf8');
+  var header_template = handlebars.compile(header_source);
 
   var source = fs.readFileSync(__dirname + '/views/daily.hjs', 'utf8');
   var template = handlebars.compile(source);
-  var mail_html = template({ledes: posts, subheader: subheader_copy});
+  var mail_html = template({ledes: posts, subheader: header_template});
 
   send_daily_email(user, mail_html, callback);
 }

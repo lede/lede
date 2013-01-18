@@ -66,29 +66,55 @@
           <tr>
             <td>
               
-              <h1 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:200!important; font-size: 44px!important;">Good Morning!</h1>
-              <p style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;" class="lede">{{{subheader}}}</p>
+              <h1 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:200!important; font-size: 44px!important;">Good Morning, Justin!</h1>
+              <p style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;" class="lede">Based your interest, we think that you might enjoy the following Ledes</p>
             </td>
           </tr>
         </table>
       </div><!-- /content -->
       
-    {{#ledes}}
       <!-- content -->
       <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
         
         <table style="width: 100%;" bgcolor="">
           <tr>
-            <td class="small" width="20%" style="vertical-align:top; padding-right:10px;"><img style="max-width:100%;" src="{{image_url}}" /></td>
+            <td class="small" width="20%" style="vertical-align:top; padding-right:10px;"><img style="max-width:100%;" src="http://placehold.it/75x75" /></td>
             <td style="vertical-align:top; padding-top:0px;">
-              <a href="{{uri}}" style="text-decoration:none;"><h4 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; margin-top:0px; color:#000000!important;font-weight:500!important; font-size: 23px!important;">{{title}} <small style="font-size: 60%; color: #6f6f6f; line-height: 1.4; text-transform: none;">{{author}}</small></h4></a>
-              <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">{{description}}</p>
-              <a href="{{uri}}" alt="{{title}}" style="text-decoration:none; color: #FFFFFF;background-color: #C80815;padding:8px 14px;font-weight:bold;margin-right:10px;text-align:center;cursor:pointer;display: inline-block;" class="btn">Read more &rarr;</a>
+              <a href="www.google.com"><h4 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; margin-top:0px; color:#000000!important;font-weight:500!important; font-size: 23px!important; text-decoration:none;">Apple Is Still Huge <small style="font-size: 60%; color: #6f6f6f; line-height: 1.4; text-transform: none;">Steven McWangmonster</small></h4></a>
+              <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">Apple is excited to launch some new rectangle, says some fucking representative </p>
+              <a style="text-decoration:none; color: #FFFFFF;background-color: #C80815;padding:8px 14px;font-weight:bold;margin-right:10px;text-align:center;cursor:pointer;display: inline-block;" class="btn">Go on... &rarr;</a>
             </td>
           </tr>
         </table>
       </div><!-- /content -->
-      {{/ledes}}
+      
+      <!-- content -->
+      <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
+        <table style="width: 100%;" bgcolor="">
+          <tr>
+            <td class="small" width="20%" style="vertical-align:top; padding-right:10px;"><img style="max-width:100%;" src="http://placehold.it/75x75" /></td>
+            <td style="vertical-align:top; padding-top:0px;">
+              <h4 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; margin-top:0px; color:#000000!important;font-weight:500!important; font-size: 23px!important;">Chrysler Launches New Car <small style="font-size: 60%; color: #6f6f6f; line-height: 1.4; text-transform: none;">Harrison Ford</small></h4>
+              <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">According to industry experts, it's pretty much the same piece of shit, only now you pay for it with taxes</p>
+              <a style="text-decoration:none; color:#FFFFFF; background-color:#C80815; padding:8px 14px; font-weight:bold; margin-right:10px; text-align:center; cursor:pointer; display:inline-block;" class="btn">Clickity Clack &rarr;</a>
+            </td>
+          </tr>
+        </table>
+      </div><!-- /content -->
+      
+      <!-- content -->
+      <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
+        <table style="width: 100%;" bgcolor="">
+          <tr>
+            <td class="small" width="20%" style="vertical-align:top; padding-right:10px;"><img style="max-width:100%;" src="http://placehold.it/75x75" /></td>
+            <td style="vertical-align:top; padding-top:0px;">
+              <h4 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; margin-top:0px; color:#000000!important;font-weight:500!important; font-size: 23px!important;">Christians, Muslims, etc... <small style="font-size: 60%; color: #6f6f6f; line-height: 1.4; text-transform: none;">Jesus Rodriquez</small></h4>
+              <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">When questioned, the Dali Lama said, "I don't speak English." </p>
+              <a style="text-decoration:none; color:#FFFFFF; background-color:#C80815; padding:8px 14px; font-weight:bold; margin-right:10px; text-align:center; cursor:pointer; display:inline-block;" class="btn">Conquor &rarr;</a>
+            </td>
+          </tr>
+        </table>
+      </div><!-- /content -->
 
       <!-- content -->
       <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
@@ -108,7 +134,7 @@
                           <td style="padding: 15px;">        
                             
                             <h5 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:900!important; font-size: 17px!important;">Connect with Us:</h5>
-                            <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;"><a style="background-color:#3B5998!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.facebook.com/unburythelede" class="soc-btn fb">Facebook</a> <a style="background-color:#1DACED!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.twitter.com/unburythelede" class="soc-btn tw">Twitter</a> <a style="background-color:#DB4A39!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="#" class="soc-btn gp">Google+</a></p>
+                            <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;"><a style="background-color:#3B5998!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.facebook.com/ledeapp" class="soc-btn fb">Facebook</a> <a style="background-color:#1DACED!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.twitter.com/unburythelede" class="soc-btn tw">Twitter</a> <a style="background-color:#DB4A39!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="#" class="soc-btn gp">Google+</a></p>
 
                           </td>
                         </tr>
