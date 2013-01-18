@@ -106,8 +106,6 @@ function extractImageTag(dom) {
   // first image tag inside the body 
   var imgTags = select(dom, "img");
 
-  log.debug("img: " + util.inspect(imgTags));
-
   if (imgTags.length) {
     log.debug("using image tag in body");
     return imgTags[0].attribs.src;
