@@ -60,10 +60,7 @@
     "maxIndexInterval": 86400,
     "minIndexInterval": 900,
     "maxRetries": 3,
-    "retryInterval": 3600,
-    "thumbnailWidth": 75,
-    "thumbnailHeight": 75,
-    "thumbnailPath": "web/app/public/thumbnails"
+    "retryInterval": 3600
   },
 
   "discoverer": {
@@ -86,6 +83,13 @@
 
   "recommender": {
     "numberOfPosts": 3
+  },
+
+  "extractor": {
+    "thumbnailWidth": 75,
+    "thumbnailHeight": 75,
+    "thumbnailPath": "web/app/public/thumbnails",
+    "thumbnailUrl": "thumbnails"
   },
 
   "defaultSourceIndexInterval": 3600

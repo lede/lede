@@ -186,9 +186,9 @@ function createThumbnail(url, done) {
       done(err);
     } else {
       var outputFileName = uuid.v1() + path.extname(url);
-      var outputPath = path.resolve(settings.ledeHome, settings.currentModule.thumbnailPath, outputFileName);
+      var outputPath = path.resolve(settings.ledeHome, settings.extractor.thumbnailPath, outputFileName);
       log.debug('thumbnail output path: ' + outputPath);
-      gm(result.buffer, url).thumb(settings.currentModule.thumbnailWidth, settings.currentModule.thumbnailHeight, outputPath, 100, 'center', function (err) {
+      gm(result.buffer, url).thumb(settings.extractor.thumbnailWidth, settings.extractor.thumbnailHeight, outputPath, 100, 'center', function (err) {
         done(err, outputFileName);
       });
     }
