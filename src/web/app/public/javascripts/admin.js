@@ -17,6 +17,20 @@ function initPage() {
   });
 }
 
+//FUCK this is really ugly, make a new endpoint that gets you the latest lede
+function updateLastNotification(userid, callback) {
+  api.notification.list({user_id: userid}, function(notifications) {
+    if(notifications.length) {
+      var updateTime = _.pluck(notifications, 'created_at').pop();
+      var formattedTime = moment(updateTime, "YYYY-MM-DDTHH:mm:ss Z").fromNow();
+      $('#last-email-sent-tag').html(formattedTime);
+    } else {
+      $('#last-email-sent-tag').html('Send them an email');
+    }
+    callback();
+  });
+}
+
 // grab the list of ledes from the backend
 function updateRecommendations(userid, callback) {
   api.recommendation.list({user_id: userid, sent: false}, function(recommendations) {
@@ -32,8 +46,8 @@ function updateRecommendations(userid, callback) {
         '</li>'
       );
     });
+    callback();
   });
-  callback();
 }
 
 // grab the list of bookmarklet hits from the backend
@@ -51,13 +65,13 @@ function updateLedes(userid, callback) {
         '</li>'
       );
     });
+    callback();
   });
-  callback();
 }
 
 // render up the user details 
 function renderUserDetails(userid) {
-  var callbackCount = 2;
+  var callbackCount = 3;
   $('#user-details').fadeOut(300);
 
   updateLedes(userid, function(){
@@ -68,6 +82,13 @@ function renderUserDetails(userid) {
   });
 
   updateRecommendations(userid, function(){
+    callbackCount--;
+    if(callbackCount === 0) {
+      $('#user-details').fadeIn(200);
+    }
+  });
+
+  updateLastNotification(userid, function(){
     callbackCount--;
     if(callbackCount === 0) {
       $('#user-details').fadeIn(200);
@@ -110,11 +131,11 @@ $(function() {
     var recommendation = { 
       user_id: userid,
       created_by_user_id: adminUser.id,
-      uri: $('input[name=lede-url]').val(),
-      title: $('input[name=lede-title]').val(),
-      author: $('input[name=lede-author]').val(),
-      description: $('input[name=lede-description]').val(),
-      image_url: $('input[name=lede-image-url]').val(),
+      uri: $('input[name=lede-url]').val().trim(),
+      title: $('input[name=lede-title]').val().trim(),
+      author: $('input[name=lede-author]').val().trim(),
+      description: $('input[name=lede-description]').val().trim(),
+      image_url: $('input[name=lede-image-url]').val().trim(),
       sent: false
     };
 
@@ -138,10 +159,11 @@ $(function() {
     );
     $('#notification').fadeIn(200);
     api.extractor.extract({url: $('input[name=lede-url]').val()}, function(recommendation) {
-      $('input[name=lede-title]').val(recommendation.title);
-      $('input[name=lede-description]').val(recommendation.description);
-      $('input[name=lede-image-url]').val(recommendation.image);
-      $('#lede-image-preview').html('<img src="'+recommendation.image+'" width="75" height="75">');
+      $('input[name=lede-url]').val($('input[name=lede-url]').val().trim());
+      $('input[name=lede-title]').val(recommendation.title.trim());
+      $('input[name=lede-description]').val(recommendation.description.trim());
+      $('input[name=lede-image-url]').val(recommendation.image.trim());
+      $('#lede-image-preview').html('<img src="'+recommendation.image.trim()+'" width="75" height="75">');
       $('#notification').fadeOut(500);
       $('#notification').html('');
     },
