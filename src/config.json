@@ -60,7 +60,10 @@
     "maxIndexInterval": 86400,
     "minIndexInterval": 900,
     "maxRetries": 3,
-    "retryInterval": 3600
+    "retryInterval": 3600,
+    "thumbnailWidth": 75,
+    "thumbnailHeight": 75,
+    "thumbnailPath": "web/app/public/thumbnails"
   },
 
   "discoverer": {
