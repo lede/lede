@@ -33,7 +33,7 @@ function extractLinks(article, callback) {
       // filter out malformed / unusable links
       function(link) {
         return !!url.parse(link.href).hostname && ( // check that this link isn't relative
-          url.parse(link.href).protocol == 'http:' || url.parse(link.href).protocol == 'https:' // ensure we have a valide protocol
+          url.parse(link.href).protocol == 'http:' || url.parse(link.href).protocol == 'https:' // ensure we have a valid protocol
         );
       }
      );
