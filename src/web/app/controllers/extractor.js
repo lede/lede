@@ -21,6 +21,7 @@ exports.createThumbnail = function(req, res) {
   Extractor.createThumbnail(req.body.url, function(err, imageUri) {
     log.info("Got to the callback");
     if(err) {
+      log.error(err);
       res.status(500);
       res.send({message: err});
     } else if (imageUri) {

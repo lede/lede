@@ -58,9 +58,10 @@ function generate_daily_email(user, posts, callback) {
   var header_source = fs.readFileSync(__dirname + '/views/' + header_filename + '.hjs', 'utf8');
   var header_template = handlebars.compile(header_source);
 
+  var title_copy = "Your Daily Ledes";
   var source = fs.readFileSync(__dirname + '/views/daily.hjs', 'utf8');
   var template = handlebars.compile(source);
-  var mail_html = template({ledes: posts, subheader: header_template});
+  var mail_html = template({page_title: title_copy, ledes: posts, subheader: header_template});
 
   send_daily_email(user, mail_html, callback);
 }
