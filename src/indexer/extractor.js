@@ -212,7 +212,11 @@ function createThumbnail(url, done) {
       var outputPath = path.resolve(settings.ledeHome, settings.extractor.thumbnailPath, outputFileName);
       log.debug('thumbnail output path: ' + outputPath);
       gm(result.buffer, url).thumb(settings.extractor.thumbnailWidth, settings.extractor.thumbnailHeight, outputPath, 100, 'center', function (err) {
-        done(err, outputFileName);
+        var outputLocation = {
+          path: outputPath,
+          relativeUrl: path.join(settings.extractor.thumbnailUrl, outputFileName)
+        };
+        done(err, outputLocation);
       });
     }
   });
