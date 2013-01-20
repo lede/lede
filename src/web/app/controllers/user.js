@@ -44,7 +44,7 @@ exports.login = function(req, res) {
         res.send({ error: 'Invalid username or password' });
       } else {
         req.session.user_id = user.id;
-        res.send({ error: 'Logged in as: ' + user.email });
+        res.send({ result: 'Logged in as: ' + user.email });
       }
     }));
   } else {
