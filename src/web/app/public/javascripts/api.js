@@ -107,6 +107,16 @@ api = {
         success: success,
         error: error
       });
+    },
+    remove: function(options, success, error) {
+      $.ajax({
+        url: '/api/recommendation',
+        type: 'DELETE',
+        datatype: 'json',
+        data: options,
+        success: success,
+        errorr: error
+      });
     }
   },
   notification: {

@@ -94,6 +94,7 @@ app.get('/api/user/:user_id', ensure_user, user.findOne);
 
 app.get('/api/recommendation', ensure_user, recommendation.list);
 app.post('/api/recommendation', ensure_user, recommendation.create);
+app.delete('/api/recommendation/:recommendation_id', ensure_user, recommendation.remove);
 
 app.get('/api/notification', ensure_user, notification.list);
 app.post('/api/notification', ensure_user, notification.create);

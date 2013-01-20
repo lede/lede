@@ -27,3 +27,14 @@ exports.create = function(req, res) {
     }
   });
 };
+
+exports.remove = function(req, res) {
+  Recommendation.destroy({id: req.query.reccomendation_id}, function(err, res) {
+    if(err) {
+      res.status(500);
+      res.send({error: "Error deleting recommendation"});
+    } else {
+      res.send({result: "Recommendation deleted"});
+    }
+  });
+};
