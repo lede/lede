@@ -1,4 +1,6 @@
 {
+  "domain": "http://unburythelede.com",
+
   "dbConnectionParams": {
     "host": "unburythelede.com",
     "port": 5432

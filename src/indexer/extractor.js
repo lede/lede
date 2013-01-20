@@ -203,7 +203,7 @@ function findFirstTextChild(element) {
 
 /** @brief reformat the image at the URL to fit our email format, which is 75x75 pixels.  this is not a very flexible function, but I figure we can generalize it later.  it then stores the image on disk
  * @param url  the absolute URL to the image to create a thumbnail of
- * @param done  the callback (err, result).  the result object contains two attributes, 'path', which is the absolute path on disk to the thumbnail, and 'relativeUrl', which is the relative URL under the domain at which the thumbnail can be accessed via the web.
+ * @param done  the callback (err, result).  the result object contains two attributes, 'path', which is the absolute path on disk to the thumbnail, and 'url', which is the absolute URL at which the thumbnail can be accessed via the web.
  */
 function createThumbnail(url, done) {
   http.get({ url: url, bufferType: 'buffer' }, function(err, result) {
@@ -216,7 +216,7 @@ function createThumbnail(url, done) {
       gm(result.buffer, url).thumb(settings.extractor.thumbnailWidth, settings.extractor.thumbnailHeight, outputPath, 100, 'center', function (err) {
         var outputLocation = {
           path: outputPath,
-          relativeUrl: path.join(settings.extractor.thumbnailUrl, outputFileName)
+          url: urlParser.resolve(settings.domain, path.join(settings.extractor.thumbnailUrl, outputFileName))
         };
         done(err, outputLocation);
       });
