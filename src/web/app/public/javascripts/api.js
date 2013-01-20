@@ -22,14 +22,12 @@ api = {
     }
   },
   lede: {
-    list: function(userid, success, error) {
+    list: function(options, success, error) {
       $.ajax({
         url: '/api/ledes',
-        data: {userid: userid},
+        data: options,
         dataType: "json",
-        success: function(data) {
-          success(data.ledes);
-        },
+        success: success,
         error: function (obj) {
           error(JSON.parse(obj.responseText));
         }
@@ -49,10 +47,10 @@ api = {
         }
       });
     },
-    list: function(success, error) {
+    list: function(options, success, error) {
       $.ajax({
         url: '/api/user',
-        type: 'GET',
+        data: options,
         success: success,
         error: function (obj) {
           error(JSON.parse(obj.responseText));

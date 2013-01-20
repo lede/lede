@@ -19,50 +19,53 @@
  </div>
   <div id="user-admin" class="user-admin">
     <div id="user-list" class="user-list">
-      <h2>Users</h2>
+      <h2>Our users</h2>
       <input type="text" name="user-search" placeholder="Search">
       <ul>
       </ul>
     </div>
-    <div id="user-details" class="user-details">
-
-      <div id="recent-bookmarklets" class="recent-bookmarklets">
-        <h2>Recent Bookmarklets</h2>
-        <ul>
-        </ul>
-      </div>
-      <div id="add-lede" class="add-lede">
-        <h2>Add Lede</h2>
-        <form id="add-lede-form">
-          <input type="text" name="lede-url" placeholder="URL">
-          <input type="text" name="lede-title" placeholder="Title">
-          <input type="text" name="lede-author" placeholder="Author">
-          <input type="text" name="lede-description" placeholder="Description">
-          <input type="text" name="lede-image-url" placeholder="Image URL">
-          <button id="lookup-lede">Lookup Lede</button>
-          <button type="submit">Add Lede</button>
-          <button type="reset">Reset</button>
-        </form>
-
-        <h2>Queued Ledes</h2>
-        <ul>
-        </ul>
-      </div>
-      <div id="last-email-sent" class="last-email-sent">
-        <span>
-          Emailed: 
-        </span>
-        <span id="last-email-sent-tag" class="last-email-sent-tag"></span>
-        <form id="send-email-form">
-          <button id="send-email">Send Email</button>
-        </form>
-        <div id="lede-image-preview" class="lede-image-preview">
-        </div>
+    <div id="add-lede" class="add-lede">
+      <h2>Lede factory</h2>
+      <form id="add-lede-form">
+        <input type="text" name="lede-url" placeholder="URL">
+        <input type="text" name="lede-title" placeholder="Title">
+        <input type="text" name="lede-author" placeholder="Author">
+        <textarea name="lede-description" placeholder="Description"></textarea>
+        <input type="text" name="lede-image-url" placeholder="Image URL">
+        <button id="lookup-lede">Lookup Lede</button>
+        <button type="submit">Add Lede</button>
+        <button type="reset">Reset</button>
+      </form>
+    </div>
+    <div id="last-email-sent" class="last-email-sent">
+      <span>
+        Emailed: 
+      </span>
+      <span id="last-email-sent-tag" class="last-email-sent-tag"></span>
+      <form id="send-email-form">
+        <button id="send-email">Send Email</button>
+      </form>
+      <div id="lede-image-preview" class="lede-image-preview">
       </div>
     </div>
   </div>
   <div id="admin-dashboard" class="admin-dashboard">
-    <div id="notification" class="notification"></div>
+      <div id="recent-bookmarklets" class="recent-bookmarklets">
+        <h2>Stuff they like</h2>
+        <ul>
+        </ul>
+      </div>
+      <div id="queued-ledes" class="queued-ledes">
+        <h2>Ready to send</h2>
+        <ul>
+        </ul>
+      </div>
+      <div id="recent-notifications" class="recent-notifications">
+        <h2>We just sent them</h2>
+        <ul>
+        </ul>
+      </div>
   </div>
+ <div id="notification" class="notification"></div>
 </body>
 </html>

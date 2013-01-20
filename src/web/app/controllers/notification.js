@@ -2,9 +2,11 @@ var Notification = require('../../../core/datalayer').Notification;
 var no_err = require('../helpers/core').no_err;
 var log = require('../../../core/logger').getLogger("web");
 var util = require('util');
+var query = require('./query');
 
 exports.list = function(req, res) {
-  Notification.find(req.query, no_err(res, function(notifications) {
+  var tq = query.translate(req.query);
+  Notification.find(tq.select, tq.attributes, no_err(res, function(notifications) {
     if(notifications) {
       res.send(notifications);
     } else {
@@ -13,7 +15,6 @@ exports.list = function(req, res) {
     }
   }));
 };
-
 
 exports.create = function(req, res) {
   Notification.create(req.body, function(err, notifications) {

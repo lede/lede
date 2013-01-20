@@ -5,7 +5,7 @@ var util = require('util');
 var no_err = require('../helpers/core').no_err;
 var path = require('path');
 var queues = require('../../../core/resque-queues');
-
+var query = require('./query');
 
 
 exports.create = function(req, res) {
@@ -38,11 +38,10 @@ exports.create = function(req, res) {
 };
 
 exports.list = function(req, res) {
-
-  // create a Lede that points at the post we either created or found
-  Lede.find({ user_id: req.query.userid }, no_err(res, function(results) {
+  var tq = query.translate(req.query);
+  Lede.find(tq.select, tq.attributes, no_err(res, function(results) {
     log.info("Listed Ledes for user " + req.user.id);
-    res.send({ ledes: results });
+    res.send(results);
   }));
 
 };

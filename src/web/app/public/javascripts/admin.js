@@ -3,12 +3,24 @@ var adminUser = {};
 
 // grab the list of users from the backend
 function initPage() {
-  $('#user-details').hide();
-  api.user.list(function(users) {
+  $('#admin-dashboard').hide();
+  $('#add-lede').hide();
+  $('#last-email-sent').hide();
+  updateUserList();
+}
+
+function updateUserList(searchstr, callback) {
+  var filter = {};
+  if(searchstr) {
+    filter = {'email.like': '%'+searchstr+'%'}; 
+  }
+  api.user.list(filter, function(users) {
+    $('.user-list ul').html('');
     _.each(users, function(user) {
+      var selectedTag = (user.id === activeUser.id) ? 'class="selected"' : '';
       $('.user-list ul').append(
-        '<li>'+
-          '<a href="#user/'+user.id+'">'+
+        '<li '+selectedTag+'>'+
+          '<a id="user-'+user.id+'" href="#user/'+user.id+'">'+
             user.email+
           '</a>'+
         '</li>'
@@ -17,9 +29,10 @@ function initPage() {
   });
 }
 
-//FUCK this is really ugly, make a new endpoint that gets you the latest lede
 function updateLastNotification(userid, callback) {
-  api.notification.list({user_id: userid}, function(notifications) {
+  $('#last-email-sent-tag').html('');
+  $('#lede-image-preview').html('');
+  api.notification.list({user_id: userid, order: '-id', limit: 1}, function(notifications) {
     if(notifications.length) {
       var updateTime = _.pluck(notifications, 'created_at').pop();
       var formattedTime = moment(updateTime, "YYYY-MM-DDTHH:mm:ss Z").fromNow();
@@ -31,14 +44,33 @@ function updateLastNotification(userid, callback) {
   });
 }
 
-// grab the list of ledes from the backend
-function updateRecommendations(userid, callback) {
-  api.recommendation.list({user_id: userid, sent: false}, function(recommendations) {
-    var li = recommendations.length ? '' : '<li>Queue up some ledes!</li>'; 
-    $('.add-lede ul').html(li);
+function updateRecentLedes(userid, callback) {
+  $('.recent-notifications ul').html('');
+  api.recommendation.list({user_id: userid, sent: true, order: '-id', limit: 9}, function(recommendations) {
+    var li = recommendations.length ? '' : '<li>Send them some ledes!</li>';
+    $('.recent-notifications ul').html(li);
 
     _.each(recommendations, function(recommendation) {
-      $('.add-lede ul').append(
+      $('.recent-notifications ul').append(
+        '<li>'+
+          '<a href="' + recommendation.uri + '" target="_blank">'+
+            recommendation.title+
+          '</a>'+
+        '</li>'
+      );
+    });
+  });
+}
+
+// grab the list of ledes from the backend
+function updateRecommendations(userid, callback) {
+  $('.queued-ledes ul').html('');
+  api.recommendation.list({user_id: userid, sent: false, order: '-id'}, function(recommendations) {
+    var li = recommendations.length ? '' : '<li>Queue up some ledes!</li>'; 
+    $('.queued-ledes ul').html(li);
+
+    _.each(recommendations, function(recommendation) {
+      $('.queued-ledes ul').append(
         '<li>'+
           '<a href="' + recommendation.uri + '" target="_blank">'+
             recommendation.title+
@@ -52,7 +84,8 @@ function updateRecommendations(userid, callback) {
 
 // grab the list of bookmarklet hits from the backend
 function updateLedes(userid, callback) {
-  api.lede.list(userid, function(ledes) {
+  $('.recent-bookmarklets ul').html('');
+  api.lede.list({user_id: userid, limit: 10}, function(ledes) {
     var li = ledes.length ? '' : '<li>No bookmarklet hits yet. Check back soon!</li>';
     $('.recent-bookmarklets ul').html(li);
 
@@ -71,27 +104,47 @@ function updateLedes(userid, callback) {
 
 // render up the user details 
 function renderUserDetails(userid) {
+  $('#user-list li').removeClass('selected');
+  $('#user-'+userid).parent().addClass('selected'); 
+
   var callbackCount = 3;
-  $('#user-details').fadeOut(300);
+  $('#admin-dashboard').fadeOut(300);
+  $('#add-lede').fadeOut(300);
+  $('#last-email-sent').fadeOut(300);
 
   updateLedes(userid, function(){
     callbackCount--;
     if(callbackCount === 0) {
-      $('#user-details').fadeIn(200);
+      $('#admin-dashboard').fadeIn(200);
+      $('#add-lede').fadeIn(300);
+      $('#last-email-sent').fadeIn(300);
+    }
+  });
+
+  updateRecentLedes(userid, function() {
+    callbackCount--;
+    if(callbackCount === 0) {
+      $('admin-dashboard').fadeIn(200);
+      $('#add-lede').fadeIn(300);
+      $('#last-email-sent').fadeIn(300);
     }
   });
 
   updateRecommendations(userid, function(){
     callbackCount--;
     if(callbackCount === 0) {
-      $('#user-details').fadeIn(200);
+      $('#admin-dashboard').fadeIn(200);
+      $('#add-lede').fadeIn(300);
+      $('#last-email-sent').fadeIn(300);
     }
   });
 
   updateLastNotification(userid, function(){
     callbackCount--;
     if(callbackCount === 0) {
-      $('#user-details').fadeIn(200);
+      $('#admin-dashboard').fadeIn(200);
+      $('#add-lede').fadeIn(300);
+      $('#last-email-sent').fadeIn(300);
     }
   });
 
@@ -124,6 +177,17 @@ $(function() {
 
   initPage();
 
+  // Handlre to search for users
+  $('input[name=user-search]').keyup(function(evt) {
+
+    if($('input[name=user-search]').val().length >= 3) {
+      updateUserList($('input[name=user-search]').val().trim());
+    }
+    if($('input[name=user-search]').val() === '') {
+      updateUserList();
+    }
+  });
+
   // Handler to add ledes
   $('#add-lede-form').submit(function(evt) {
     evt.preventDefault();
@@ -134,7 +198,7 @@ $(function() {
       uri: $('input[name=lede-url]').val().trim(),
       title: $('input[name=lede-title]').val().trim(),
       author: $('input[name=lede-author]').val().trim(),
-      description: $('input[name=lede-description]').val().trim(),
+      description: $('textarea[name=lede-description]').val().trim(),
       image_url: $('input[name=lede-image-url]').val().trim(),
       sent: false
     };
@@ -144,8 +208,10 @@ $(function() {
         $('input[name=lede-url]').val('');
         $('input[name=lede-title]').val('');
         $('input[name=lede-author]').val('');
-        $('input[name=lede-description]').val('');
+        $('textarea[name=lede-description]').val('');
         $('input[name=lede-image-url]').val('');
+        $('#last-email-sent-tag').html('');
+        $('#lede-image-preview').html('');
       });
     });
   });
@@ -161,16 +227,18 @@ $(function() {
     api.extractor.extract({url: $('input[name=lede-url]').val()}, function(recommendation) {
       $('input[name=lede-url]').val($('input[name=lede-url]').val().trim());
       $('input[name=lede-title]').val(recommendation.title.trim());
-      $('input[name=lede-description]').val(recommendation.description.trim());
+      $('textarea[name=lede-description]').val(recommendation.description.trim());
       $('input[name=lede-image-url]').val(recommendation.image.trim());
       $('#lede-image-preview').html('<img src="'+recommendation.image.trim()+'" width="75" height="75">');
       $('#notification').fadeOut(500);
       $('#notification').html('');
     },
     function(err) {
+      $('#notification').addClass('error');
       $('#notification').html('Extracting Lede Information Has Failed.  Check your URL and try again.');
       window.setTimeout(function() {
         $('#notification').fadeOut(500);
+        $('#notification').removeClass('error');
         $('#notification').html('');
       }, 3000);
     });
@@ -194,6 +262,20 @@ $(function() {
         $('#notification').fadeOut(500);
         $('#notification').html('');
       });
+      updateRecentLedes(userid, function() {
+        $('#notification').fadeOut(500);
+        $('#notification').html('');
+      });
+
+    },
+    function(err) {
+      $('#notification').addClass('error');
+      $('#notification').html('Sending the daily email has failed.');
+      window.setTimeout(function() {
+        $('#notification').fadeOut(500);
+        $('#notification').removeClass('error');
+        $('#notification').html('');
+      }, 3000);
     });
   });
 

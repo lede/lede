@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var notifier = require('../../../notifier/notifier.js');
 var log = require('../../../core/logger').getLogger("web");
 var util = require('util');
+var query = require('./query.js');
 
 // HACK: break this out into some util library
 function randomPass() {
@@ -18,7 +19,8 @@ function randomPass() {
 }
 
 exports.findAll = function(req, res) {
-  User.find({}, no_err(res, function(users) {
+  var tq = query.translate(req.query);
+  User.find(tq.select, tq.attributes, no_err(res, function(users) {
     res.send(users);
   }));
 };

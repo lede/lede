@@ -81,14 +81,25 @@ h2 {
 }
 
 input {
+  padding: 5px;
   border: 1px solid #CCC;
   margin-bottom: 5px;
+  font-family: 'Istok Web', sans-serif; font-weight: lighter;
+}
+
+textarea {
+  padding: 5px;
+  outline: none;
+  border: 10px solid #CCC:
+  margin-bottom: 5px;
+  height: 100px;
+  font-family: 'Istok Web', sans-serif; font-weight: lighter;
 }
 
 button {
   background: #C80815;
-  padding: 2px 5px;
-  margin: 5px 0;
+  padding: 5px 10px;
+  margin: 5px 10px 5px 0;
   color: #FFF;
   border: none;
   border-radius: 3px;
@@ -113,42 +124,45 @@ div.user-admin {
   clear: both;
 }
 
-div.user-details {
-  float: left;
-  padding: 2%;
-  width: 70%;
-  height: 80%;
-}
-
 div.user-list {
   float: left;
-  width: 20%;
+  width: 30%;
   height; 100%;
-  padding: 2%;
+  padding: 0 2%;
 }
 
 div.user-list ul {
   width: 100%;
 }
 
-div.user-list ul  li {
-  padding: 5px 0;
+div.user-list ul li {
+  width: 100%;
+  padding: 5px;
 }
 
 div.user-list input {
   width: 100%;
 }
 
+div.user-list li.selected {
+  background: #C80815;
+  border-radius: 5px;
+}
+
+div.user-list li.selected a{
+  color: #FFF;
+}
+
 div.admin-dashboard {
   height: 30%;
-  padding: 0 2%;
   position: relative;
   clear: both;
 }
 
 div.recent-bookmarklets {
   float: left;
-  width: 40%;
+  width: 30%;
+  padding: 0 2%;
 }
 
 div.recent-bookmarklets ul {
@@ -163,34 +177,69 @@ div.add-lede {
   float: left;
   height: 100%;
   width: 30%;
-  padding: 0 1%
+  padding: 0 2%
 }
 
 div.add-lede ul  li {
   padding: 5px 0;
 }
+
 div.add-lede input {
   width: 100%;
+}
+
+div.add-lede textarea {
+  width: 100%;
+}
+
+div.queued-ledes {
+  float: left;
+  height: 100%;
+  width: 30%;
+  padding: 0 2%;
+}
+
+div.queued-ledes ul li {
+  padding: 5px 0;
 }
 
 div.last-email-sent {
   float: right;
   text-align: right;
   height: 100%;
-  width: 20%;
+  width: 25%;
+  padding: 0 2%;
+}
+
+div.recent-notifications {
+  float: right;
+  height: 100%;
+  width: 25%;
+  padding: 0 2%;
+}
+
+div.recent-notifications ul li {
+  padding: 5px 0;
 }
 
 div.notification {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   text-align: center; 
   padding: 10px; 
   width: 400px; 
-  height: 100px; 
-  margin-left: auto; 
-  margin-right: auto; 
+  height: 100px;
+  margin-left: -200px;
+  margin-top: -50px;
   border: 1px solid #CCC; 
-  background: rgba(0,0,0,0.5); 
+  background: rgba(0,0,0,0.9); 
   border-radius: 5px; 
   display: none;
+}
+
+div.notification.error {
+  border-color: #F00;
 }
 
 div.notification img {
