@@ -108,12 +108,10 @@ api = {
         error: error
       });
     },
-    remove: function(options, success, error) {
+    remove: function(recommendation_id, success, error) {
       $.ajax({
-        url: '/api/recommendation',
+        url: '/api/recommendation/' + recommendation_id,
         type: 'DELETE',
-        datatype: 'json',
-        data: options,
         success: success,
         errorr: error
       });

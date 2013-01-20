@@ -80,9 +80,19 @@ function updateRecommendations(userid, callback) {
         '<li>'+
           '<a href="' + recommendation.uri + '" target="_blank">'+
             recommendation.title+
-          '</a>'+
+          '</a>' + '&nbsp;' +
+          '<a id="delete-recommendation-'+recommendation.id+'" style="color: #C80815; font-weight: bold;" href="#">[x]</a>'+
         '</li>'
       );
+      // Add delete handler
+      $('#delete-recommendation-'+recommendation.id).click(function(evt) {
+        evt.preventDefault();
+        api.recommendation.remove(recommendation.id, function(res) {
+          updateRecommendations(userid, function(){
+            updateUserList();
+          });
+        });
+      });
     });
     callback();
   });
@@ -245,7 +255,6 @@ $(function() {
       sent: false
     };
 
-    //TODO: make a call here to get the image resized and pointed to our local version.
     api.extractor.createThumbnail({url: recommendation.image_url}, function(image) {
       recommendation.image_url = image.url;
 

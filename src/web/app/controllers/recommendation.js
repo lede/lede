@@ -29,12 +29,12 @@ exports.create = function(req, res) {
 };
 
 exports.remove = function(req, res) {
-  Recommendation.destroy({id: req.query.reccomendation_id}, function(err, res) {
+  Recommendation.destroy({id: req.route.params.recommendation_id}, function(err, rows) {
     if(err) {
       res.status(500);
       res.send({error: "Error deleting recommendation"});
     } else {
-      res.send({result: "Recommendation deleted"});
+      res.send({result: rows + " recommendation(s) deleted"});
     }
   });
 };
