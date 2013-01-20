@@ -54,6 +54,7 @@ body {
   height: 100%;
   min-width: 1000px;
   font-family: 'Istok Web', sans-serif; font-weight: lighter;
+  font-size: 13px;
   background: url('/images/wild_oliva.png');
   color: #AAA;
 }
@@ -76,22 +77,21 @@ h1 {
 
 h2 {
   color: #FFF;
-  font-size: 20px;
+  font-size: 22px;
   padding: 2% 0;
 }
 
 input {
-  padding: 5px;
+  padding: 3px;
   border: 1px solid #CCC;
-  margin-bottom: 5px;
+  margin: 5px 0;
   font-family: 'Istok Web', sans-serif; font-weight: lighter;
 }
 
 textarea {
-  padding: 5px;
-  outline: none;
-  border: 10px solid #CCC:
-  margin-bottom: 5px;
+  padding: 3px;
+  border: 1px solid #CCC;
+  margin: 5px 0;
   height: 100px;
   font-family: 'Istok Web', sans-serif; font-weight: lighter;
 }
@@ -99,7 +99,6 @@ textarea {
 button {
   background: #C80815;
   padding: 5px 10px;
-  margin: 5px 10px 5px 0;
   color: #FFF;
   border: none;
   border-radius: 3px;
@@ -118,10 +117,8 @@ img.header {
 }
 
 div.user-admin {
-  position: relative;
   height: 45%;
   width: 100%;
-  clear: both;
 }
 
 div.user-list {
@@ -155,8 +152,7 @@ div.user-list li.selected a{
 
 div.admin-dashboard {
   height: 30%;
-  position: relative;
-  clear: both;
+  width: 100%;
 }
 
 div.recent-bookmarklets {
@@ -239,9 +235,25 @@ div.notification {
 }
 
 div.notification.error {
-  border-color: #F00;
+  border-color: #C80815;
 }
 
 div.notification img {
   margin: 25px 0;
 }
+
+div.preview {
+  padding: 25px;
+  position: absolute; 
+  width: 550px; 
+  left: 50%; 
+  margin-left: -300px; 
+  height: 250px; 
+  top: 50%; 
+  margin-top: -150px;
+  border: 1px solid #CCC; 
+  background: #FFF; 
+  border-radius: 5px; 
+  display: none;
+}
+

@@ -5,12 +5,30 @@
   <link href='http://fonts.googleapis.com/css?family=Istok+Web' rel='stylesheet' type='text/css'>
   <link href='/stylesheets/admin.css' media='all' rel='stylesheet' type='text/css'>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
+  <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.rc.1/handlebars.min.js"></script> 
   <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script> 
   <script src="//cdnjs.cloudflare.com/ajax/libs/js-signals/0.8.1/js-signals.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/1.7.2/moment.min.js"></script>
   <script src="/javascripts/hasher.min.js"></script>
   <script src="/javascripts/api.js"></script> 
   <script src="/javascripts/admin.js"></script>
+
+  <script id="lede-preview" type="text/x-handlebars-template">
+    <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
+      <table style="width: 100%;" bgcolor="">
+        <tr>
+          <td class="small" width="20%" style="vertical-align:top; padding-right:10px;"><img style="max-width:100%;" src="{{image_url}}" /></td>
+          <td style="vertical-align:top; padding-top:0px;">
+            <a href="{{uri}}" style="text-decoration:none;"><h4 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; margin-top:0px; color:#000000!important;font-weight:500!important; font-size: 23px!important;">{{title}} <small style="font-size: 60%; color: #6f6f6f; line-height: 1.4; text-transform: none;">{{author}}</small></h4></a>
+            <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">{{description}}</p>
+            <a href="{{uri}}" alt="{{title}}" style="text-decoration:none; color: #FFFFFF;background-color: #C80815;padding:8px 14px;font-weight:bold;margin-right:10px;text-align:center;cursor:pointer;display: inline-block;" class="btn">Read more &rarr;</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div style="text-align: right; position: absolute; bottom: 10px; right: 10px"><a id="close-preview" href="#">close (x)</a></div>
+  </script>
+
 </head>
 <body>
  <div id="admin-header" class="admin-header">
@@ -32,9 +50,10 @@
         <input type="text" name="lede-author" placeholder="Author">
         <textarea name="lede-description" placeholder="Description"></textarea>
         <input type="text" name="lede-image-url" placeholder="Image URL">
-        <button id="lookup-lede">Lookup Lede</button>
-        <button type="submit">Add Lede</button>
-        <button type="reset">Reset</button>
+        <button id="lookup-lede">Lookup</button>
+        <button id="preview-lede">Preview</button>
+        <button type="submit">Add</button>
+        <button id="reset-lede" type="reset">Reset</button>
       </form>
     </div>
     <div id="last-email-sent" class="last-email-sent">
@@ -66,6 +85,7 @@
         </ul>
       </div>
   </div>
- <div id="notification" class="notification"></div>
+  <div id="preview" class="preview"></div>
+  <div id="notification" class="notification"></div>
 </body>
 </html>

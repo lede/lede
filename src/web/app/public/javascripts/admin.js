@@ -111,6 +111,13 @@ function renderUserDetails(userid) {
   $('#admin-dashboard').fadeOut(300);
   $('#add-lede').fadeOut(300);
   $('#last-email-sent').fadeOut(300);
+  $('input[name=lede-url]').val('');
+  $('input[name=lede-title]').val('');
+  $('input[name=lede-author]').val('');
+  $('textarea[name=lede-description]').val('');
+  $('input[name=lede-image-url]').val('');
+  $('#last-email-sent-tag').html('');
+  $('#lede-image-preview').html('');
 
   updateLedes(userid, function(){
     callbackCount--;
@@ -168,6 +175,10 @@ $(function() {
   hasher.initialized.add(router);
   hasher.init();
 
+  //Set up Handlebars Templates
+  var ledePreview = $('#lede-preview').html();
+  var ledePreviewTemplate = Handlebars.compile(ledePreview);
+
   api.user.check(function(user) {
     adminUser = user.result;
   }, 
@@ -177,7 +188,7 @@ $(function() {
 
   initPage();
 
-  // Handlre to search for users
+  // Handler to search for users
   $('input[name=user-search]').keyup(function(evt) {
 
     if($('input[name=user-search]').val().length >= 3) {
@@ -186,6 +197,31 @@ $(function() {
     if($('input[name=user-search]').val() === '') {
       updateUserList();
     }
+  });
+
+  // Hander to reset ledes
+  $('#reset-lede').click(function(evt) {
+    $('#lede-image-preview').html('');
+  });
+
+  // Handler to preview ledes
+  $('#preview-lede').click(function(evt) {
+    evt.preventDefault();
+    var recommendation = { 
+      uri: $('input[name=lede-url]').val().trim(),
+      title: $('input[name=lede-title]').val().trim(),
+      author: $('input[name=lede-author]').val().trim(),
+      description: $('textarea[name=lede-description]').val().trim(),
+      image_url: $('input[name=lede-image-url]').val().trim()
+    };
+
+    $('#preview').html(ledePreviewTemplate(recommendation));
+    $('#preview').fadeIn(200);
+    $('#close-preview').click(function(evt) {
+      evt.preventDefault();
+      $('#preview').fadeOut(200);
+      $('#preview').html('');
+    });
   });
 
   // Handler to add ledes
@@ -235,7 +271,7 @@ $(function() {
     },
     function(err) {
       $('#notification').addClass('error');
-      $('#notification').html('Extracting Lede Information Has Failed.  Check your URL and try again.');
+      $('#notification').html('Extracting Lede Information Has Failed.<br />Check your URL and try again.');
       window.setTimeout(function() {
         $('#notification').fadeOut(500);
         $('#notification').removeClass('error');
