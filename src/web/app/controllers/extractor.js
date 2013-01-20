@@ -24,7 +24,8 @@ exports.createThumbnail = function(req, res) {
       res.status(500);
       res.send({message: err});
     } else if (image) {
-      res.send(image);
+      //explicitly only send the url, since the path is private info
+      res.send({url: image.url});
     }
   });
 };
