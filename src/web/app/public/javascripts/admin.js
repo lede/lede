@@ -11,22 +11,25 @@ function initPage() {
 
 //TODO: consider a more efficient way to collect the number of unsent ledes
 function updateUserList(searchstr, callback) {
-  var filter = {};
-  if(searchstr) {
-    filter = {'email.like': '%'+searchstr+'%'}; 
-  }
+  var filter = searchstr ? {'email.like': '%'+searchstr+'%'} : {}; 
   api.user.list(filter, function(users) {
     $('.user-list ul').html('');
     _.each(users, function(user) {
-      api.recommendation.list({user_id: user.id, sent: false}, function (recommendations) {
-        var selectedTag = (user.id === activeUser.id) ? 'class="selected"' : '';
-        $('.user-list ul').append(
-          '<li '+selectedTag+'>'+
-            '<a id="user-'+user.id+'" href="#user/'+user.id+'">'+
-              user.email+ '(' +recommendations.length + ')'+
-            '</a>'+
-          '</li>'
-        );
+      var selectedTag = (user.id === activeUser.id) ? 'class="selected"' : '';
+      $('.user-list ul').append(
+        '<li '+selectedTag+'>'+
+          '<a id="user-' + user.id + '" href="#user/' + user.id + '">'+
+            user.email+
+          '</a>'+
+        '</li>'
+      );
+
+      api.recommendation.list({
+        user_id: user.id, 
+        sent: false
+      }, 
+      function (recommendations) {
+        $('#user-'+user.id).html(user.email + ' (' + recommendations.length + ')');
       });
     });
   });

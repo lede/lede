@@ -1,4 +1,4 @@
-var User = require('../../../core/datalayer').User;
+var dataLayer = require('../../../core/datalayer');
 var no_err = require('../helpers/core').no_err;
 var crypto = require('crypto');
 var notifier = require('../../../notifier/notifier.js');
@@ -20,16 +20,16 @@ function randomPass() {
 
 exports.findAll = function(req, res) {
   var tq = query.translate(req.query);
-  User.find(tq.select, tq.attributes, no_err(res, function(users) {
+  dataLayer.User.find(tq.select, tq.attributes, no_err(res, function(users) {
     res.send(users);
   }));
 };
 
 exports.findOne = function(req, res) {
-  User.findOne({id: req.route.params.user_id}, function(err, user) {
+  dataLayer.User.findOne({id: req.route.params.user_id}, function(err, user) {
     if(err) {
       res.status(404);
-      res.send({error: 'User with this id not found'});
+      res.send({error: 'dataLayer.User with this id not found'});
     } else if (user) {
       res.send(user);
     }
@@ -40,7 +40,7 @@ exports.findOne = function(req, res) {
 // just for testing
 exports.login = function(req, res) {
   if(req.body.user_email) {
-    User.findOne({email: req.body.user_email}, no_err(res, function(user) {
+    dataLayer.User.findOne({email: req.body.user_email}, no_err(res, function(user) {
       if(!user) {
         res.status(403); // forbidden
         res.send({ error: 'Invalid username or password' });
@@ -51,7 +51,7 @@ exports.login = function(req, res) {
     }));
   } else {
     res.status(422); // unprocessable entity
-    res.send({ error: 'User name is required but was not specified' });
+    res.send({ error: 'dataLayer.User name is required but was not specified' });
   }
 };
 
@@ -88,7 +88,7 @@ exports.register = function(req, res) {
     }
 
     // ensure we don't already have a user with that email
-    User.findOne({email:  req.body.user_email}, no_err(res, function(user) {
+    dataLayer.User.findOne({email:  req.body.user_email}, no_err(res, function(user) {
 
       // duplicate user, yell
       if(user) {
@@ -100,13 +100,13 @@ exports.register = function(req, res) {
         password = randomPass(); // HACK: send random password to user in email
         sha_sum = crypto.createHash('sha1');
         sha_sum.update(password);
-        User.create({ email: req.body.user_email, password_hash: sha_sum.digest('hex')  }, no_err(res, function(created_users) {
+        dataLayer.User.create({ email: req.body.user_email, password_hash: sha_sum.digest('hex')  }, no_err(res, function(created_users) {
           req.session.user_id = created_users.rows[0].id;
           log.info('Logging in as new user: ' + util.inspect(created_users.rows[0]));
           notifier.send_welcome(created_users.rows[0].id, password, function() {
             log.info('Sent welcome email for ' + created_users.rows[0].id);
           });
-          res.send({ result: 'User created for ' + req.body.user_email });
+          res.send({ result: 'dataLayer.User created for ' + req.body.user_email });
         }));
       }
     }));

@@ -24,9 +24,12 @@ exports.translate = function(query) {
     attributes.only = query.only.split(',');
     delete query.only;
   }
+  if(query.count) {
+    attributes.count = query.count;
+    delete query.count;
+  }
 
   //after removing the attributes, send the select as is
   select = query;
-
   return {select: select, attributes: attributes};
 };
