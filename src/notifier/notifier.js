@@ -1,5 +1,5 @@
-settings = require('../core/settings').get("notifier");
-log = require('../core/logger').getLogger("notifier");
+var settings = require('../core/settings').get("notifier");
+var log = require('../core/logger').getLogger("notifier");
 var _ = require('underscore');
 var util = require('util');
 var handlebars = require('handlebars');
