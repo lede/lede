@@ -84,7 +84,7 @@
   },
 
   "recommender": {
-    "numberOfPosts": 3
+    "numberOfLedes": 5
   },
 
   "extractor": {
