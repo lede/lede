@@ -1,5 +1,3 @@
-settings = require('../core/settings').get("recommender");
-log = require('../core/logger').getLogger("recommender");
 var User = require('../core/datalayer').User;
 var _ = require('underscore');
 var dataLayer = require('../core/datalayer');
@@ -7,7 +5,7 @@ var notifier = require('../notifier/notifier');
 var util = require('util');
 var Step = require('step');
 
-function generateDailyEmails(numberOfLedes, done) {
+function sendDailyEmails(done) {
 	// Get all users
   log.info('Starting email generation process for all users...');
 
@@ -24,17 +22,7 @@ function generateDailyEmails(numberOfLedes, done) {
           _.each(
             users,
             function (user) { 
-              var cb = group();
-
-              fetchLedesForUser(user.id, numberOfLedes, function(err, ledes) {
-                if(err) {
-                  log.error('Error finding Ledes for user ' + user.id + ' : ' + err);
-                  cb(err);
-                } else {
-                  log.info('Sending email to user ' + user.id + ' (' + user.email + ') with ' + ledes.length + ' links');
-                  notifier.send_daily(user, ledes, cb);
-                }
-              });
+              sendDailyEmailForUser(user, group());
             }
           );
         },
@@ -44,25 +32,31 @@ function generateDailyEmails(numberOfLedes, done) {
   });
 } 
 
+/** send an email for one user
+ * @param user  the user object to send to.  must contain attributes for 'id' and 'email'
+ * @param done  the callback.  there is no results param, only error
+ */
+function sendDailyEmailForUser(user, done) {
+  fetchLedesForUser(user.id, settings.recommender.numberOfLedes, function(err, ledes) {
+    if(err) {
+      log.error('Error finding Ledes for user ' + user.id + ' : ' + err);
+      done(err);
+    } else {
+      log.info('Sending email to user ' + user.id + ' (' + user.email + ') with ' + ledes.length + ' links');
+      notifier.send_daily(user, ledes, done);
+    }
+  });
+}
+
+/** fetches Ledes for the specified user, up to a max of 'limit'.  Will fetch the oldest ones first
+ * @param userId the user to fetch for
+ * @param limit  the max number of Ledes to fetch
+ * @done  callback.  result is array of Ledes
+ */
 function fetchLedesForUser(userId, limit, done) {
   log.debug('Fetching ledes for user: ' + userId);
   dataLayer.Recommendation.find({ user_id: userId, sent: false }, { order: ['created_at'], limit: limit }, done);
 }
 
-// Handle top-level exceptions
-process.on('uncaughtException',function(error) {
-  log.fatal('Top-Level Uncaught Exception: ' + error);
-  log.fatal(error.stack);
-  log.fatal('Exiting in 10 seconds...');
-  setTimeout(function() {
-    log.fatal('Exiting.');
-    process.exit(1);
-  }, 10000);
-});
-
-var NUMBER_OF_POSTS_PER_EMAIL = 3; // HACK: get from settings
-
-generateDailyEmails(NUMBER_OF_POSTS_PER_EMAIL, function() { 
-  log.info('Done sending daily emails!');
-  process.exit(0); 
-});
+exports.sendDailyEmails = sendDailyEmails;
+exports.sendDailyEmailForUser = sendDailyEmailForUser;
