@@ -1,4 +1,6 @@
 {
+  "domain": "http://192.168.0.103:3000",
+  
   "dbConnectionParams": {
     "user": "jon",
     "password": "jondbpass",

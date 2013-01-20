@@ -1,4 +1,6 @@
 {
+  "domain": "http://localhost:3000",
+  
   "dbConnectionParams": {
     "user": "justin",
     "password": "justindbpass",

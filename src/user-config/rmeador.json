@@ -1,4 +1,6 @@
 {
+  "domain": "http://localhost:3000",
+  
   "dbConnectionParams": {
     "user": "ryan",
     "password": "ryandbpass",
@@ -24,7 +26,7 @@
 
   "log4jsConfig": {
     "levels": {
-      "indexer": "INFO",
+      "indexer": "DEBUG",
       "scheduler": "INFO",
       "discoverer": "INFO",
       "web": "INFO"
