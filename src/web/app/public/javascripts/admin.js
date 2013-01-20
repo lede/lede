@@ -9,6 +9,7 @@ function initPage() {
   updateUserList();
 }
 
+//TODO: consider a more efficient way to collect the number of unsent ledes
 function updateUserList(searchstr, callback) {
   var filter = {};
   if(searchstr) {
@@ -17,14 +18,16 @@ function updateUserList(searchstr, callback) {
   api.user.list(filter, function(users) {
     $('.user-list ul').html('');
     _.each(users, function(user) {
-      var selectedTag = (user.id === activeUser.id) ? 'class="selected"' : '';
-      $('.user-list ul').append(
-        '<li '+selectedTag+'>'+
-          '<a id="user-'+user.id+'" href="#user/'+user.id+'">'+
-            user.email+
-          '</a>'+
-        '</li>'
-      );
+      api.recommendation.list({user_id: user.id, sent: false}, function (recommendations) {
+        var selectedTag = (user.id === activeUser.id) ? 'class="selected"' : '';
+        $('.user-list ul').append(
+          '<li '+selectedTag+'>'+
+            '<a id="user-'+user.id+'" href="#user/'+user.id+'">'+
+              user.email+ '(' +recommendations.length + ')'+
+            '</a>'+
+          '</li>'
+        );
+      });
     });
   });
 }
@@ -239,15 +242,22 @@ $(function() {
       sent: false
     };
 
-    api.recommendation.create(recommendation, function() {
-      updateRecommendations(userid, function() {
-        $('input[name=lede-url]').val('');
-        $('input[name=lede-title]').val('');
-        $('input[name=lede-author]').val('');
-        $('textarea[name=lede-description]').val('');
-        $('input[name=lede-image-url]').val('');
-        $('#last-email-sent-tag').html('');
-        $('#lede-image-preview').html('');
+    //TODO: make a call here to get the image resized and pointed to our local version.
+    api.extractor.createThumbnail({url: recommendation.image_url}, function(image) {
+      recommendation.image_url = image.url;
+
+      api.recommendation.create(recommendation, function() {
+        updateRecommendations(userid, function() {
+          $('input[name=lede-url]').val('');
+          $('input[name=lede-title]').val('');
+          $('input[name=lede-author]').val('');
+          $('textarea[name=lede-description]').val('');
+          $('input[name=lede-image-url]').val('');
+          $('#last-email-sent-tag').html('');
+          $('#lede-image-preview').html('');
+
+          updateUserList($('input[name=user-search]').val());
+        });
       });
     });
   });
@@ -282,7 +292,7 @@ $(function() {
 
   // Image preview handler
   $('input[name=lede-image-url]').change(function(evt) {
-      $('#lede-image-preview').html('<img src="'+recommendation.image+'" width="75" height="75">');
+      $('#lede-image-preview').html('<img src="'+$('input[name=lede-image-url]').val()+'" width="75" height="75">');
   });
 
   // Handler to send daily email

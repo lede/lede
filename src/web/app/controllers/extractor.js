@@ -18,14 +18,13 @@ exports.extract = function(req, res) {
 };
 
 exports.createThumbnail = function(req, res) {
-  Extractor.createThumbnail(req.body.url, function(err, imageUri) {
-    log.info("Got to the callback");
+  Extractor.createThumbnail(req.body.url, function(err, image) {
     if(err) {
       log.error(err);
       res.status(500);
       res.send({message: err});
-    } else if (imageUri) {
-      res.send(imageUri);
+    } else if (image) {
+      res.send(image);
     }
   });
 };
