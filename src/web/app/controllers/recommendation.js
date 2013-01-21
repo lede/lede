@@ -1,4 +1,5 @@
 var Recommendation = require('../../../core/datalayer').Recommendation;
+var Recommender = require('../../../recommender/recommender.js');
 var no_err = require('../helpers/core').no_err;
 var log = require('../../../core/logger').getLogger("web");
 var util = require('util');
@@ -15,7 +16,6 @@ exports.list = function(req, res) {
     }
   }));
 };
-
 
 exports.create = function(req, res) {
   Recommendation.create(req.body, function(err, recommendations) {
@@ -35,6 +35,17 @@ exports.remove = function(req, res) {
       res.send({error: "Error deleting recommendation"});
     } else {
       res.send({result: rows + " recommendation(s) deleted"});
+    }
+  });
+};
+
+exports.sendDailyEmailForUser = function(req, res) {
+  Recommender.sendDailyEmailForUser(req.body, function(err, respoonse) {
+    if(err) {
+      res.status(500);
+      res.send({error: "Error sending daily email for user"});
+    } else {
+      res.send({result: "Delivered daily email for user"});
     }
   });
 };

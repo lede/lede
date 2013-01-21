@@ -115,6 +115,16 @@ api = {
         success: success,
         errorr: error
       });
+    },
+    sendDaily: function(user, success, error) {
+      $.ajax({
+        url: '/api/recommendation/send_daily',
+        type: 'POST',
+        datatype: 'json',
+        data: user,
+        success: success,
+        error: error
+      });
     }
   },
   notification: {
@@ -132,18 +142,6 @@ api = {
         type: 'POST',
         datatype: 'json',
         data: notification,
-        success: success,
-        error: error
-      });
-    }
-  },
-  notifier: {
-    sendDaily: function(user, success, error) {
-      $.ajax({
-        url: '/api/notifier/send_daily',
-        type: 'POST',
-        datatype: 'json',
-        data: user,
         success: success,
         error: error
       });

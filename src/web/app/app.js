@@ -17,7 +17,6 @@ var express = require('express')
   , link = require('./controllers/link')
   , post = require('./controllers/post')
   , recommendation = require('./controllers/recommendation')
-  , notifier = require('./controllers/notifier')
   , notification = require('./controllers/notification')
   , extractor = require('./controllers/extractor')
   , _ = require('underscore')
@@ -94,12 +93,11 @@ app.get('/api/user/:user_id', ensure_user, user.findOne);
 
 app.get('/api/recommendation', ensure_user, recommendation.list);
 app.post('/api/recommendation', ensure_user, recommendation.create);
+app.post('/api/recommendation/send_daily', ensure_user, recommendation.sendDailyEmailForUser);
 app.delete('/api/recommendation/:recommendation_id', ensure_user, recommendation.remove);
 
 app.get('/api/notification', ensure_user, notification.list);
 app.post('/api/notification', ensure_user, notification.create);
-
-app.post('/api/notifier/send_daily', ensure_user, notifier.send_daily);
 
 app.post('/api/extractor/extract', ensure_user, extractor.extract);
 app.post('/api/extractor/createThumbnail', ensure_user, extractor.createThumbnail);
