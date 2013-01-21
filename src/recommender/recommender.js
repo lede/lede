@@ -32,7 +32,7 @@ function sendDailyEmails(done) {
   });
 } 
 
-/** send an email for one user
+/** send an email for one user.  marks the recommendations that are sent as 'sent'
  * @param user  the user object to send to.  must contain attributes for 'id' and 'email'
  * @param done  the callback.  there is no results param, only error
  */
@@ -43,7 +43,14 @@ function sendDailyEmailForUser(user, done) {
       done(err);
     } else {
       log.info('Sending email to user ' + user.id + ' (' + user.email + ') with ' + ledes.length + ' links');
-      notifier.send_daily(user, ledes, done);
+      notifier.send_daily(user, ledes, function (err, results) {
+        if (err) {
+          done(err);
+        } else {
+          // mark the recommendations as sent
+          dataLayer.Recommendation.update(_.pluck(ledes, 'id'), { sent: true }, done);
+        }
+      });
     }
   });
 }
