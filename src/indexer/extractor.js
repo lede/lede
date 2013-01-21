@@ -78,23 +78,23 @@ function extractImage(dom, baseUrl) {
 
 function extractImageTag(dom) {
   // parse Facebook Open Graph image meta tag
-  var ogImageMetas = _.filter(select(dom, "head meta"), function(e) {
+  var ogImageMeta = _.find(select(dom, "head meta"), function(e) {
     return /og:image/i.test(e.attribs.property);
   });
 
-  if (ogImageMetas.length) {
+  if (ogImageMeta) {
     log.debug("using OG image meta");
-    return ogImageMetas[0].attribs.content;
+    return ogImageMeta.attribs.content;
   }
 
-  // parse image_src meta tag
-  var imageSrcLinks = _.filter(select(dom, "head link"), function(e) {
+  // parse image_src link tag
+  var imageSrcLink = _.find(select(dom, "head link"), function(e) {
     return /image_src/i.test(e.attribs.type);
   });
 
-  if (imageSrcLinks.length) {
-    log.debug("using image_src meta");
-    return imageSrcLinks[0].attribs.content;
+  if (imageSrcLink) {
+    log.debug("using image_src link");
+    return imageSrcLink.attribs.content;
   }
 
   // first image tag inside the body paragraph
@@ -120,44 +120,43 @@ function extractImageTag(dom) {
 
 function extractTitle(dom) {
   // parse Facebook Open Graph title meta tag
-  var ogTitleMetas = _.filter(select(dom, "head meta"), function(e) {
+  var ogTitleMeta = _.find(select(dom, "head meta"), function(e) {
     return /og:title/i.test(e.attribs.property);
   });
 
-  if (ogTitleMetas.length) {
+  if (ogTitleMeta) {
     log.debug("using OG title meta");
-    return ogTitleMetas[0].attribs.content;
+    return ogTitleMeta.attribs.content;
   }
 
   // title tag
-  var titleTags = _.filter(select(dom, "head title"), function(e) {
+  var titleTag = _.find(select(dom, "head title"), function(e) {
     return e.children;
   });
 
-  if (titleTags.length) {
+  if (titleTag) {
     log.debug("using title tag");
-    return flattenHtml(titleTags[0]);
+    return flattenHtml(titleTag);
   }
   
   // h1
-  var h1Tags = _.filter(select(dom, "body h1"), function(e) {
-    //log.info(util.inspect(e));
+  var h1Tag = _.find(select(dom, "body h1"), function(e) {
     return e.children;
   });
 
-  if (h1Tags.length) {
+  if (h1Tag) {
     log.debug("using h1 tag");
-    return flattenHtml(h1Tags[0]);
+    return flattenHtml(h1Tag);
   }
 
   // h2
-  var h2Tags = _.filter(select(dom, "body h2"), function(e) {
+  var h2Tag = _.find(select(dom, "body h2"), function(e) {
     return e.children;
   });
 
-  if (h2Tags.length) {
+  if (h2Tag) {
     log.debug("using h2 tag");
-    return flattenHtml(h2Tags[0]);
+    return flattenHtml(h2Tag);
   }
   
   // give up
@@ -167,23 +166,23 @@ function extractTitle(dom) {
 
 function extractDescription(dom) {
   // parse Facebook Open Graph description meta tag
-  var ogDescriptionMetas = _.filter(select(dom, "head meta"), function(e) {
+  var ogDescriptionMeta = _.find(select(dom, "head meta"), function(e) {
     return /og:description/i.test(e.attribs.property);
   });
   
-  if (ogDescriptionMetas.length) {
+  if (ogDescriptionMeta) {
     log.debug("using OG desc meta");
-    return ogDescriptionMetas[0].attribs.content;
+    return ogDescriptionMeta.attribs.content;
   }
   
   // first P tag of the body
-  var pTags = _.filter(select(dom, "body p"), function(e) {
+  var pTag = _.find(select(dom, "body p"), function(e) {
     return e.children;
   });
 
-  if (pTags.length) {
+  if (pTag) {
     log.debug("using body P tag");
-    return flattenHtml(pTags[0]);
+    return flattenHtml(pTag);
   }
   
   // give up
