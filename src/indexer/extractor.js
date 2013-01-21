@@ -18,7 +18,7 @@ function extractContent(url, done) {
     if (err) {
       done(err);
     } else {
-      extractContentFromHtml(result.buffer, url || result.url, done);
+      extractContentFromHtml(result.buffer, result.url || url, done);
     }
   });
 }
@@ -37,8 +37,8 @@ function extractContentFromHtml(siteBody, baseUrl, done) {
       } else {
         var result = {
           image: extractImage(dom, baseUrl),
-          title: stripAndDecodeHtml(extractTitle(dom)),
-          description: stripAndDecodeHtml(extractDescription(dom))
+          title: decodeHtml(extractTitle(dom)),
+          description: decodeHtml(extractDescription(dom))
         };
 
         done(null, result);
@@ -131,33 +131,33 @@ function extractTitle(dom) {
 
   // title tag
   var titleTags = _.filter(select(dom, "head title"), function(e) {
-    return findFirstTextChild(e);
+    return e.children;
   });
 
   if (titleTags.length) {
     log.debug("using title tag");
-    return findFirstTextChild(titleTags[0]).data;
+    return flattenHtml(titleTags[0]);
   }
   
   // h1
   var h1Tags = _.filter(select(dom, "body h1"), function(e) {
     //log.info(util.inspect(e));
-    return findFirstTextChild(e);
+    return e.children;
   });
 
   if (h1Tags.length) {
     log.debug("using h1 tag");
-    return findFirstTextChild(h1Tags[0]).data;
+    return flattenHtml(h1Tags[0]);
   }
 
   // h2
   var h2Tags = _.filter(select(dom, "body h2"), function(e) {
-    return findFirstTextChild(e);
+    return e.children;
   });
 
   if (h2Tags.length) {
     log.debug("using h2 tag");
-    return findFirstTextChild(h2Tags[0]).data;
+    return flattenHtml(h2Tags[0]);
   }
   
   // give up
@@ -178,12 +178,12 @@ function extractDescription(dom) {
   
   // first P tag of the body
   var pTags = _.filter(select(dom, "body p"), function(e) {
-    return findFirstTextChild(e);
+    return e.children;
   });
 
   if (pTags.length) {
     log.debug("using body P tag");
-    return findFirstTextChild(pTags[0]).data;
+    return flattenHtml(pTags[0]);
   }
   
   // give up
@@ -191,16 +191,27 @@ function extractDescription(dom) {
   return null;
 }
 
-function findFirstTextChild(element) {
+function flattenHtml(element) {
   if (!element.children) {
-    return null;
+    return "";
   }
 
-  var textChildren = _.filter(element.children, function(c) {
-    return c.type == 'text' && c.data != "";
-  });
-
-  return textChildren.length ? textChildren[0] : null;
+  try {
+    return _.reduce(element.children,
+      function (memo, child) {
+        if (child.type == 'text') {
+          return memo + child.data;
+        } else if (child.type == 'tag') {
+          return memo + flattenHtml(child);
+        } else {
+          throw "unknown child element type: " + child.type;
+        }
+      },
+      "");
+  } catch (e) {
+    log.error(e);
+    return null;
+  }
 }
 
 /** @brief reformat the image at the URL to fit our email format, which is 75x75 pixels.  this is not a very flexible function, but I figure we can generalize it later.  it then stores the image on disk
@@ -226,13 +237,10 @@ function createThumbnail(url, done) {
   });
 }
 
-function stripAndDecodeHtml(html) {
+function decodeHtml(html) {
   if (!_.isString(html)) { // can't sanitize non-strings...
     return html;
   }
-
-  // strip HTML tags, suggested by http://stackoverflow.com/a/822464/10861
-  html = html.replace(/<(?:.|\n)*?>/gm, '');
 
   // decode HTML entities
   return encoder.htmlDecode(html);
@@ -240,4 +248,4 @@ function stripAndDecodeHtml(html) {
 
 exports.extractContent = extractContent;
 exports.createThumbnail = createThumbnail;
-exports.stripAndDecodeHtml = stripAndDecodeHtml;
+exports.decodeHtml = decodeHtml;
