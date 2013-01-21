@@ -102,6 +102,7 @@ function send_email(user, mail_options, callback) {
   smtpTransport.sendMail(mail_options, function(err, res) {
     if(err) {
       log.error(err);
+      callback(err);
     } else {
       log.info("Message sent: " + res.message);
       //If we successfully send the message, then update the notifications table to reflect it
@@ -111,8 +112,7 @@ function send_email(user, mail_options, callback) {
         } else if (res) {
           log.info('Created record of notification');
         }
-        //TODO: I think we want the callback regardless of whether the saving notification state worked or not
-        callback();
+        callback(err, res);
       });
     }
   });
