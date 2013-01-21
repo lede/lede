@@ -139,10 +139,13 @@ require.alias = function (from, to) {
 
 (function () {
     var process = {};
+    var global = typeof window !== 'undefined' ? window : {};
+    var definedProcess = false;
     
     require.define = function (filename, fn) {
-        if (require.modules.__browserify_process) {
+        if (!definedProcess && require.modules.__browserify_process) {
             process = require.modules.__browserify_process();
+            definedProcess = true;
         }
         
         var dirname = require._core[filename]
@@ -183,7 +186,8 @@ require.alias = function (from, to) {
                 module_.exports,
                 dirname,
                 filename,
-                process
+                process,
+                global
             );
             module_.loaded = true;
             return module_.exports;
@@ -192,7 +196,7 @@ require.alias = function (from, to) {
 })();
 
 
-require.define("path",function(require,module,exports,__dirname,__filename,process){function filter (xs, fn) {
+require.define("path",function(require,module,exports,__dirname,__filename,process,global){function filter (xs, fn) {
     var res = [];
     for (var i = 0; i < xs.length; i++) {
         if (fn(xs[i], i, xs)) res.push(xs[i]);
@@ -327,9 +331,50 @@ exports.extname = function(path) {
   return splitPathRe.exec(path)[3] || '';
 };
 
+exports.relative = function(from, to) {
+  from = exports.resolve(from).substr(1);
+  to = exports.resolve(to).substr(1);
+
+  function trim(arr) {
+    var start = 0;
+    for (; start < arr.length; start++) {
+      if (arr[start] !== '') break;
+    }
+
+    var end = arr.length - 1;
+    for (; end >= 0; end--) {
+      if (arr[end] !== '') break;
+    }
+
+    if (start > end) return [];
+    return arr.slice(start, end - start + 1);
+  }
+
+  var fromParts = trim(from.split('/'));
+  var toParts = trim(to.split('/'));
+
+  var length = Math.min(fromParts.length, toParts.length);
+  var samePartsLength = length;
+  for (var i = 0; i < length; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      samePartsLength = i;
+      break;
+    }
+  }
+
+  var outputParts = [];
+  for (var i = samePartsLength; i < fromParts.length; i++) {
+    outputParts.push('..');
+  }
+
+  outputParts = outputParts.concat(toParts.slice(samePartsLength));
+
+  return outputParts.join('/');
+};
+
 });
 
-require.define("__browserify_process",function(require,module,exports,__dirname,__filename,process){var process = module.exports = {};
+require.define("__browserify_process",function(require,module,exports,__dirname,__filename,process,global){var process = module.exports = {};
 
 process.nextTick = (function () {
     var canSetImmediate = typeof window !== 'undefined'
@@ -339,7 +384,7 @@ process.nextTick = (function () {
     ;
 
     if (canSetImmediate) {
-        return window.setImmediate;
+        return function (f) { return window.setImmediate(f) };
     }
 
     if (canPost) {
@@ -387,10 +432,10 @@ process.binding = function (name) {
 
 });
 
-require.define("/node_modules/domready/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"./ready.js"}
+require.define("/node_modules/domready/package.json",function(require,module,exports,__dirname,__filename,process,global){module.exports = {"main":"./ready.js"}
 });
 
-require.define("/node_modules/domready/ready.js",function(require,module,exports,__dirname,__filename,process){/*!
+require.define("/node_modules/domready/ready.js",function(require,module,exports,__dirname,__filename,process,global){/*!
   * domready (c) Dustin Diaz 2012 - License MIT
   */
 !function (name, definition) {
@@ -446,7 +491,7 @@ require.define("/node_modules/domready/ready.js",function(require,module,exports
 })
 });
 
-require.define("/widget/bookmarklet.js",function(require,module,exports,__dirname,__filename,process){var yarn = require('./build/yarn');
+require.define("/widget/bookmarklet.js",function(require,module,exports,__dirname,__filename,process,global){var yarn = require('./build/yarn');
 
 var elem = yarn('bookmarklet.html', ['bookmarklet.css']);
 
@@ -459,14 +504,14 @@ exports.inject = function(target_element) {
 
 });
 
-require.define("/widget/build/yarn.js",function(require,module,exports,__dirname,__filename,process){module.exports = require("yarnify")("_025a770b-",{"/bookmarklet.html":"<div id='pop-down' class='pop-down'>\n  <img src='http://unburythelede.com/images/lede_icon.png'></img>\n  <h1>You now lede this story</h1>\n</div>\n<script type='text/javascript'>\n  setTimeout(function() {\n    $(__LEDE_POPDOWN__).find('div').slideDown();\n    setTimeout(function() {\n      $(__LEDE_POPDOWN__).find('div').slideUp();\n    }, 3000);\n  }, 200);\n</script>\n","/bookmarklet.css":["7cc25b94","._025a770b-7cc25b94 div._025a770b._025a770b-pop-down {\n  display: none;\n  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);\n  background: rgba(255,255,255,0.95);\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  color: #444;\n  z-index: 9000; /* arbitrary big number */\n}\n\n  "]});
+require.define("/widget/build/yarn.js",function(require,module,exports,__dirname,__filename,process,global){module.exports = require("yarnify")("_b56197b-",{"/bookmarklet.html":"<div id='pop-down' class='pop-down'>\n  <img id='lede-logo' class='lede-logo' src='http://unburythelede.com/images/lede_icon.png'></img>\n  <h1 id='lede-title' class='lede-title'>You now lede this story</h1>\n</div>\n<script type='text/javascript'>\n  setTimeout(function() {\n    $(__LEDE_POPDOWN__).find('div').slideDown();\n    setTimeout(function() {\n      $(__LEDE_POPDOWN__).find('div').slideUp();\n    }, 3000);\n  }, 200);\n</script>\n","/bookmarklet.css":["4242d954","._b56197b-4242d954 div._b56197b._b56197b-pop-down {\n  display: none;\n  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);\n  background: rgba(255,255,255,0.95);\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 100%;\n  color: #444;\n  z-index: 9000; /* arbitrary big number */\n}\n\n._b56197b-4242d954 h1._b56197b._b56197b-lede-title {\n  margin-top: 29px !important;\n  margin-left: 30px !important;\n  font-size: 36px !important;\n  float: left !important;\n  color: #444 !important;\n}\n\n._b56197b-4242d954 img._b56197b._b56197b-lede-logo {\n  float: left !important;\n}\n\n"]});
 
 });
 
-require.define("/node_modules/yarnify/package.json",function(require,module,exports,__dirname,__filename,process){module.exports = {"main":"index.js","browserify":"browser.js"}
+require.define("/node_modules/yarnify/package.json",function(require,module,exports,__dirname,__filename,process,global){module.exports = {"main":"index.js","browserify":"browser.js"}
 });
 
-require.define("/node_modules/yarnify/browser.js",function(require,module,exports,__dirname,__filename,process){var path = require('path');
+require.define("/node_modules/yarnify/browser.js",function(require,module,exports,__dirname,__filename,process,global){var path = require('path');
 var parse = require('./browser/parse');
 var withPrefix = require('./browser/with_prefix');
 
@@ -538,7 +583,7 @@ module.exports = function (prefix, files) {
 
 });
 
-require.define("/node_modules/yarnify/browser/parse.js",function(require,module,exports,__dirname,__filename,process){module.exports = function (prefix, src) {
+require.define("/node_modules/yarnify/browser/parse.js",function(require,module,exports,__dirname,__filename,process,global){module.exports = function (prefix, src) {
     var elem = document.createElement('div');
     var className = prefix.slice(0, -1);
     elem.setAttribute('class', prefix + '_container');
@@ -569,7 +614,7 @@ require.define("/node_modules/yarnify/browser/parse.js",function(require,module,
 
 });
 
-require.define("/node_modules/yarnify/browser/with_prefix.js",function(require,module,exports,__dirname,__filename,process){module.exports = function withPrefix (prefix, elem) {
+require.define("/node_modules/yarnify/browser/with_prefix.js",function(require,module,exports,__dirname,__filename,process,global){module.exports = function withPrefix (prefix, elem) {
     function wrap (e) {
         if (!e) return e
         if (e && e.length) {
@@ -628,7 +673,7 @@ require.define("/node_modules/yarnify/browser/with_prefix.js",function(require,m
 
 });
 
-require.define("/entry.js",function(require,module,exports,__dirname,__filename,process){var domready = require('domready');
+require.define("/entry.js",function(require,module,exports,__dirname,__filename,process,global){var domready = require('domready');
 var widget = require('./widget/bookmarklet');
 
 domready(function() {

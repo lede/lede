@@ -324,7 +324,7 @@ $(function() {
         $('#notification').fadeOut(500);
         $('#notification').html('');
       });
-
+      updateUserList();
     },
     function(err) {
       $('#notification').addClass('error');

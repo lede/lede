@@ -10,14 +10,15 @@ div.pop-down {
   z-index: 9000; /* arbitrary big number */
 }
 
-  div.pop-down h1 {
-    margin-top: 29px !important;
-    margin-left: 30px !important;
-    font-size: 36px !important;
-    float: left !imporant;
-  }
+h1.lede-title {
+  margin-top: 29px !important;
+  margin-left: 30px !important;
+  font-size: 36px !important;
+  float: left !important;
+  color: #444 !important;
+}
 
-  div.pop-down img {
-    float: left !important;
-  }
+img.lede-logo {
+  float: left !important;
+}
 
