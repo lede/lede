@@ -18,7 +18,7 @@ function extractContent(url, done) {
     if (err) {
       done(err);
     } else {
-      extractContentFromHtml(result.buffer, result.url, done);
+      extractContentFromHtml(result.buffer, url || result.url, done);
     }
   });
 }
@@ -65,8 +65,10 @@ function extractImage(dom, baseUrl) {
   var parsedUrl = urlParser.parse(imageUrl);
 
   if (parsedUrl.host) {
+    log.trace('image URL is absolute');
     return imageUrl;
   } else if (parsedUrl.pathname || parsedUrl.query) {
+    log.trace('resolving relative image URL');
     return urlParser.resolve(baseUrl, imageUrl);
   } else {
     log.debug("unable to resolve relative URL");
