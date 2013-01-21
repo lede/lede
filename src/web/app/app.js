@@ -17,7 +17,6 @@ var express = require('express')
   , link = require('./controllers/link')
   , post = require('./controllers/post')
   , recommendation = require('./controllers/recommendation')
-  , notifier = require('./controllers/notifier')
   , notification = require('./controllers/notification')
   , extractor = require('./controllers/extractor')
   , _ = require('underscore')
@@ -99,8 +98,6 @@ app.delete('/api/recommendation/:recommendation_id', ensure_user, recommendation
 
 app.get('/api/notification', ensure_user, notification.list);
 app.post('/api/notification', ensure_user, notification.create);
-
-app.post('/api/notifier/send_daily', ensure_user, notifier.send_daily);
 
 app.post('/api/extractor/extract', ensure_user, extractor.extract);
 app.post('/api/extractor/createThumbnail', ensure_user, extractor.createThumbnail);

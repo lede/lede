@@ -118,7 +118,7 @@ api = {
     },
     sendDaily: function(user, success, error) {
       $.ajax({
-        url: '/api/recomendation/send_daily',
+        url: '/api/recommendation/send_daily',
         type: 'POST',
         datatype: 'json',
         data: user,
