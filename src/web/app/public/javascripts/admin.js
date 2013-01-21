@@ -315,7 +315,7 @@ $(function() {
       '<img src="/images/ajax-loader.gif">'
     );
     $('#notification').fadeIn(200);
-    api.notifier.sendDaily(activeUser, function(r) {
+    api.recommendation.sendDaily(activeUser, function(r) {
       updateRecommendations(userid, function() {
         $('#notification').fadeOut(500);
         $('#notification').html('');
