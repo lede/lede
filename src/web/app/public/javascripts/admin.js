@@ -271,6 +271,15 @@ $(function() {
           updateUserList($('input[name=user-search]').val());
         });
       });
+    },
+    function(err){
+      $('#notification').addClass('error');
+      $('#notification').html('Extracting Lede Information Has Failed.<br />Check your URL and try again.');
+      window.setTimeout(function() {
+        $('#notification').fadeOut(500);
+        $('#notification').removeClass('error');
+        $('#notification').html('');
+      }, 3000);
     });
   });
 
@@ -283,11 +292,11 @@ $(function() {
     );
     $('#notification').fadeIn(200);
     api.extractor.extract({url: $('input[name=lede-url]').val()}, function(recommendation) {
-      $('input[name=lede-url]').val($('input[name=lede-url]').val().trim());
-      $('input[name=lede-title]').val(recommendation.title.trim());
-      $('textarea[name=lede-description]').val(recommendation.description.trim());
-      $('input[name=lede-image-url]').val(recommendation.image.trim());
-      $('#lede-image-preview').html('<img src="'+recommendation.image.trim()+'" width="75" height="75">');
+      $('input[name=lede-url]').val($.trim($('input[name=lede-url]').val()));
+      $('input[name=lede-title]').val($.trim(recommendation.title));
+      $('textarea[name=lede-description]').val($.trim(recommendation.description));
+      $('input[name=lede-image-url]').val($.trim(recommendation.image.trim()));
+      $('#lede-image-preview').html('<img src="'+$.trim(recommendation.image) +'" width="75" height="75">');
       $('#notification').fadeOut(500);
       $('#notification').html('');
     },
