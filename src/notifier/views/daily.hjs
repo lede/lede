@@ -104,12 +104,11 @@
                     <!--- column 1 -->
                     <div style="width: 280px; min-width: 279px; float:left;" class="column">
                       <table style="width: 100%;" bgcolor="" cellpadding="" align="left">
-                        <tr style="padding: 15px;">
-                          <td style="padding: 15px;">        
+                        <tr style="padding: 15px 15px 0px 15px;">
+                          <td style="padding: 15px 15px 0px 15px;">        
                             
                             <h5 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:900!important; font-size: 17px!important;">Connect with Us:</h5>
-                            <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;"><a style="background-color:#3B5998!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.facebook.com/unburythelede" class="soc-btn fb">Facebook</a> <a style="background-color:#1DACED!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.twitter.com/unburythelede" class="soc-btn tw">Twitter</a> <a style="background-color:#DB4A39!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="#" class="soc-btn gp">Google+</a></p>
-
+                            <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;"><a style="background-color:#3B5998!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.facebook.com/unburythelede" class="soc-btn fb">Facebook</a> <a style="background-color:#1DACED!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.twitter.com/unburythelede" class="soc-btn tw">Twitter</a></p>
                           </td>
                         </tr>
                       </table><!-- /column 1 -->
@@ -118,13 +117,15 @@
                     <!--- column 2 -->
                     <div style="width: 280px; min-width: 279px; float:left;" class="column">
                       <table style="width: 100%;" bgcolor="" cellpadding="" align="left">
-                        <tr style="padding: 15px;">
-                          <td style="padding: 15px;">        
+                        <tr style="padding: 0px 15px 15px 15px;">
+                          <td style="padding: 0px 15px 15px 15px;">        
                                           
-                            <h5 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:900!important; font-size: 17px!important;">Contact Info:</h5>                       
-                            <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">Phone: <strong>+1 (603) 817 7553</strong><br/>
-                    Email: <strong><a style="color:#2BA6CB;" href="emailto:hello@unburythelede.com">hello@unburythelede.com</a></strong></p>
-                    
+                            <h5 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:900!important; font-size: 17px!important;">Say Hi!</h5>                       
+                            <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">
+                              <strong>
+                                Email us: <a style="color:#2BA6CB;" href="emailto:hello@unburythelede.com">hello@unburythelede.com</a>
+                              </strong>
+                            </p>
                           </td>
                         </tr>
                       </table><!-- /column 2 -->  
@@ -158,9 +159,9 @@
           <tr>
             <td align="center">
               <p style="border-top:1px solid rgb(215,215,215);font-weight: normal;font-size:14px;line-height:1.6;">
-                <a style="color:#2BA6CB;" href="#">Terms</a> |
+                <!-- <a style="color:#2BA6CB;" href="#">Terms</a> |
                 <a style="color:#2BA6CB;" href="#">Privacy</a> |
-                <a style="color:#2BA6CB;" href="#"><unsubscribe>Unsubscribe</unsubscribe></a>
+                <a style="color:#2BA6CB;" href="#"><unsubscribe>Unsubscribe</unsubscribe></a> -->
               </p>
             </td>
           </tr>
