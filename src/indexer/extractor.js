@@ -23,6 +23,7 @@ function extractContent(url, done) {
   });
 }
 
+
 /** extract the content from the web page, using some basic heuristics and metadata to figure out which parts are the parts that we seek.
  * @param siteBody  the raw response content of the web page
  * @param baseUrl  the URL of the web page, used to resolve relative links
@@ -61,6 +62,10 @@ function extractImage(dom, baseUrl) {
   // TODO handle <base> tag which changes the base URL
  
   var imageUrl = extractImageTag(dom);
+  
+  if (!imageUrl) {
+    return null;
+  }
 
   var parsedUrl = urlParser.parse(imageUrl);
 
@@ -77,116 +82,102 @@ function extractImage(dom, baseUrl) {
 }
 
 function extractImageTag(dom) {
-  // parse Facebook Open Graph image meta tag
-  var ogImageMeta = _.find(select(dom, "head meta"), function(e) {
-    return /og:image/i.test(e.attribs.property);
-  });
+  var extractors = [
+    new FirstMetaByPropertyExtractor('og:image'),
+    new FirstLinkByRelExtractor('image_src'),
+    new FirstImgExtractor('body p img'),
+    new FirstImgExtractor('body img')
+  ];
 
-  if (ogImageMeta) {
-    log.debug("using OG image meta");
-    return ogImageMeta.attribs.content;
-  }
-
-  // parse image_src link tag
-  var imageSrcLink = _.find(select(dom, "head link"), function(e) {
-    return /image_src/i.test(e.attribs.type);
-  });
-
-  if (imageSrcLink) {
-    log.debug("using image_src link");
-    return imageSrcLink.attribs.content;
-  }
-
-  // first image tag inside the body paragraph
-  var imgPTags = select(dom, "body p img");
-
-  if (imgPTags.length) {
-    log.debug("using image tag in paragraph in body");
-    return imgPTags[0].attribs.src;
-  }
-
-  // first image tag inside the body 
-  var imgTags = select(dom, "img");
-
-  if (imgTags.length) {
-    log.debug("using image tag in body");
-    return imgTags[0].attribs.src;
-  }
-
-  // give up
-  log.debug("unable to find image");
-  return null;
+  return findFirstInDom(dom, extractors, 'image');
 }
 
 function extractTitle(dom) {
-  // parse Facebook Open Graph title meta tag
-  var ogTitleMeta = _.find(select(dom, "head meta"), function(e) {
-    return /og:title/i.test(e.attribs.property);
-  });
+  var extractors = [
+    new FirstMetaByPropertyExtractor('og:title'),
+    new FirstTagWithChildrenExtractor('head title'),
+    new FirstTagWithChildrenExtractor('body h1'),
+    new FirstTagWithChildrenExtractor('body h2')
+  ];
 
-  if (ogTitleMeta) {
-    log.debug("using OG title meta");
-    return ogTitleMeta.attribs.content;
-  }
-
-  // title tag
-  var titleTag = _.find(select(dom, "head title"), function(e) {
-    return e.children;
-  });
-
-  if (titleTag) {
-    log.debug("using title tag");
-    return flattenHtml(titleTag);
-  }
-  
-  // h1
-  var h1Tag = _.find(select(dom, "body h1"), function(e) {
-    return e.children;
-  });
-
-  if (h1Tag) {
-    log.debug("using h1 tag");
-    return flattenHtml(h1Tag);
-  }
-
-  // h2
-  var h2Tag = _.find(select(dom, "body h2"), function(e) {
-    return e.children;
-  });
-
-  if (h2Tag) {
-    log.debug("using h2 tag");
-    return flattenHtml(h2Tag);
-  }
-  
-  // give up
-  log.debug("unable to find title");
-  return null;
+  return findFirstInDom(dom, extractors, 'title');
 }
 
 function extractDescription(dom) {
-  // parse Facebook Open Graph description meta tag
-  var ogDescriptionMeta = _.find(select(dom, "head meta"), function(e) {
-    return /og:description/i.test(e.attribs.property);
-  });
-  
-  if (ogDescriptionMeta) {
-    log.debug("using OG desc meta");
-    return ogDescriptionMeta.attribs.content;
-  }
-  
-  // first P tag of the body
-  var pTag = _.find(select(dom, "body p"), function(e) {
-    return e.children;
-  });
+  var extractors = [
+    new FirstMetaByPropertyExtractor('og:description'),
+    new FirstTagWithChildrenExtractor('body p')
+  ];
 
-  if (pTag) {
-    log.debug("using body P tag");
-    return flattenHtml(pTag);
+  return findFirstInDom(dom, extractors, 'description');
+}
+
+function FirstMetaByPropertyExtractor(propertyName) {
+  this.find = function(dom) {
+     return _.find(select(dom, "head meta"), function(e) {
+      return new RegExp(propertyName, "i").test(e.attribs.property);
+    });
+  };
+
+  this.extractValue = function (element) {
+    return element.attribs.content;
+  };
+
+  this.description = propertyName + " meta tag";
+}
+
+function FirstLinkByRelExtractor(rel) {
+  this.find = function(dom) {
+     return _.find(select(dom, "head link"), function(e) {
+      return new RegExp(rel, "i").test(e.attribs.rel);
+    });
+  };
+
+  this.extractValue = function (element) {
+    return element.attribs.content;
+  };
+
+  this.description = "link rel='" + rel + "' tag";
+}
+
+function FirstTagWithChildrenExtractor(selector) {
+  this.find = function(dom) {
+     return _.find(select(dom, selector), function(e) {
+      return e.children;
+    });
+  };
+
+  this.extractValue = function (element) {
+    return flattenHtml(element);
+  };
+
+  this.description = selector + " tag";
+}
+
+function FirstImgExtractor(selector) {
+  this.find = function(dom) {
+     return _.find(select(dom, selector), function(e) {
+      return e.attribs.src;
+    });
+  };
+
+  this.extractValue = function (element) {
+    return element.attribs.src;
+  };
+
+  this.description = selector + " tag";
+}
+
+function findFirstInDom(dom, extractors, desc) {
+  for (var i = 0; i < extractors.length; ++i) {
+    var e = extractors[i].find(dom);
+    if (e) {
+      log.debug("using " + extractors[i].description);
+      return extractors[i].extractValue(e);
+    }
   }
-  
-  // give up
-  log.debug("unable to find description");
+
+  log.debug("unable to find " + desc);
   return null;
 }
 
