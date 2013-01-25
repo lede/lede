@@ -1,5 +1,4 @@
-#SERVER_ADDRESS=unburythelede.com
-SERVER_ADDRESS=192.168.0.103:3000
+SERVER_ADDRESS=unburythelede.com
 
 all: build/bundle.js boot.html
 
