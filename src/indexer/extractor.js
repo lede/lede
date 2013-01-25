@@ -1,6 +1,8 @@
 // this library is meant to extract a headline, article text, and a
 // representative image from a raw web page, for use when there is no RSS feed
-// available
+// available.  many of the meta tags used below are recommended by
+// http://www.webmarketingnow.com/tips/meta-tags-uncovered.html, and I believe
+// they should be promoted as a real standard
 
 var util = require('util');
 var _ = require('underscore');
@@ -39,7 +41,8 @@ function extractContentFromHtml(siteBody, baseUrl, done) {
         var result = {
           image: extractImage(dom, baseUrl),
           title: decodeHtml(extractTitle(dom)),
-          description: decodeHtml(extractDescription(dom))
+          description: decodeHtml(extractDescription(dom)),
+          author: decodeHtml(extractAuthor(dom))
         };
 
         done(null, result);
@@ -83,7 +86,8 @@ function extractImage(dom, baseUrl) {
 
 function extractImageTag(dom) {
   var extractors = [
-    new FirstMetaByPropertyExtractor('og:image'),
+    new FirstMetaByNameExtractor('thumbnail'), // this is something I want to push as a pseudo-standard
+    new FirstMetaByPropertyExtractor('og:image'), // Facebook
     new FirstLinkByRelExtractor('image_src'),
     new FirstImgExtractor('body p img'),
     new FirstImgExtractor('body img')
@@ -94,7 +98,8 @@ function extractImageTag(dom) {
 
 function extractTitle(dom) {
   var extractors = [
-    new FirstMetaByPropertyExtractor('og:title'),
+    new FirstMetaByNameExtractor('title'), // recommended but nonstandard
+    new FirstMetaByPropertyExtractor('og:title'), // Facebook
     new FirstTagWithChildrenExtractor('head title'),
     new FirstTagWithChildrenExtractor('body h1'),
     new FirstTagWithChildrenExtractor('body h2')
@@ -105,8 +110,19 @@ function extractTitle(dom) {
 
 function extractDescription(dom) {
   var extractors = [
-    new FirstMetaByPropertyExtractor('og:description'),
+    new FirstMetaByNameExtractor('description'), // this is real
+    new FirstMetaByPropertyExtractor('og:description'), // Facebook
+    new FirstMetaByNameExtractor('abstract'), // recommended but nonstandard
     new FirstTagWithChildrenExtractor('body p')
+  ];
+
+  return findFirstInDom(dom, extractors, 'description');
+}
+
+function extractAuthor(dom) {
+  var extractors = [
+    new FirstMetaByNameExtractor('author'), // recommended but nonstandard
+    new FirstMetaByPropertyExtractor('article:author') // Facebook
   ];
 
   return findFirstInDom(dom, extractors, 'description');
@@ -123,7 +139,21 @@ function FirstMetaByPropertyExtractor(propertyName) {
     return element.attribs.content;
   };
 
-  this.description = propertyName + " meta tag";
+  this.description = "property=" + propertyName + " meta tag";
+}
+
+function FirstMetaByNameExtractor(name) {
+  this.find = function(dom) {
+     return _.find(select(dom, "head meta"), function(e) {
+      return new RegExp(name, "i").test(e.attribs.name);
+    });
+  };
+
+  this.extractValue = function (element) {
+    return element.attribs.content;
+  };
+
+  this.description = "name=" + name + " meta tag";
 }
 
 function FirstLinkByRelExtractor(rel) {
