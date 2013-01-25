@@ -1,12 +1,11 @@
 <div id='pop-down' class='pop-down'>
-  <img id='lede-logo' class='lede-logo' src='http://unburythelede.com/images/lede_icon.png'></img>
-  <h1 id='lede-title' class='lede-title'>You now lede this story</h1>
+  <img id='lede-logo' class='lede-logo' src='http://unburythelede.com/images/lede-logo.png'></img>
 </div>
 <script type='text/javascript'>
   setTimeout(function() {
-    $(__LEDE_POPDOWN__).find('div').slideDown();
+    $(__LEDE_POPDOWN__).find('div').animate({"top": "0px"}, 1000);
     setTimeout(function() {
-      $(__LEDE_POPDOWN__).find('div').slideUp();
+      $(__LEDE_POPDOWN__).find('div').animate({"top": "-185px"}, 2000);
     }, 3000);
   }, 200);
 </script>
