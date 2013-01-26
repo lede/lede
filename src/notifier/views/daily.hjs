@@ -43,7 +43,7 @@
         <table style="width: 100%;" bgcolor="#FFFFFF" >
           <tr>
             <!-- DUDE THAT Schtuff IS HARDCODED!-->
-            <td><img style="max-width:100%;" src="http://unburythelede.com/lede_email_logo.png" /></td>
+            <td><img style="max-width:100%;" alt="Lede" src="http://unburythelede.com/lede_email_logo.png" /></td>
             <!-- <td align="right"><h6 style="margin:0!important;padding:0;" class="collapse">Your daily Ledes</h6></td> -->
           </tr>
         </table>
@@ -160,8 +160,8 @@
             <td align="center">
               <p style="border-top:1px solid rgb(215,215,215);font-weight: normal;font-size:14px;line-height:1.6;">
                 <!-- <a style="color:#2BA6CB;" href="#">Terms</a> |
-                <a style="color:#2BA6CB;" href="#">Privacy</a> |
-                <a style="color:#2BA6CB;" href="#"><unsubscribe>Unsubscribe</unsubscribe></a> -->
+                <a style="color:#2BA6CB;" href="#">Privacy</a> | -->
+                <a style="color:#2BA6CB;" href="[unsubscribe]"><unsubscribe>Unsubscribe</unsubscribe></a>
               </p>
             </td>
           </tr>
