@@ -88,7 +88,9 @@ function send_welcome_email (user, temp_password, callback) {
 }
 
 // Sent the constructed email to the customer through the email service provider
+// This will overwrite SMTP headers so do all that shit here
 function send_email(user, mail_options, callback) {
+  mail_options.generateTextFromHTML = true;
 
   // Set up mailer
   var smtpTransport = nodemailer.createTransport("SMTP", {
@@ -99,21 +101,23 @@ function send_email(user, mail_options, callback) {
     }
   });
 
-  smtpTransport.sendMail(mail_options, function(err, res) {
+  dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, inserted_notification) {
     if(err) {
-      log.error(err);
+      log.error('Failed to create record in the notifications table');
       callback(err);
-    } else {
-      log.info("Message sent: " + res.message);
-      //If we successfully send the message, then update the notifications table to reflect it
-      dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, res) {
+    } else if (inserted_notification) {
+      log.info('Created record of notification');
+      mail_options.headers = {"X-SMTPAPI": {"unique_args": {"notification_id": inserted_notification.id}}};
+      smtpTransport.sendMail(mail_options, function(err, inserted_notification) {
         if(err) {
-          log.error('Failed to create record in the notifications table');
-        } else if (res) {
-          log.info('Created record of notification');
+          log.error(err);
+          callback(err);
+        } else {
+          callback(err, inserted_notification);
         }
-        callback(err, res);
       });
+    } else {
+      callback(err, inserted_notification);
     }
   });
 
