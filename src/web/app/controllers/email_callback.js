@@ -15,8 +15,21 @@ exports.process = function(req, res) {
   var triggering_event = req.body.event;
   var notification_id = req.body.notification_id;
 
-  // if (event is click)
-  //  var link = req.body.url
+  // Break out a method for all of the below
 
-  Notification.update();
+  //if (event is delivered)
+  //{
+  //  [Modify the delivered_at timestamp on the notification that has the corresponding notification_id]  
+  //}
+
+  //if (event is click)
+  //{
+  //  var link_url = req.body.url
+  //  [Modify the clicked timstamp on the link included in this notification that has the specified url]
+  //}
+
+  //if (event is open)
+  //{
+  //  [Modify the opened_at timestamp on the notification that has the corresponding notification_id]
+  //}
 };
