@@ -2,8 +2,12 @@ var db = require('../db');
 
 exports.up = function(next){
   db.run("ALTER TABLE notifications ADD COLUMN delivered_at timestamp", function(err, result) {
-    console.log(err);
-    db.run("ALTER TABLE notifications ADD COLUMN opened_at timestamp", next);
+    if(err) {
+      console.log(err);
+      next();
+    } else {
+      db.run("ALTER TABLE notifications ADD COLUMN opened_at timestamp", next);
+    }
   });
 };
 

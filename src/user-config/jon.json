@@ -1,5 +1,5 @@
 {
-  "domain": "http://192.168.0.103:3000",
+  "domain": "http://192.168.0.110:3000",
   
   "dbConnectionParams": {
     "user": "jon",

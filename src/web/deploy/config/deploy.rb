@@ -117,7 +117,7 @@ namespace :deploy do
     run "cd #{latest_release}/#{discoverer_path} && npm install"
   end
 
-  task :update_indexer_dependencies, :roles => [:crawler] do
+  task :update_indexer_dependencies, :roles => [:crawler, :web] do
     run "cd #{latest_release}/#{indexer_path} && npm install"
   end
 
@@ -125,10 +125,9 @@ namespace :deploy do
     run "cd #{latest_release}/#{notifier_path} && npm install"
   end
 
-  task :update_recommender_dependencies, :roles => [:db] do
+  task :update_recommender_dependencies, :roles => [:db, :web] do
     run "cd #{latest_release}/#{recommender_path} && npm install"
   end
-
 
   task :update_scheduler_dependencies, :roles => [:crawler] do
     run "cd #{latest_release}/#{scheduler_path} && npm install"
@@ -193,6 +192,8 @@ namespace :deploy do
 
   task :update_dependencies, :roles => [:db, :web, :crawler] do
     update_notifier_dependencies
+    update_indexer_dependencies
+    update_recommender_dependencies
     update_migrate_dependencies
     update_server_dependencies
     update_app_dependencies
