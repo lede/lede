@@ -15,7 +15,7 @@ exports.process = function(req, res) {
   var triggering_event = req.body.event;
   var notification_id = req.body.notification_id;
 
-  // Break out a method for all of the below
+  // Break out a method for all of the below (and oh shit, if you move the checks to the methods, you can do them all at the same damn time)
 
   //if (event is delivered)
   //{
