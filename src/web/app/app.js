@@ -103,7 +103,7 @@ app.post('/api/notification', ensure_user, notification.create);
 app.post('/api/extractor/extract', ensure_user, extractor.extract);
 app.post('/api/extractor/createThumbnail', ensure_user, extractor.createThumbnail);
 
-app.post('/api/email_callback', );
+app.post('/api/email_callback', email_callback.process);
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));
