@@ -1,6 +1,6 @@
 SERVER_ADDRESS=unburythelede.com
 
-all: build/bundle.js boot.html
+all: build/bundle.js build/boot.html
 
 build/bundle.js: 	widget/build/yarn.js widget/bookmarklet.js entry.js
 									./node_modules/browserify/bin/cmd.js entry.js -o build/bundle.js
@@ -8,7 +8,7 @@ build/bundle.js: 	widget/build/yarn.js widget/bookmarklet.js entry.js
 widget/build/yarn.js: 	widget/bookmarklet.html widget/bookmarklet.css
 												./node_modules/yarnify/bin/cmd.js widget -o widget/build/yarn.js
 
-boot.html:	boot.html-template
+build/boot.html:	boot.html-template
 						sed "s/{{{SERVER_ADDRESS}}}/$(SERVER_ADDRESS)/g" boot.html-template > build/boot.html
 
 clean:
