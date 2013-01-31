@@ -24,8 +24,8 @@ var express = require('express')
   , redis = require('redis').createClient()
   , _ = require('underscore')
   , ensure_user = require('./middleware/user.js').ensure_user
-  , user = require('./controllers/user.js'),
-  , email_callback - require('./controllers/email_callback.js');
+  , user = require('./controllers/user.js')
+  , email_callback = require('./controllers/email_callback.js');
 
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
