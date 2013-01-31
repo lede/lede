@@ -5,27 +5,27 @@ log = require('../../core/logger').getLogger("web");
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')
-  , http = require('http')
-  , path = require('path')
-  , util = require('util')
-  , lede = require('./controllers/lede')
-  , posts_dashboard = require('./controllers/posts_dashboard')
-  , sources_dashboard = require('./controllers/sources_dashboard')
-  , links_dashboard = require('./controllers/links_dashboard')
-  , link = require('./controllers/link')
-  , post = require('./controllers/post')
-  , recommendation = require('./controllers/recommendation')
-  , notification = require('./controllers/notification')
-  , extractor = require('./controllers/extractor')
-  , _ = require('underscore')
-  , redis_store = require('connect-redis')(express)
-  , redis = require('redis').createClient()
-  , _ = require('underscore')
-  , ensure_user = require('./middleware/user.js').ensure_user
-  , user = require('./controllers/user.js')
-  , email_callback = require('./controllers/email_callback.js');
+var express = require('express');
+var routes = require('./routes');
+var http = require('http');
+var path = require('path');
+var util = require('util');
+var lede = require('./controllers/lede');
+var posts_dashboard = require('./controllers/posts_dashboard');
+var sources_dashboard = require('./controllers/sources_dashboard');
+var links_dashboard = require('./controllers/links_dashboard');
+var link = require('./controllers/link');
+var post = require('./controllers/post');
+var recommendation = require('./controllers/recommendation');
+var notification = require('./controllers/notification');
+var extractor = require('./controllers/extractor');
+var _ = require('underscore');
+var redis_store = require('connect-redis')(express);
+var redis = require('redis').createClient();
+var _ = require('underscore');
+var ensure_user = require('./middleware/user.js').ensure_user;
+var user = require('./controllers/user.js');
+var email_callback = require('./controllers/email_callback.js');
 
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
