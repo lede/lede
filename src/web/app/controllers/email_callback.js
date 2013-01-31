@@ -1,4 +1,5 @@
 var Notification = require('../../../core/datalayer').Notification;
+var Recommendation = require('../../../core/datalayer').Recommendation;
 var _ = require('underscore');
 var util = require('util');
 var no_err = require('../helpers/core').no_err;
@@ -16,6 +17,12 @@ exports.process = function(req, res) {
   var notification_id = req.body.notification_id;
 
   // Break out a method for all of the below (and oh shit, if you move the checks to the methods, you can do them all at the same damn time)
+
+  // Nofification.update(
+  //   { id: notification_id },
+  //   { title: 'Renamed title' },
+  //   callback
+  // );
 
   //if (event is delivered)
   //{

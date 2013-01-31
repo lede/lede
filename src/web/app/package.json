@@ -11,6 +11,7 @@
     "less-middleware": "*",
     "underscore": "*",
     "connect-redis": "*",
-    "redis": "*"
+    "redis": "*",
+    "moment": "*"
   }
 }
