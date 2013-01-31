@@ -1,23 +1,168 @@
-<h1>Hey-</h1>
 
-<h2>Thanks for helping us develop Lede!</h2>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<style type="text/css">
+  /* ------------------------------------------- 
+      PHONE
+      For clients that support media queries.
+      Nothing fancy.
+  -------------------------------------------- */
+  @media only screen and (max-width: 600px) {
+    
+    a[class="btn"] { display:block!important; margin-bottom:10px!important; background-image:none!important; margin-right:0!important;}
 
-<p>When you read something you like in your daily browsing, click our bookmarklet.<br>
-In return we'll deliver a special package to your inbox each morning.</p>
+    div[class="column"] { width: auto!important; float:none!important;}
+    
+    table.social div[class="column"] {
+      width:auto!important;
+    }
 
-<p>
-<a href="http://unburythelede.com">http://unburythelede.com</a>
-</p>
+  }
+</style>
 
-<p style="font-weight: bold">Temporary Credentials</p>
-<p>Username: {{username}}</p>
-<p>Password: {{password}}</p>
-<br>
-<p>Cheers!</p>
-<p>— The Lede Team</p>
+<!-- If you delete this meta tag, the ground will open and swallow you. -->
+<meta name="viewport" content="width=device-width" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>{{subject}}</title>
+
+</head>
  
-<br>
-<br>
-<br>
-<br>
-<!--Lede. Don't Follow.-->
+<body style="height:100%;width:100%!important;margin:0;padding:0;font-family:'Helvetica Neue','Helvetica',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:none;" bgcolor="#FFFFFF" topmargin="0" leftmargin="0" marginheight="0" marginwidth="0">
+
+<!-- HEADER -->
+<table style="width:100%;" class="head-wrap" bgcolor="#FFFFFF">
+  <tr>
+    <td></td>
+    <td style="display:block!important; max-width:600px!important; margin:0 auto!important; clear:both!important;" class="header container" align="">
+      
+      <!-- /content -->
+    
+      <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
+        <table style="width: 100%;" bgcolor="#FFFFFF" >
+          <tr>
+            <!-- DUDE THAT Schtuff IS HARDCODED!-->
+            <td><img style="max-width:100%;" src="http://unburythelede.com/lede_email_logo.png" /></td>
+            <!-- <td align="right"><h6 style="margin:0!important;padding:0;" class="collapse">Your daily Ledes</h6></td> -->
+          </tr>
+        </table>
+      </div><!-- /content -->
+      
+    </td>
+    <td></td>
+  </tr>
+</table><!-- /HEADER -->
+
+<!-- BODY -->
+<table style="width:100%;" class="body-wrap" bgcolor="">
+  <tr>
+    <td></td>
+    <td style="display:block!important; max-width:600px!important; margin:0 auto!important; clear:both!important;" class="container" align="" bgcolor="#FFFFFF">
+      
+      <!-- content -->
+      <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
+        <table style="width: 100%;">
+          <tr>
+            <td>
+              <h1 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:200!important; font-size: 44px!important;">Welcome!</h1>
+              <p style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;" class="lede">
+                When you read an article you like in your daily browsing, click our bookmarklet to tell us to cover it. In return we'll deliver a special package to your inbox each morning with follow-ups to stories you've asked us to cover and content curated just for you.
+              </p>
+              <p style="margin-bottom: 4px; font-weight:bold; font-size:17px;line-height:1.6;" class="lede">
+                Credentials:
+              </p>
+              <p style="margin-bottom:1px;font-weight: normal;font-size:17px;line-height:1.6;">Username: {{username}}</p>
+              <p style="margin-bottom:11px;font-weight: normal;font-size:17px;line-height:1.6;">Password: {{password}}</p>
+              <br />
+              <p style="margin-bottom:1px;font-weight: normal;font-size:17px;line-height:1.6;">Cheers!</p>
+              <p style="margin-bottom:1px;font-weight: normal;font-size:17px;line-height:1.6;">— The Lede Team</p>
+            </td>
+          </tr>
+        </table>
+      </div><!-- /content -->
+
+      <!-- content -->
+      <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
+        <table style="width: 100%;" bgcolor="">
+          <tr>
+            <td>
+              
+              <!-- social & contact -->
+              <table style="width: 100%; background-color:#EBEBEB;" bgcolor="#EBEBEB" class="social" width="100%">
+                <tr>
+                  <td>
+                    
+                    <!--- column 1 -->
+                    <div style="width: 280px; min-width: 279px; float:left;" class="column">
+                      <table style="width: 100%;" bgcolor="" cellpadding="" align="left">
+                        <tr style="padding: 15px 15px 0px 15px;">
+                          <td style="padding: 15px 15px 0px 15px;">        
+                            
+                            <h5 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:900!important; font-size: 17px!important;">Connect with Us:</h5>
+                            <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;"><a style="background-color:#3B5998!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.facebook.com/unburythelede" class="soc-btn fb">Facebook</a> <a style="background-color:#1DACED!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.twitter.com/unburythelede" class="soc-btn tw">Twitter</a></p>
+                          </td>
+                        </tr>
+                      </table><!-- /column 1 -->
+                    </div>
+                    
+                    <!--- column 2 -->
+                    <div style="width: 280px; min-width: 279px; float:left;" class="column">
+                      <table style="width: 100%;" bgcolor="" cellpadding="" align="left">
+                        <tr style="padding: 0px 15px 15px 15px;">
+                          <td style="padding: 0px 15px 15px 15px;">        
+                                          
+                            <h5 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:900!important; font-size: 17px!important;">Say Hi!</h5>                       
+                            <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">
+                              <strong>
+                                Email us: <a style="color:#2BA6CB;" href="emailto:hello@unburythelede.com">hello@unburythelede.com</a>
+                              </strong>
+                            </p>
+                          </td>
+                        </tr>
+                      </table><!-- /column 2 -->  
+                    </div>
+                    
+                    <div style="display: block; clear: both;" class="clear"></div>
+  
+                  </td>
+                </tr>
+              </table><!-- /social & contact -->
+              
+            </td>
+          </tr>
+        </table>
+      </div><!-- /content -->
+      
+
+    </td>
+    <td></td>
+  </tr>
+</table><!-- /BODY -->
+
+<!-- FOOTER -->
+<table style="width:100%;clear:both!important" class="footer-wrap">
+  <tr>
+    <td></td>
+    <td style="display:block!important; max-width:600px!important; margin:0 auto!important; clear:both!important;" class="container">
+      <!-- content -->
+      <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
+        <table style="width: 100%;">
+          <tr>
+            <td align="center">
+              <p style="border-top:1px solid rgb(215,215,215);font-weight: normal;font-size:14px;line-height:1.6;">
+                <!-- <a style="color:#2BA6CB;" href="#">Terms</a> |
+                <a style="color:#2BA6CB;" href="#">Privacy</a> |
+                <a style="color:#2BA6CB;" href="#"><unsubscribe>Unsubscribe</unsubscribe></a> -->
+              </p>
+            </td>
+          </tr>
+        </table>
+      </div><!-- /content -->
+    </td>
+    <td></td>
+  </tr>
+</table><!-- /FOOTER -->
+
+</body>
+</html>

@@ -17,18 +17,18 @@
     }
 
     function registerError(message) {
-      $('form').addClass('error');
-      $('form.error').trigger('startRumble');
-      $('form label').html(message);
+      $('form#signup').addClass('error');
+      $('form#signup.error').trigger('startRumble');
+      $('form#signup label').html(message);
       $('img#signup-loader').fadeOut(function() {
-        $('form label').fadeIn();
-        $('form input').fadeIn(function() { 
-          $('form input#email').focus();
+        $('form#signup label').fadeIn();
+        $('form#signup input').fadeIn(function() { 
+          $('form#signup input#email').focus();
         });
-        $('form a.button').fadeIn();
+        $('form#signup a.button').fadeIn();
       });
       setTimeout(function() {
-        $('form.error').trigger('stopRumble');
+        $('form#signup.error').trigger('stopRumble');
       }, 300);
     }
 
@@ -60,39 +60,39 @@
       // validate and submit signup
       $('a.signup').click(function(evt) {
         console.log('Clicked!');
-        if($('form input#email').val().length == 0) {
-          $('form').addClass('error');
-          $('form.error').trigger('startRumble');
-          $('form label').html('Please enter an email first.');
-          $('form input#email').focus();
+        if($('form#signup input#email').val().length == 0) {
+          $('form#signup').addClass('error');
+          $('form#signup.error').trigger('startRumble');
+          $('form#signup label').html('Please enter an email first.');
+          $('form#signup input#email').focus();
           setTimeout(function() {
-            $('form.error').trigger('stopRumble');
+            $('form#signup.error').trigger('stopRumble');
           }, 300);
         } else {
           
           console.log('submitting...');
-          $('form').removeClass('error');
-          $('form label').html('Creating your account...');
+          $('form#signup').removeClass('error');
+          $('form#signup label').html('Creating your account...');
 
 
-          $('form input').fadeOut(250);
-          $('form a.button').fadeOut(250, function() {
+          $('form#signup input').fadeOut(250);
+          $('form#signup a.button').fadeOut(250, function() {
             console.log('Registering...');
             $('img#signup-loader').fadeIn();
             api.user.register(
-              $('form #email').val(),
+              $('form#signup #email').val(),
 
               // success!
               function() {
 
                 $('img#signup-loader').fadeOut(250, function() { 
                   $('div#get-started h2, div#get-started h3, div#get-started label').fadeOut();
-                  $('form').addClass('invisible');
+                  $('form#signup').addClass('invisible');
 
                   setTimeout(function() { 
                     $('div#get-started h2').html('Your custom bookmarklet is ready.');
                     $('div#get-started h3').html('Install it to start covering stories with Lede.');
-                    $('form label').html('Drag the bookmarklet to your bar and you\'re all set.');
+                    $('form#signup label').html('Drag the bookmarklet to your bar and you\'re all set.');
                     $('div#get-started h2, div#get-started h3, div#get-started label').fadeIn();
                     setTimeout(function() {
                       $('a#install-bookmarklet').show();
@@ -119,8 +119,40 @@
       });
 
       // hook up rumbling support for forms for error effect
-      $('form').jrumble();
+      $('form#signup').jrumble();
+      $('form#login').jrumble();
 
+      function login() {
+        api.user.login({
+            'user_email': $('#email').val(),
+            'user_password': $('#password').val()
+          },
+          function() {
+            window.location.href = '/';
+          },
+          function(message) {
+            $('form#login').addClass('error');
+            $('form#login.error').trigger('startRumble');
+            $('form#login label').html(message);
+            $('form#login input#email').focus();
+            setTimeout(function() {
+              $('form.error').trigger('stopRumble');
+            }, 300);
+          }
+        );
+      }
+
+      // handlers for form
+
+      $('a#login-button').click(function(evt) {
+        login();
+        evt.preventDefault();
+      });
+
+      $('form#login').submit(function(evt) {
+        login();
+        evt.preventDefault();
+      });
     });
   </script>
 </head>
@@ -146,7 +178,7 @@
         <h3> Following the news you care about is hard. Lede makes it easy. </h3>
         <div class='learn-more'>
           <a class='learn-more button' href='#'>
-            Learn How
+            Learn How & Sign Up
           </a>
         </div>
       </div>
@@ -161,19 +193,19 @@
       <div class='step'>
         <img class='step' src='/images/steps/news.png'></img>
         <br/>
-        <span class='step-description'> Read a great story </span>
+        <span class='step-description'> Read a great story. </span>
       </div>
       <img class='next-step' src='/images/steps/next_step.png'></img>
       <div class='step'>
         <img class='step' src='/images/steps/watch.png'></img>
         <br/>
-        <span class='step-description'> Tell us to cover it </span>
+        <span class='step-description'> Tell us to cover it. </span>
       </div>
       <img class='next-step' src='/images/steps/next_step.png'></img>
       <div class='step'>
         <img class='step' src='/images/steps/email.png'></img>
         <br/>
-        <span class='step-description'> Get daily, relevant updates </span>
+        <span class='step-description'> Get daily, relevant updates to your inbox. </span>
       </div>
     </div>
 
@@ -189,9 +221,9 @@
 
     <div class='signup'>
       <form id='signup'>
-        <label for='email'> Let us know where to send your daily Ledes: </label>
-        <input id='email' spellcheck='false'></input>
-        <a href='#' class='button signup'> Install Bookmarklet </a>
+        <label for='email'> What's your email address?: </label>
+        <input id='email' text='Email' spellcheck='false'></input>
+        <a href='#' class='button signup'> Sign Me Up </a>
         <img src='/images/ajax-loader.gif' style='display:none' id='signup-loader'></img>
         <a href='#' id='install-bookmarklet' style='display:none'>
           <img src='/images/bookmark_add.png'></img>

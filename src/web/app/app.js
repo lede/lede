@@ -24,7 +24,8 @@ var express = require('express')
   , redis = require('redis').createClient()
   , _ = require('underscore')
   , ensure_user = require('./middleware/user.js').ensure_user
-  , user = require('./controllers/user.js');
+  , user = require('./controllers/user.js'),
+  , email_callback - require('./controllers/email_callback.js');
 
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
@@ -101,6 +102,8 @@ app.post('/api/notification', ensure_user, notification.create);
 
 app.post('/api/extractor/extract', ensure_user, extractor.extract);
 app.post('/api/extractor/createThumbnail', ensure_user, extractor.createThumbnail);
+
+app.post('/api/email_callback', );
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));
