@@ -9,9 +9,9 @@ exports.run = function(query, cb) {
       cb(err);
     } else {
       client.query(query, function(err, res) {
-        if(err) { 
+        if(err) {
           console.log(err);
-        } 
+        }
         cb();
       });
     }
