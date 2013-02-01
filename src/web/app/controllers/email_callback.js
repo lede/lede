@@ -1,42 +1,53 @@
 var Notification = require('../../../core/datalayer').Notification;
 var Recommendation = require('../../../core/datalayer').Recommendation;
+var logger = require('../../../core/logger').getLogger('web');
 var _ = require('underscore');
 var util = require('util');
 var no_err = require('../helpers/core').no_err;
 var path = require('path');
 var queues = require('../../../core/resque-queues');
 var query = require('./query');
+var moment = require('moment');
 
 // Handles the POST request callback from the email service provider (SendGrid in this case)
 // and updates the notification or link accordingly
-// The post body will take this form: 
+// The post body will take this form:
 //   email=emailrecipient@domain.com&event=open&userid=1123&template=welcome
 exports.process = function(req, res) {
 
   var triggering_event = req.body.event;
   var notification_id = req.body.notification_id;
 
-  // Break out a method for all of the below (and oh shit, if you move the checks to the methods, you can do them all at the same damn time)
+  if (triggering_event == 'delivered') {
+    Notification.update(
+      { id: notification_id },
+      { delivered_at: moment.utc() },
+      log_any_errors
+    );
+  }
+  else if (triggering_event == 'opened') {
+    Notification.update(
+      { id: notification_id },
+      { opened_at: moment.utc() },
+      log_any_errors
+    );
+  }
+  else if(triggering_event == 'click') {
+    var link_url = req.body.url;
+    Recommendation.update(
+      { url: link_url },
+      { clicked_at: moment.utc() },
+      log_any_errors
+    );
+  }
 
-  // Nofification.update(
-  //   { id: notification_id },
-  //   { title: 'Renamed title' },
-  //   callback
-  // );
-
-  //if (event is delivered)
-  //{
-  //  [Modify the delivered_at timestamp on the notification that has the corresponding notification_id]  
-  //}
-
-  //if (event is click)
-  //{
-  //  var link_url = req.body.url
-  //  [Modify the clicked timstamp on the link included in this notification that has the specified url]
-  //}
-
-  //if (event is open)
-  //{
-  //  [Modify the opened_at timestamp on the notification that has the corresponding notification_id]
-  //}
+  // Respond right away since SendGrid isn't waiting for us anyhow.
+  res.status = 200;
+  res.end();
 };
+
+function log_any_errors(err, result) {
+  if(err) {
+    logger.error(err);
+  }
+}
