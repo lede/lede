@@ -106,7 +106,7 @@ function send_email(user, mail_options, callback) {
       log.error('Failed to create record in the notifications table');
       callback(err);
     } else if (inserted_notification_rows) {
-      var inserted_notification = inserted_notification[0];
+      var inserted_notification = inserted_notification_rows[0];
       log.info('Created record of notification ' + util.inspect(inserted_notification));
       mail_options.headers = {'X-SMTPAPI': {unique_args: {notification_id: inserted_notification.id}}};
       log.info(util.inspect(mail_options));
