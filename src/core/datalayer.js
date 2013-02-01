@@ -1,4 +1,5 @@
-var FastLegS = require('FastLegS');
+var FastLegSBase = require('FastLegS');
+var FastLegS = new FastLegSBase('pg');
 
 // TODO I suspect this only uses one DB connection per process, and we might get better throughput if we had more than one (at least one per worker)
 
