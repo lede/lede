@@ -74,8 +74,8 @@ namespace :deploy do
     update_discoverer_dependencies
     # Since notifier is a dependency of web, it is now part of update_dependencies wich will be run as part of web_launch 
     update_indexer_dependencies
-    update_recommender_dependencies
     update_scheduler_dependencies
+    # Since recommender is a dependency of web, it is now part of update_dependencies wich will be run as part of web_launch 
     discoverer_restart
     indexer_restart
     notifier_restart
@@ -192,8 +192,8 @@ namespace :deploy do
 
   task :update_dependencies, :roles => [:db, :web, :crawler] do
     update_notifier_dependencies
-    update_indexer_dependencies
     update_recommender_dependencies
+    update_indexer_dependencies
     update_migrate_dependencies
     update_server_dependencies
     update_app_dependencies
