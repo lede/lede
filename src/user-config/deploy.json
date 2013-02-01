@@ -101,5 +101,13 @@
     "workers": {
       "fast_discovery,slow_discovery": 2000
     }
-  }
+  },
+
+  "extractor": {
+    "thumbnailWidth": 75,
+    "thumbnailHeight": 75,
+    "thumbnailPath": "/home/deploy/assets/thumbnails",
+    "thumbnailUrl": "thumbnails"
+  },
+
 }
