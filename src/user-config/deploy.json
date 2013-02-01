@@ -64,6 +64,24 @@
         "backups": 10,
         "pollInterval": 15,
         "category": "web" 
+      },
+      {
+        "type": "file",
+        "absolute": true,
+        "filename": "/var/log/notifier.log",
+        "maxLogSize": 20480,
+        "backups": 10,
+        "pollInterval": 15,
+        "category": "notifier" 
+      },
+      {
+        "type": "file",
+        "absolute": true,
+        "filename": "/var/log/recommender.log",
+        "maxLogSize": 20480,
+        "backups": 10,
+        "pollInterval": 15,
+        "category": "recommender" 
       }
     ],
     "levels": {
