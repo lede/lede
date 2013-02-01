@@ -7,7 +7,6 @@ var no_err = require('../helpers/core').no_err;
 var path = require('path');
 var queues = require('../../../core/resque-queues');
 var query = require('./query');
-var moment = require('moment');
 
 // Handles the POST request callback from the email service provider (SendGrid in this case)
 // and updates the notification or link accordingly
@@ -21,14 +20,14 @@ exports.process = function(req, res) {
   if (triggering_event == 'delivered') {
     Notification.update(
       { id: notification_id },
-      { delivered_at: moment.utc() },
+      { delivered_at: new Date() },
       log_any_errors
     );
   }
   else if (triggering_event == 'opened') {
     Notification.update(
       { id: notification_id },
-      { opened_at: moment.utc() },
+      { opened_at: new Date() },
       log_any_errors
     );
   }
@@ -36,7 +35,7 @@ exports.process = function(req, res) {
     var link_url = req.body.url;
     Recommendation.update(
       { url: link_url },
-      { clicked_at: moment.utc() },
+      { clicked_at: new Date() },
       log_any_errors
     );
   }
