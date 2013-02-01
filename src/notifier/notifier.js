@@ -101,13 +101,14 @@ function send_email(user, mail_options, callback) {
     }
   });
 
-  dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, inserted_notification) {
+  dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, inserted_notification_rows) {
     if(err) {
       log.error('Failed to create record in the notifications table');
       callback(err);
-    } else if (inserted_notification) {
+    } else if (inserted_notification_rows) {
+      var inserted_notification = inserted_notification[0];
       log.info('Created record of notification ' + util.inspect(inserted_notification));
-      mail_options.headers = {'X-SMTPAPI': {unique_args: {notification_id: inserted_notification[0].id}}};
+      mail_options.headers = {'X-SMTPAPI': {unique_args: {notification_id: inserted_notification.id}}};
       log.info(util.inspect(mail_options));
       smtpTransport.sendMail(mail_options, function(err, inserted_notification) {
         if(err) {
@@ -118,7 +119,7 @@ function send_email(user, mail_options, callback) {
         }
       });
     } else {
-      callback(err, inserted_notification);
+      log.error("We should not have gotten here so something is dicked");
     }
   });
 
