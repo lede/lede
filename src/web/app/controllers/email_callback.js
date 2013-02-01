@@ -14,11 +14,11 @@ var query = require('./query');
 //   email=emailrecipient@domain.com&event=open&userid=1123&template=welcome
 exports.process = function(req, res) {
 
+  // Justin wants this
+  log.info(req.body);
+
   var triggering_event = req.body.event;
   var notification_id = req.body.notification_id;
-
-  log.info('Triggering event: ' + triggering_event);
-  log.info('Notification ID: ' + notification_id);
 
   if (triggering_event == 'delivered') {
     Notification.update(
@@ -49,7 +49,5 @@ exports.process = function(req, res) {
 function log_any_errors(err, result) {
   if (err) {
     log.error(err);
-  } else if ( result) {
-    log.info('Result ' + result);
-  }
+  } 
 }
