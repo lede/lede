@@ -107,9 +107,7 @@ function send_email(user, mail_options, callback) {
       callback(err);
     } else if (inserted_notifications && inserted_notifications.rows.length) {
       var inserted_notification = inserted_notifications.rows[0];
-      log.info('Created record of notification ' + util.inspect(inserted_notification));
       mail_options.headers = {'X-SMTPAPI': {unique_args: {notification_id: inserted_notification.id}}};
-      log.info(util.inspect(mail_options));
       smtpTransport.sendMail(mail_options, function(err, inserted_notification) {
         if(err) {
           log.error(err);
