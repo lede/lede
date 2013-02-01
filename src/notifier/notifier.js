@@ -39,6 +39,7 @@ function get_posts(postids, cb){
 function send_daily_email(user, mail_html, callback) {
   var mail_options = {
     from: "hello@unburythelede.com",
+    fromname: "Lede",
     to: user.email,
     subject: "Your new Ledes",
     html: mail_html
@@ -79,6 +80,7 @@ function send_welcome_email (user, temp_password, callback) {
 
   var mail_options = {
     from: "hello@unburythelede.com",
+    fromname: "The Lede Team",
     to: user.email,
     subject: "Welcome to Lede!",
     html: mail_html
