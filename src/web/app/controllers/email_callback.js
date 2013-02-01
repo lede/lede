@@ -14,8 +14,6 @@ var query = require('./query');
 //   email=emailrecipient@domain.com&event=open&userid=1123&template=welcome
 exports.process = function(req, res) {
 
-  log.info(req.body);
-
   var triggering_event = req.body.event;
   var notification_id = req.body.notification_id;
 
