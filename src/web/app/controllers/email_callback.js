@@ -37,7 +37,7 @@ exports.process = function(req, res) {
   } else if (triggering_event == 'click') {
     var link_url = req.body.url;
     Recommendation.update(
-      { url: link_url },
+      { uri: link_url },
       { clicked_at: new Date() },
       log_any_errors
     );
