@@ -6,6 +6,7 @@ var no_err = require('../helpers/core').no_err;
 var path = require('path');
 var queues = require('../../../core/resque-queues');
 var query = require('./query');
+var url = require('url');
 
 
 exports.create = function(req, res) {
@@ -15,8 +16,8 @@ exports.create = function(req, res) {
   if(!req.query.target) {
     // invalid request, say so:
     log.warn('Malformed bookmarklet request: ' + util.inspect(req.query));
-    res.status(422); // unprocessable entity
-    res.send({ result: 'Failed', message: 'Not all required request fields were present.', original_request: req.query });
+    //res.send({ result: 'Failed', message: 'Not all required request fields were present.', original_request: req.query });
+    res.send("var response = { success: false, message: 'Not all required request fields were present.' };");
     return;
   }
 
@@ -30,8 +31,7 @@ exports.create = function(req, res) {
 
     // let the client know we're done here.
     log.info('Created a new Lede with ID: ' + results.rows[0].id);
-    var response_pixel_path = path.resolve('public/images/response_pixel.gif');
-    res.sendfile(response_pixel_path);
+    res.send("var response = { success: true };");
 
   }));
 

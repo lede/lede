@@ -331,47 +331,6 @@ exports.extname = function(path) {
   return splitPathRe.exec(path)[3] || '';
 };
 
-exports.relative = function(from, to) {
-  from = exports.resolve(from).substr(1);
-  to = exports.resolve(to).substr(1);
-
-  function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-      if (arr[start] !== '') break;
-    }
-
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-      if (arr[end] !== '') break;
-    }
-
-    if (start > end) return [];
-    return arr.slice(start, end - start + 1);
-  }
-
-  var fromParts = trim(from.split('/'));
-  var toParts = trim(to.split('/'));
-
-  var length = Math.min(fromParts.length, toParts.length);
-  var samePartsLength = length;
-  for (var i = 0; i < length; i++) {
-    if (fromParts[i] !== toParts[i]) {
-      samePartsLength = i;
-      break;
-    }
-  }
-
-  var outputParts = [];
-  for (var i = samePartsLength; i < fromParts.length; i++) {
-    outputParts.push('..');
-  }
-
-  outputParts = outputParts.concat(toParts.slice(samePartsLength));
-
-  return outputParts.join('/');
-};
-
 });
 
 require.define("__browserify_process",function(require,module,exports,__dirname,__filename,process,global){var process = module.exports = {};
@@ -384,7 +343,7 @@ process.nextTick = (function () {
     ;
 
     if (canSetImmediate) {
-        return function (f) { return window.setImmediate(f) };
+        return window.setImmediate;
     }
 
     if (canPost) {
@@ -504,7 +463,7 @@ exports.inject = function(target_element) {
 
 });
 
-require.define("/widget/build/yarn.js",function(require,module,exports,__dirname,__filename,process,global){module.exports = require("yarnify")("_7b5ed026-",{"/bookmarklet.html":"<div id='pop-down' class='pop-down'>\n  <img id='lede-logo' class='lede-logo' src='http://unburythelede.com/images/lede-logo.png'></img>\n</div>\n<script type='text/javascript'>\n  setTimeout(function() {\n    $(__LEDE_POPDOWN__).find('div').animate({\"top\": \"0px\"}, 1000);\n    setTimeout(function() {\n      $(__LEDE_POPDOWN__).find('div').animate({\"top\": \"-185px\"}, 2000);\n    }, 3000);\n  }, 200);\n</script>\n","/bookmarklet.css":["cd77229a","._7b5ed026-cd77229a div._7b5ed026._7b5ed026-pop-down {\n  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);\n  background: rgba(255,255,255,0.95);\n  position: fixed;\n  top: -185px;\n  left: 50% !important;\n  margin-left: -60px !important;\n  width: 120px !important;\n  z-index: 9000; /* arbitrary big number */\n}\n\n._7b5ed026-cd77229a img._7b5ed026._7b5ed026-lede-logo {\n  margin: 10px !important;\n  clear: none !important;\n}\n\n"]});
+require.define("/widget/build/yarn.js",function(require,module,exports,__dirname,__filename,process,global){module.exports = require("yarnify")("_55b31285-",{"/bookmarklet.css":["25eb0b0b","._55b31285-25eb0b0b div._55b31285._55b31285-pop-down {\n  box-shadow: 0px 1px 3px rgba(0,0,0,0.5);\n  background: rgba(255,255,255,0.95);\n  position: fixed;\n  top: -185px;\n  left: 50% !important;\n  margin-left: -60px !important;\n  width: 120px !important;\n  z-index: 9000; /* arbitrary big number */\n}\n\n._55b31285-25eb0b0b img._55b31285._55b31285-lede-logo {\n  margin: 10px !important;\n  clear: none !important;\n}\n\n"],"/bookmarklet.html":"<div id='pop-down' class='pop-down'>\n  <img id='lede-logo' class='lede-logo' src='http://unburythelede.com/images/lede-logo.png'></img>\n</div>\n<script type='text/javascript'>\n  setTimeout(function() {\n    $(__LEDE_POPDOWN__).find('div').animate({\"top\": \"0px\"}, 1000);\n    setTimeout(function() {\n      $(__LEDE_POPDOWN__).find('div').animate({\"top\": \"-185px\"}, 2000);\n    }, 3000);\n  }, 200);\n</script>\n"});
 
 });
 

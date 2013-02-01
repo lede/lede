@@ -68,7 +68,8 @@ app.get('/', routes.index);
 // super simple handler for lead posts
 // TODO: clean up api routing at some point
 // NOTE: we have to accept GET here because we're using image requests as a cross-site hack
-app.all('/api/lede', ensure_user, lede.create);
+// NOTE: this endpoint does its own valid-user checking because it does some hackalicious stuff with the response pixel
+app.all('/api/lede', lede.create);
 
 app.get('/api/ledes', ensure_user, lede.list);
 

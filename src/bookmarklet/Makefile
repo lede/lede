@@ -8,8 +8,11 @@ build/bundle.js: 	widget/build/yarn.js widget/bookmarklet.js entry.js
 widget/build/yarn.js: 	widget/bookmarklet.html widget/bookmarklet.css
 	./node_modules/yarnify/bin/cmd.js widget -o widget/build/yarn.js
 
-build/boot.html:	boot.html-template
-	sed "s/{{{SERVER_ADDRESS}}}/$(SERVER_ADDRESS)/g" boot.html-template > build/boot.html
+build/boot.html:	boot.html-template build/bookmarklet-link.js
+	./subst.py boot.html-template LINK --file build/bookmarklet-link.js > build/boot.html
+
+build/bookmarklet-link.js:	bookmarklet-link-template.js
+	./subst.py bookmarklet-link-template.js SERVER_ADDRESS --value $(SERVER_ADDRESS) > build/bookmarklet-link.js
 
 clean:
 	rm -rf build/*
