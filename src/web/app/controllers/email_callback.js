@@ -28,7 +28,7 @@ exports.process = function(req, res) {
       { delivered_at: new Date() },
       log_any_errors
     );
-  } else if (triggering_event == 'opened') {
+  } else if (triggering_event == 'open') {
     Notification.update(
       { id: notification_id },
       { opened_at: new Date() },
