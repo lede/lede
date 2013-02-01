@@ -18,7 +18,7 @@ clean:
 	rm -rf build/*
 	rm -rf widget/build/*
 
-install: 	build/bundle.js boot.html
+install: 	build/bundle.js build/boot.html
 	mkdir -p ../web/app/public/bookmarklet/
 	mkdir -p ../web/app/public/bookmarklet/widget
 	cp build/bundle.js ../web/app/public/bookmarklet/bundle.js
