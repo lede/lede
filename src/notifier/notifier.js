@@ -101,12 +101,12 @@ function send_email(user, mail_options, callback) {
     }
   });
 
-  dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, inserted_notification_rows) {
+  dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, inserted_notifications) {
     if(err) {
       log.error('Failed to create record in the notifications table');
       callback(err);
-    } else if (inserted_notification_rows) {
-      var inserted_notification = inserted_notification_rows[0];
+    } else if (inserted_notifications && inserted_notifications.rows.length) {
+      var inserted_notification = inserted_notifications.rows[0];
       log.info('Created record of notification ' + util.inspect(inserted_notification));
       mail_options.headers = {'X-SMTPAPI': {unique_args: {notification_id: inserted_notification.id}}};
       log.info(util.inspect(mail_options));
