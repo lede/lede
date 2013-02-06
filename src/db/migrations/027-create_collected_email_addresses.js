@@ -6,8 +6,7 @@ exports.up = function(next){
       console.log(err);
       next();
     } else {
-      db.run("CREATE UNIQUE INDEX collected_email_unique ON collected_email_addresses (email)", next)
-    }
+      db.run("CREATE UNIQUE INDEX collected_email_unique ON collected_email_addresses (email)", next);    }
   });
 };
 
@@ -17,7 +16,7 @@ exports.down = function(next){
       console.log(err);
       next();
     } else {
-      db.run("DROP TABLE collected_email_addresses", next)
+      db.run("DROP TABLE collected_email_addresses", next);
     }
   });
 };
