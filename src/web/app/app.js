@@ -59,10 +59,6 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
-
 app.get('/', routes.index);
 
 // super simple handler for lead posts
@@ -105,6 +101,11 @@ app.post('/api/extractor/extract', ensure_user, extractor.extract);
 app.post('/api/extractor/createThumbnail', ensure_user, extractor.createThumbnail);
 
 app.post('/api/email_callback', email_callback.process);
+
+app.use(function (err, req, res, next) { // error handler (must have arity 4)
+  log.error(err.stack);
+  res.send(500, 'Server Error');
+});
 
 http.createServer(app).listen(app.get('port'), function(){
   log.info("Express server listening on port " + app.get('port'));
