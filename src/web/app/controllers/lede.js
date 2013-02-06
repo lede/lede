@@ -9,23 +9,7 @@ var query = require('./query');
 var url = require('url');
 var User = require('../../../core/datalayer').User;
 
-exports.create = function(req, res) {
-
-  if(req.session.user_id) {
-    User.findOne({id: req.session.user_id}, no_err(res, function(user) {
-      if(!user) {
-        log.info('Invalid session');
-        res.send("var response = { success: false, message: 'Please log in.' };");
-        return;
-      } else {
-        req.user = user;
-      }
-    }));
-  } else {
-    log.info('A non-logged in session attempted to Lede a page');
-    res.send("var response = { success: false, message: 'Please log in.' };");
-  }
-
+function createLede(req, res) {
   // clean this up, but:
   // ensure we have a valid request
   if(!req.query.target) {
@@ -39,7 +23,7 @@ exports.create = function(req, res) {
 
   // don't pass parent id since there's no meaning to it here and discoverer seems to ignore it anyway
   queues.fastDiscover.enqueue({ parentId: null, url: req.query.target});
-  
+
   // create a Lede that points at the post we either created or found
   Lede.create({ uri: req.query.target, title: req.query.title, user_id: req.user.id }, no_err(res, function(results) {
 
@@ -48,7 +32,30 @@ exports.create = function(req, res) {
     res.send("var response = { success: true };");
 
   }));
+}
 
+exports.create = function(req, res) {
+
+  if(req.session.user_id) {
+    User.findOne({id: req.session.user_id}, function(err, user) {
+      if(err) {
+        log.error('DB error during user lookup: ' + err);
+        res.send("var response = { success: false, message: 'Please log in.' };");
+        return;
+      } else if (!user) {
+        log.warn('Invalid user ID in session');
+        res.send("var response = { success: false, message: 'Please log in.' };");
+        return;
+      } else {
+        req.user = user;
+        createLede(req, res);
+      }
+    });
+  } else {
+    log.info('A non-logged in session attempted to Lede a page');
+    res.send("var response = { success: false, message: 'Please log in.' };");
+    return;
+  }
 };
 
 exports.list = function(req, res) {
