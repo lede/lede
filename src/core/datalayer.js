@@ -62,6 +62,13 @@ exports.Lede = FastLegS.Base.extend({
   }]
 });
 
+exports.CollectedEmailAddress = FastLegS.Base.extend({
+  tableName: "collected_email_addresses",
+  primaryKey: "email",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at"
+});
+
 exports.Reason = FastLegS.Base.extend({
   tableName: "reasons",
   primaryKey: "id",
