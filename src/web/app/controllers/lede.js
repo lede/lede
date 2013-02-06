@@ -7,16 +7,30 @@ var path = require('path');
 var queues = require('../../../core/resque-queues');
 var query = require('./query');
 var url = require('url');
-
+var User = require('../../../core/datalayer').User;
 
 exports.create = function(req, res) {
+
+  if(req.session.user_id) {
+    User.findOne({id: req.session.user_id}, no_err(res, function(user) {
+      if(!user) {
+        log.info('Invalid session');
+        res.send("var response = { success: false, message: 'Please log in.' };");
+        return;
+      } else {
+        req.user = user;
+      }
+    }));
+  } else {
+    log.info('A non-logged in session attempted to Lede a page');
+    res.send("var response = { success: false, message: 'Please log in.' };");
+  }
 
   // clean this up, but:
   // ensure we have a valid request
   if(!req.query.target) {
     // invalid request, say so:
     log.warn('Malformed bookmarklet request: ' + util.inspect(req.query));
-    //res.send({ result: 'Failed', message: 'Not all required request fields were present.', original_request: req.query });
     res.send("var response = { success: false, message: 'Not all required request fields were present.' };");
     return;
   }
