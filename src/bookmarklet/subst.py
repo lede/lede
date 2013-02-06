@@ -18,7 +18,7 @@ if subsitutitionType == "--value":
   value = substitutionValue
 elif subsitutitionType == "--file":
   with open(substitutionValue, "r") as valueFile:
-    value = valueFile.read()
+    value = valueFile.read().rstrip()
 else:
   sys.stderr.write("Need --value or --file")
   exit(1)
