@@ -109,3 +109,14 @@ exports.Notification = FastLegS.Base.extend({
     joinOn: 'created_by_user_id'
   }]
 });
+
+exports.Apikey = FastLegS.Base.extend({
+  tableName: "apikeys",
+  primaryKey: "id",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at",
+  belongsTo: [{
+    user: exports.User,
+    joinOn: 'user_id'
+  }]
+});
