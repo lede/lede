@@ -1,7 +1,7 @@
 var db = require('../db');
 
 exports.up = function(next){
-  db.run("CREATE TABLE collected_email_addresses (email TEXT CONSTRAINT collected_email_not_null NOT NULL, created_at TIMESTAMP CONSTRAINT collected_email_created_at_not_null NOT NULL, can_create_account_as_of TIMESTAMP)", function(err, result) {
+  db.run("CREATE TABLE collected_email_addresses (email TEXT CONSTRAINT collected_email_not_null NOT NULL, created_at TIMESTAMP CONSTRAINT collected_email_created_at_not_null NOT NULL, updated_at TIMESTAMP CONSTRAINT collected_email_updated_at_not_null NOT NULL, can_create_account_as_of TIMESTAMP)", function(err, result) {
     if(err) {
       console.log(err);
       next();
