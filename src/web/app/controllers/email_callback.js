@@ -1,13 +1,12 @@
 var Notification = require('../../../core/datalayer').Notification;
 var Recommendation = require('../../../core/datalayer').Recommendation;
-var logger = require('../../../core/logger').getLogger('web');
+var log = require('../../../core/logger').getLogger('web');
 var _ = require('underscore');
 var util = require('util');
 var no_err = require('../helpers/core').no_err;
 var path = require('path');
 var queues = require('../../../core/resque-queues');
 var query = require('./query');
-var moment = require('moment');
 
 // Handles the POST request callback from the email service provider (SendGrid in this case)
 // and updates the notification or link accordingly
@@ -15,28 +14,29 @@ var moment = require('moment');
 //   email=emailrecipient@domain.com&event=open&userid=1123&template=welcome
 exports.process = function(req, res) {
 
+  // Justin wants this
+  log.info(req.body);
+
   var triggering_event = req.body.event;
   var notification_id = req.body.notification_id;
 
   if (triggering_event == 'delivered') {
     Notification.update(
       { id: notification_id },
-      { delivered_at: moment.utc() },
+      { delivered_at: new Date() },
       log_any_errors
     );
-  }
-  else if (triggering_event == 'opened') {
+  } else if (triggering_event == 'open') {
     Notification.update(
       { id: notification_id },
-      { opened_at: moment.utc() },
+      { opened_at: new Date() },
       log_any_errors
     );
-  }
-  else if(triggering_event == 'click') {
+  } else if (triggering_event == 'click') {
     var link_url = req.body.url;
     Recommendation.update(
-      { url: link_url },
-      { clicked_at: moment.utc() },
+      { uri: link_url },
+      { clicked_at: new Date() },
       log_any_errors
     );
   }
@@ -47,7 +47,7 @@ exports.process = function(req, res) {
 };
 
 function log_any_errors(err, result) {
-  if(err) {
-    logger.error(err);
-  }
+  if (err) {
+    log.error(err);
+  } 
 }

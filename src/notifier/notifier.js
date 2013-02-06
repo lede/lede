@@ -38,7 +38,7 @@ function get_posts(postids, cb){
 // Send the pre formatted daily email
 function send_daily_email(user, mail_html, callback) {
   var mail_options = {
-    from: "hello@unburythelede.com",
+    from: "Lede <hello@unburythelede.com>",
     to: user.email,
     subject: "Your new Ledes",
     html: mail_html
@@ -78,7 +78,7 @@ function send_welcome_email (user, temp_password, callback) {
   var mail_html = template({password: temp_password, username: user.email});
 
   var mail_options = {
-    from: "hello@unburythelede.com",
+    from: "The Lede Team <hello@unburythelede.com>",
     to: user.email,
     subject: "Welcome to Lede!",
     html: mail_html
@@ -101,13 +101,13 @@ function send_email(user, mail_options, callback) {
     }
   });
 
-  dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, inserted_notification) {
+  dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, inserted_notifications) {
     if(err) {
       log.error('Failed to create record in the notifications table');
       callback(err);
-    } else if (inserted_notification) {
-      log.info('Created record of notification');
-      mail_options.headers = {"X-SMTPAPI": {"unique_args": {"notification_id": inserted_notification.id}}};
+    } else if (inserted_notifications && inserted_notifications.rows.length) {
+      var inserted_notification = inserted_notifications.rows[0];
+      mail_options.headers = {'X-SMTPAPI': {unique_args: {notification_id: inserted_notification.id}}};
       smtpTransport.sendMail(mail_options, function(err, inserted_notification) {
         if(err) {
           log.error(err);
@@ -117,7 +117,7 @@ function send_email(user, mail_options, callback) {
         }
       });
     } else {
-      callback(err, inserted_notification);
+      log.error("We should not have gotten here so something is dicked");
     }
   });
 

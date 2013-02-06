@@ -64,6 +64,24 @@
         "backups": 10,
         "pollInterval": 15,
         "category": "web" 
+      },
+      {
+        "type": "file",
+        "absolute": true,
+        "filename": "/var/log/notifier.log",
+        "maxLogSize": 20480,
+        "backups": 10,
+        "pollInterval": 15,
+        "category": "notifier" 
+      },
+      {
+        "type": "file",
+        "absolute": true,
+        "filename": "/var/log/recommender.log",
+        "maxLogSize": 20480,
+        "backups": 10,
+        "pollInterval": 15,
+        "category": "recommender" 
       }
     ],
     "levels": {
@@ -83,5 +101,13 @@
     "workers": {
       "fast_discovery,slow_discovery": 2000
     }
+  },
+
+  "extractor": {
+    "thumbnailWidth": 75,
+    "thumbnailHeight": 75,
+    "thumbnailPath": "/home/deploy/assets/thumbnails",
+    "thumbnailUrl": "thumbnails"
   }
+
 }
