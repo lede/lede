@@ -12,6 +12,7 @@
     "underscore": "*",
     "connect-redis": "*",
     "redis": "*",
-    "moment": "*"
+    "moment": "*",
+    "node-uuid": "*"
   }
 }

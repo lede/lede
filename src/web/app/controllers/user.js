@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var notifier = require('../../../notifier/notifier.js');
 var log = require('../../../core/logger').getLogger("web");
 var util = require('util');
+var uuid = require('node-uuid');
 var query = require('./query.js');
 
 // HACK: break this out into some util library
@@ -100,13 +101,25 @@ exports.register = function(req, res) {
         password = randomPass(); // HACK: send random password to user in email
         sha_sum = crypto.createHash('sha1');
         sha_sum.update(password);
-        dataLayer.User.create({ email: req.body.user_email, password_hash: sha_sum.digest('hex')  }, no_err(res, function(created_users) {
-          req.session.user_id = created_users.rows[0].id;
-          log.info('Logging in as new user: ' + util.inspect(created_users.rows[0]));
-          notifier.send_welcome(created_users.rows[0].id, password, function() {
-            log.info('Sent welcome email for ' + created_users.rows[0].id);
-          });
-          res.send({ result: 'dataLayer.User created for ' + req.body.user_email });
+        dataLayer.User.create({ 
+          email: req.body.user_email, 
+          password_hash: sha_sum.digest('hex')  
+        }, 
+        no_err(res, function(created_users) {
+
+          dataLayer.Apikey.create({ 
+            user_id: created_users.rows[0].id, 
+            apikey: uuid.v4() 
+          }, 
+          no_err( res, function(created_apikeys) {
+
+            req.session.user_id = created_users.rows[0].id;
+            log.info('Logging in as new user: ' + util.inspect(created_users.rows[0]));
+            notifier.send_welcome(created_users.rows[0].id, password, function() {
+              log.info('Sent welcome email for ' + created_users.rows[0].id);
+            });
+            res.send({ result: 'dataLayer.User created for ' + req.body.user_email });
+          }));
         }));
       }
     }));

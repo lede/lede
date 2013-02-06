@@ -62,6 +62,13 @@ exports.Lede = FastLegS.Base.extend({
   }]
 });
 
+exports.CollectedEmailAddress = FastLegS.Base.extend({
+  tableName: "collected_email_addresses",
+  primaryKey: "email",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at"
+});
+
 exports.Reason = FastLegS.Base.extend({
   tableName: "reasons",
   primaryKey: "id",
@@ -107,5 +114,16 @@ exports.Notification = FastLegS.Base.extend({
   {
     user: exports.User,
     joinOn: 'created_by_user_id'
+  }]
+});
+
+exports.Apikey = FastLegS.Base.extend({
+  tableName: "apikeys",
+  primaryKey: "id",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at",
+  belongsTo: [{
+    user: exports.User,
+    joinOn: 'user_id'
   }]
 });

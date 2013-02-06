@@ -123,7 +123,7 @@
                             <h5 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:900!important; font-size: 17px!important;">Say Hi!</h5>                       
                             <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;">
                               <strong>
-                                Email us: <a style="color:#2BA6CB;" href="emailto:hello@unburythelede.com">hello@unburythelede.com</a>
+                                <a style="color:#2BA6CB;" href="emailto:hello@unburythelede.com">hello@unburythelede.com</a>
                               </strong>
                             </p>
                           </td>
