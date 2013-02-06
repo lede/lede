@@ -152,6 +152,7 @@ div.signup form label {
   font-size: 1.2em;
   margin-bottom: 10px;
 }
+
 div.signup form input {
   padding: 5px;
   border: none;
@@ -168,7 +169,7 @@ div.signup form input {
 div.signup form a.signup {
   float: left;
   font-size: 1.1em;
-  margin-left: 116px;
+  margin-left: 139px;
   margin-top: 20px;
 }
 
