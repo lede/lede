@@ -17,7 +17,7 @@ exports.down = function(next){
       console.log(err);
       next();
     } else {
-      db.run("DROP TABLE collected_email_addressess", next)
+      db.run("DROP TABLE collected_email_addresses", next)
     }
   });
 };
