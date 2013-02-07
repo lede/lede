@@ -106,10 +106,12 @@ exports.register = function(req, res) {
           password_hash: sha_sum.digest('hex')  
         }, 
         no_err(res, function(created_users) {
+          
+          var apikey = uuid.v4();
 
           dataLayer.Apikey.create({ 
             user_id: created_users.rows[0].id, 
-            apikey: uuid.v4() 
+            apikey: apikey
           }, 
           no_err( res, function(created_apikeys) {
 
@@ -118,7 +120,7 @@ exports.register = function(req, res) {
             notifier.send_welcome(created_users.rows[0].id, password, function() {
               log.info('Sent welcome email for ' + created_users.rows[0].id);
             });
-            res.send({ result: 'dataLayer.User created for ' + req.body.user_email });
+            res.send({ success: true, apikey: apikey, result: 'dataLayer.User created for ' + req.body.user_email });
           }));
         }));
       }
