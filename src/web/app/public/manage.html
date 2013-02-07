@@ -28,6 +28,7 @@
         });
       }
 
+/*
       function updateLedesList() {
         api.lede.list(function(res) {
           var html = "";
@@ -45,7 +46,7 @@
           $('#error').html(err.error);
         });
       }
-
+*/
       // handlers for form
 
       $('a#logout-button').click(function(evt) {
@@ -68,6 +69,10 @@
 
   <div id='error' class='message'></div>
 
+<br>
+  <a href='#' id='logout-button' class='button'> Generate Bookmarklet </a><br/>
+
+<!--
   <table id='ledes-list'>
     <thead>
       <tr>
@@ -78,5 +83,7 @@
     <tbody>
     </tbody>
   </table>
+-->
+
 </body>
 </html>
