@@ -21,8 +21,8 @@ exports.ensure_user = function (req, res, next) {
       }
     }));
   // If we don't have a session, we might have an API key. Check that out.
-  } else if (req.body.apikey) {
-    Apikey.findOne({apikey: req.body.apikey}, no_err(res, function(apikey) {
+  } else if (req.query.apikey) {
+    Apikey.findOne({apikey: req.query.apikey}, no_err(res, function(apikey) {
       if(!apikey) {
         log.info('Invalid api key');
         res.status(403); // forbidden
@@ -44,6 +44,6 @@ exports.ensure_user = function (req, res, next) {
   } else {
     log.info('A non-logged in session attempted to access a users-only endpoint');
     res.status(403); // forbidden
-    res.send({ error: 'Valid session required, please log in'});
+    res.send({ error: 'Valid session or API key required, please log in'});
   }
 };
