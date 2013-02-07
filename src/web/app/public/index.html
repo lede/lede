@@ -83,24 +83,28 @@
               $('form#signup #email').val(),
 
               // success!
-              function() {
+              function(res) {
 
                 $('img#signup-loader').fadeOut(250, function() { 
                   $('div#get-started h2, div#get-started h3, div#get-started label').fadeOut();
                   $('form#signup').addClass('invisible');
 
                   setTimeout(function() { 
-                    $('div#get-started h2').html('Your custom bookmarklet is ready.');
-                    $('div#get-started h3').html('Install it to start covering stories with Lede.');
-                    $('form#signup label').html('Drag the bookmarklet to your bar and you\'re all set.');
-                    $('div#get-started h2, div#get-started h3, div#get-started label').fadeIn();
-                    setTimeout(function() {
-                      $('a#install-bookmarklet').show();
-                      $('a#install-bookmarklet img').addClass('fly-in');
+                    if(res.waitlisted) {
+                      $('p#waitlisted').fadeIn();
+                    } else {
+                      $('div#get-started h2').html('Your custom bookmarklet is ready.');
+                      $('div#get-started h3').html('Install it to start covering stories with Lede.');
+                      $('form#signup label').html('Drag the bookmarklet to your bar and you\'re all set.');
+                      $('div#get-started h2, div#get-started h3, div#get-started label').fadeIn();
                       setTimeout(function() {
-                        $('img#install-arrow').fadeIn();
-                      }, 1000);
-                    }, 2000);
+                        $('a#install-bookmarklet').show();
+                        $('a#install-bookmarklet img').addClass('fly-in');
+                        setTimeout(function() {
+                          $('img#install-arrow').fadeIn();
+                        }, 1000);
+                      }, 2000);
+                    }
                   }, 1000);
 
                 });
@@ -228,6 +232,9 @@
         <a href='#' id='install-bookmarklet' style='display:none'>
           <img src='/images/bookmark_add.png'></img>
         </a>
+        <p id='waitlisted' style='display:none'>
+          Sorry, but Lede is currently in closed beta. We'll let you know when it's ready for you!
+        </p>
       </form>
       <img id='install-arrow' src='/images/install_arrow.png' style='display:none'></img>
     </div>

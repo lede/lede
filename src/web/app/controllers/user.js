@@ -74,10 +74,10 @@ exports.whoami = function(req, res) {
 exports.register = function(req, res) {
 
 
-  // email param is required
+  // Email param is required
   if(req.body.user_email) {
 
-    // validate email
+    // Validate email
     // FIXME: this should probably go in a model validation, but we don't have those (yet)
     // NOTE: validating emails according to the RFC with a regex is basically impossible,
     // but this should handle all sane addresses, which is good enough for now.
@@ -88,45 +88,58 @@ exports.register = function(req, res) {
       return;
     }
 
-    // ensure we don't already have a user with that email
-    dataLayer.User.findOne({email:  req.body.user_email}, no_err(res, function(user) {
+    // Ensure we don't already have a user with that email
+    dataLayer.User.findOne({email: req.body.user_email}, no_err(res, function(user) {
 
-      // duplicate user, yell
+      // Duplicate user, yell
       if(user) {
-        res.status(409); // conflict
+        res.status(409); // Conflict
         res.send({ error: 'An account with that email already exists!' });
       } else {
+        // Is the user allowed to create an account?
+        dataLayer.CollectedEmailAddress.findOne({email: req.body.user_email}, no_err(res, function(collectedEmailAddress) {
+          if(collectedEmailAddress && collectedEmailAddress.can_create_account_as_of) {
+            // Create the new user
+            password = randomPass(); // HACK: send random password to user in email
+            sha_sum = crypto.createHash('sha1');
+            sha_sum.update(password);
+            dataLayer.User.create({
+              email: req.body.user_email,
+              password_hash: sha_sum.digest('hex')
+            },
+            no_err(res, function(created_users) {
+              var apikey = uuid.v4();
+              dataLayer.Apikey.create({
+                user_id: created_users.rows[0].id,
+                apikey: apikey
+              },
+              no_err(res, function(created_apikeys) {
+                req.session.user_id = created_users.rows[0].id;
+                log.info('Logging in as new user: ' + util.inspect(created_users.rows[0]));
+                notifier.send_welcome(created_users.rows[0].id, password, function() {
+                  log.info('Sent welcome email for ' + created_users.rows[0].id);
+                });
+                res.send({ success: true, apikey: apikey, result: 'dataLayer.User created for ' + req.body.user_email });
+              }));
+            }));
+          } else {
+            // We aren't ready for this user yet, but let's take their email address if we don't already have it
+            if(!collectedEmailAddress) {
+              dataLayer.CollectedEmailAddress.create({
+                email: req.body.user_email
+              });
+            }
 
-        // create the new userult"
-        password = randomPass(); // HACK: send random password to user in email
-        sha_sum = crypto.createHash('sha1');
-        sha_sum.update(password);
-        dataLayer.User.create({ 
-          email: req.body.user_email, 
-          password_hash: sha_sum.digest('hex')  
-        }, 
-        no_err(res, function(created_users) {
-
-          dataLayer.Apikey.create({ 
-            user_id: created_users.rows[0].id, 
-            apikey: uuid.v4() 
-          }, 
-          no_err( res, function(created_apikeys) {
-
-            req.session.user_id = created_users.rows[0].id;
-            log.info('Logging in as new user: ' + util.inspect(created_users.rows[0]));
-            notifier.send_welcome(created_users.rows[0].id, password, function() {
-              log.info('Sent welcome email for ' + created_users.rows[0].id);
-            });
-            res.send({ result: 'dataLayer.User created for ' + req.body.user_email });
-          }));
+            res.status(200);
+            res.send({ waitlisted: true });
+          }
         }));
       }
     }));
   } else {
 
-    // yell about missing required email param
-    res.status(422); // unprocessable entity
+    // Yell about missing required email param
+    res.status(422); // Unprocessable entity
     res.send({ error: 'An email must be specified to register an account' });
   }
 };
