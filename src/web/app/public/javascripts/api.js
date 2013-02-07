@@ -87,6 +87,16 @@ api = {
           error(JSON.parse(obj.responseText));
         }
       });
+    },
+    apikey: function(options, success, error) {
+      $.ajax({
+        url: '/api/user/apikey',
+        data: options,
+        success: success,
+        error: function (obj) {
+          error(JSON.parse(obj.responseText));
+        }
+      });
     }
   },
   recommendation: {

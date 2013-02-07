@@ -144,13 +144,13 @@ exports.register = function(req, res) {
   }
 };
 
-exports.generate_apikey = function(req, res) {
+exports.apikey = function(req, res) {
   dataLayer.Apikey.create({ 
     user_id: req.session.user_id, 
     apikey: uuid.v4() 
   }, 
   no_err( res, function(created_apikeys) {
     log.info('Generating new API key for user: ' + util.inspect(req.session.user_id));
-    res.send({ result: 'API Key generated for user id: ' + req.session.user_id });
+    res.send({ result: created_apikeys.rows[0].apikey });
   }));
 };

@@ -86,6 +86,7 @@ app.post('/api/user/login', user.login);
 app.post('/api/user/logout', ensure_user, user.logout);
 app.get('/api/user/whoami', ensure_user, user.whoami);
 app.put('/api/user/register', user.register);
+app.get('/api/user/apikey', ensure_user, user.apikey);
 app.get('/api/user', ensure_user, user.findAll);
 app.get('/api/user/:user_id', ensure_user, user.findOne);
 
