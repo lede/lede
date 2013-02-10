@@ -1,9 +1,13 @@
 <html>
   <head>
-    <script type="text/javascript" src="/bookmarklet/bookmarklet-generator.js"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
+    <script type="text/javascript" src="/bookmarklet/bookmarklet-generator.js"></script>
     <script type="text/javascript">
-      var e = createBookmarklet('test');
-      document.body.appendChild(e);
+      $(function() {
+        console.log("running");
+        var e = createBookmarkletLink('test');
+        document.body.appendChild(e);
+      });
     </script>
   </head>
   <body style='height:10000px;'>
