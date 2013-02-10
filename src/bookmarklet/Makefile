@@ -9,7 +9,7 @@ widget/build/yarn.js: 	widget/bookmarklet.html widget/bookmarklet.css widget/bui
 build/boot.html:	boot.html
 	cp boot.html build/boot.html
 
-build/bookmarklet-generator.js: bookmarklet-generator.js
+build/bookmarklet-generator.js: server-address.txt bookmarklet-generator.js
 	./subst.py bookmarklet-generator.js SERVER_ADDRESS --file server-address.txt > build/bookmarklet-generator.js
 
 build:
