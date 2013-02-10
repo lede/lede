@@ -3,8 +3,10 @@
   <title>Manage Your Ledes</title>
   <link href='http://fonts.googleapis.com/css?family=Andada' rel='stylesheet' type='text/css'>
   <link href='/stylesheets/main.css' media='all' rel='stylesheet' type='text/css'>
+  <link rel="icon" type="image/png" href="/images/lede_icon.png">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
   <script src="/javascripts/api.js"></script> 
+  <script type="text/javascript" src="/bookmarklet/bookmarklet-generator.js"></script>
   <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-36275380-1']);
@@ -26,6 +28,19 @@
             window.location.href = '/';
           }
         });
+      }
+
+      function generateBookmarklet() {
+        api.user.apikey({}, function(result) {
+          $('#generate-bookmarklet-button').hide();
+          var e = createBookmarkletLink(result.result);
+          $('#bookmarklet-div').append("Drag this link to your browser's bookmark bar: ");
+          $('#bookmarklet-div').append(e);
+        },
+        function(err) {
+          console.log(err);
+        });
+
       }
 
 /*
@@ -59,18 +74,23 @@
         evt.preventDefault();
       });
 
-      updateLedesList();
+      $('#generate-bookmarklet-button').click(function(evt) {
+        generateBookmarklet();
+        evt.preventDefault();
+      });
     });
   </script>
 </head>
 <body>
-  <h2>Manage your Ledes</h2>
+  <h2>User Management Panel</h2>
   <a href='#' id='logout-button' class='button'> Log Out </a><br/>
 
   <div id='error' class='message'></div>
 
-<br>
-  <a href='#' id='logout-button' class='button'> Generate Bookmarklet </a><br/>
+  <h3>Need a new bookmarklet?</h3>
+  <div id='bookmarklet-div'>
+    <a href='#' id='generate-bookmarklet-button' class='button'> Generate Bookmarklet </a>
+  </div>
 
 <!--
   <table id='ledes-list'>
