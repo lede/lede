@@ -98,7 +98,7 @@ namespace :deploy do
 
   task :rebuild_bookmarklet, :roles => [:web] do
     update_bookmarklet_dependencies
-    run "cd #{latest_release}/#{bookmarklet_source_path} && make clean && make SERVER_ADDRESS=unburythelede.com && make install"
+    run "cd #{latest_release}/#{web_app_path} && make clean && make"
   end
 
   task :update_server_dependencies, :roles => [:db, :web, :crawler] do
