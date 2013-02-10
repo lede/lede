@@ -1,0 +1,39 @@
+{
+  "domain": "http://localhost:3000",
+  
+  "dbConnectionParams": {
+    "user": "justin",
+    "password": "justindbpass",
+    "database": "dev_justin"
+  },
+
+  "graphConnectionParams": {
+    "dbConfig": {
+      "user_name": "production",
+      "user_password": "z!+A01--nXFAp@O=p"
+    },
+    "serverConfig": {
+      "host": "unburythelede.com",
+      "port": 2424,
+      "user_name": "production",
+      "user_password": "z!+A01--nXFAp@O=p"
+    },
+    "database": "production",
+    "minPoolSize": 2,
+    "maxPoolSize": 10,
+    "idleConnectionTimeout": 15000
+  },
+
+  "log4jsConfig": {
+    "levels": {
+      "indexer": "INFO",
+      "scheduler": "INFO",
+      "discoverer": "INFO",
+      "web": "INFO"
+    }
+  },
+
+  "indexer": {
+    "throttleInterval": 60
+  }
+}
