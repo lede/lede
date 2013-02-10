@@ -119,19 +119,24 @@ exports.register = function(req, res) {
                 notifier.send_welcome(created_users.rows[0].id, password, function() {
                   log.info('Sent welcome email for ' + created_users.rows[0].id);
                 });
-                res.send({ success: true, apikey: apikey, result: 'dataLayer.User created for ' + req.body.user_email });
+                res.send({ success: true, apikey: apikey, result: 'Account created for ' + req.body.user_email });
               }));
             }));
           } else {
+            log.info("Collected email address for " + req.body.user_email);
             // We aren't ready for this user yet, but let's take their email address if we don't already have it
             if(!collectedEmailAddress) {
               dataLayer.CollectedEmailAddress.create({
                 email: req.body.user_email
+              }, function(err, result) {
+                if (err) {
+                  log.error("While creating collected email address: " + err.stack);
+                }
               });
             }
 
             res.status(200);
-            res.send({ waitlisted: true });
+            res.send({ success: true, waitlisted: true, result: 'User added to waitlist' });
           }
         }));
       }
