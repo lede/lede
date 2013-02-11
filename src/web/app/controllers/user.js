@@ -40,8 +40,8 @@ exports.findOne = function(req, res) {
 // FIXME: currently insecure login, will let you access any account with a username
 // just for testing
 exports.login = function(req, res) {
-  if(req.body.user_email) {
-    dataLayer.User.findOne({email: req.body.user_email}, no_err(res, function(user) {
+  if(email_address) {
+    dataLayer.User.findOne({email: email_address}, no_err(res, function(user) {
       if(!user) {
         res.status(403); // forbidden
         res.send({ error: 'Invalid username or password' });
@@ -77,19 +77,23 @@ exports.register = function(req, res) {
   // Email param is required
   if(req.body.user_email) {
 
+    var email_address = req.body.user_email.toLowerCase();
+
     // Validate email
     // FIXME: this should probably go in a model validation, but we don't have those (yet)
     // NOTE: validating emails according to the RFC with a regex is basically impossible,
     // but this should handle all sane addresses, which is good enough for now.
     var email_validator = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/i;
-    if(!email_validator.test(req.body.user_email)) {
+    if(!email_validator.test(email_address)) {
       res.status(400); // bad request
       res.send({ error: 'That email looks invalid!' });
       return;
     }
 
     // Ensure we don't already have a user with that email
-    dataLayer.User.findOne({email: req.body.user_email}, no_err(res, function(user) {
+    dataLayer.User.findOne({email: email_address}, no_err(res, function(user) {
+
+
 
       // Duplicate user, yell
       if(user) {
@@ -97,14 +101,14 @@ exports.register = function(req, res) {
         res.send({ error: 'An account with that email already exists!' });
       } else {
         // Is the user allowed to create an account?
-        dataLayer.CollectedEmailAddress.findOne({email: req.body.user_email}, no_err(res, function(collectedEmailAddress) {
+        dataLayer.CollectedEmailAddress.findOne({email: email_address}, no_err(res, function(collectedEmailAddress) {
           if(collectedEmailAddress && collectedEmailAddress.can_create_account_as_of) {
             // Create the new user
             password = randomPass(); // HACK: send random password to user in email
             sha_sum = crypto.createHash('sha1');
             sha_sum.update(password);
             dataLayer.User.create({
-              email: req.body.user_email,
+              email: email_address,
               password_hash: sha_sum.digest('hex')
             },
             no_err(res, function(created_users) {
@@ -119,15 +123,15 @@ exports.register = function(req, res) {
                 notifier.send_welcome(created_users.rows[0].id, password, function() {
                   log.info('Sent welcome email for ' + created_users.rows[0].id);
                 });
-                res.send({ success: true, apikey: apikey, result: 'Account created for ' + req.body.user_email });
+                res.send({ success: true, apikey: apikey, result: 'Account created for ' + email_address });
               }));
             }));
           } else {
-            log.info("Collected email address for " + req.body.user_email);
+            log.info("Collected email address for " + email_address);
             // We aren't ready for this user yet, but let's take their email address if we don't already have it
             if(!collectedEmailAddress) {
               dataLayer.CollectedEmailAddress.create({
-                email: req.body.user_email
+                email: email_address
               }, function(err, result) {
                 if (err) {
                   log.error("While creating collected email address: " + err.stack);
@@ -150,10 +154,10 @@ exports.register = function(req, res) {
 };
 
 exports.apikey = function(req, res) {
-  dataLayer.Apikey.create({ 
-    user_id: req.session.user_id, 
-    apikey: uuid.v4() 
-  }, 
+  dataLayer.Apikey.create({
+    user_id: req.session.user_id,
+    apikey: uuid.v4()
+  },
   no_err( res, function(created_apikeys) {
     log.info('Generating new API key for user: ' + util.inspect(req.session.user_id));
     res.send({ result: created_apikeys.rows[0].apikey });
