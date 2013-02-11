@@ -101,7 +101,7 @@ function updateRecommendations(userid, callback) {
 // grab the list of bookmarklet hits from the backend
 function updateLedes(userid, callback) {
   $('.recent-bookmarklets ul').html('');
-  api.lede.list({user_id: userid, limit: 10}, function(ledes) {
+  api.lede.list({user_id: userid, limit: 10, order: '-id'}, function(ledes) {
     var li = ledes.length ? '' : '<li>No bookmarklet hits yet. Check back soon!</li>';
     $('.recent-bookmarklets ul').html(li);
 
