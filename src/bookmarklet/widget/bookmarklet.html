@@ -2,11 +2,9 @@
   <img id='lede-logo' class='lede-logo' src='http://unburythelede.com/images/lede-logo.png'></img>
   <div id='message' class='message'></div>
 </div>
-<script type='text/javascript'>
+<script id="animate-bookmarklet" type='text/javascript' data-bookmarklet='animate'>
+  $(__LEDE_POPDOWN__.querySelector('#pop-down')).animate({"top": "0px"}, 1000);
   setTimeout(function() {
-    $(__LEDE_POPDOWN__).find('div').animate({"top": "0px"}, 1000);
-    setTimeout(function() {
-      $(__LEDE_POPDOWN__).find('div').animate({"top": "-185px"}, 2000);
-    }, 3000);
-  }, 200);
+    $(__LEDE_POPDOWN__.querySelector('#pop-down')).animate({"top": "-200px"}, 2000);
+  }, 3000);
 </script>
