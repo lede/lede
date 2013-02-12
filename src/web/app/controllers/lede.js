@@ -35,16 +35,18 @@ function createLede(req, res) {
 }
 
 exports.create = function(req, res) {
-
+//TODO: send meaningful stuff to the bookmarklet.  Right now it doesn't honor the API key and always nags the user to log in
   if(req.session.user_id) {
     User.findOne({id: req.session.user_id}, function(err, user) {
       if(err) {
         log.error('DB error during user lookup: ' + err);
-        res.send("var response = { success: false, message: 'Please log in.' };");
+        //res.send("var response = { success: false, message: 'Please log in.' };");
+        res.send("var response = { success: true, message: '' };");
         return;
       } else if (!user) {
         log.warn('Invalid user ID in session');
-        res.send("var response = { success: false, message: 'Please log in.' };");
+        //res.send("var response = { success: false, message: 'Please log in.' };");
+        res.send("var response = { success: true, message: '' };");
         return;
       } else {
         req.user = user;
@@ -53,7 +55,8 @@ exports.create = function(req, res) {
     });
   } else {
     log.info('A non-logged in session attempted to Lede a page');
-    res.send("var response = { success: false, message: 'Please log in.' };");
+    //res.send("var response = { success: false, message: 'Please log in.' };");
+    res.send("var response = { success: true, message: '' };");
     return;
   }
 };

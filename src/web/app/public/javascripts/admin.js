@@ -9,27 +9,28 @@ function initPage() {
   updateUserList();
 }
 
-//TODO: consider a more efficient way to collect the number of unsent ledes
 function updateUserList(searchstr, callback) {
   var filter = searchstr ? {'email.like': '%'+searchstr+'%'} : {}; 
   api.user.list(filter, function(users) {
     $('.user-list ul').html('');
     _.each(users, function(user) {
-      var selectedTag = (user.id === activeUser.id) ? 'class="selected"' : '';
-      $('.user-list ul').append(
-        '<li '+selectedTag+'>'+
-          '<a id="user-' + user.id + '" href="#user/' + user.id + '">'+
-            user.email+
-          '</a>'+
-        '</li>'
-      );
 
       api.recommendation.list({
         user_id: user.id, 
-        sent: false
+        sent: false,
+        count: true
       }, 
-      function (recommendations) {
-        $('#user-'+user.id).html(user.email + ' (' + recommendations.length + ')');
+      function (count) {
+
+        var selectedTag = (user.id === activeUser.id) ? 'class="selected"' : '';
+        $('.user-list ul').append(
+          '<li '+selectedTag+'>'+
+            '<a id="user-' + user.id + '" href="#user/' + user.id + '">'+
+              user.email + ' (' + count.count + ')' + 
+           '</a>'+
+          '</li>'
+        );
+
       });
     });
   });
@@ -101,7 +102,7 @@ function updateRecommendations(userid, callback) {
 // grab the list of bookmarklet hits from the backend
 function updateLedes(userid, callback) {
   $('.recent-bookmarklets ul').html('');
-  api.lede.list({user_id: userid, limit: 10}, function(ledes) {
+  api.lede.list({user_id: userid, limit: 10, order: '-id'}, function(ledes) {
     var li = ledes.length ? '' : '<li>No bookmarklet hits yet. Check back soon!</li>';
     $('.recent-bookmarklets ul').html(li);
 
@@ -172,6 +173,40 @@ function renderUserDetails(userid) {
   });
 
 }
+
+// Event Handlers
+function handleLookupLede() {
+  $('#notification').html(
+    '<p>Extracting Lede Details...</p>'+
+    '<img src="/images/ajax-loader.gif">'
+  );
+  $('#notification').fadeIn(200);
+
+  api.extractor.extract({
+    url: $('input[name=lede-url]').val()
+  }, 
+  function(recommendation) {
+      $('input[name=lede-url]').val($.trim($('input[name=lede-url]').val()));
+      $('input[name=lede-title]').val($.trim(recommendation.title));
+      $('textarea[name=lede-description]').val($.trim(recommendation.description));
+      $('input[name=lede-image-url]').val($.trim(recommendation.image));
+      $('#lede-image-preview').html('<img src="'+$.trim(recommendation.image) +'" width="75" height="75">');
+      $('#notification').fadeOut(500);
+      $('#notification').html('');
+  },
+  function(err) {
+    $('#notification').addClass('error');
+    $('#notification').html('Extracting Lede Information Has Failed.<br />Check your URL and try again.');
+
+    setTimeout(function() {
+      $('#notification').fadeOut(500);
+      $('#notification').removeClass('error');
+      $('#notification').html('');
+    }, 3000);
+  });
+}
+
+
 
 $(function() {
 
@@ -283,33 +318,16 @@ $(function() {
     });
   });
 
-  // Handler to look up lede data
+  // Handlers to look up lede data
   $('#lookup-lede').click(function(evt) {
     evt.preventDefault();
-    $('#notification').html(
-      '<p>Extracting Lede Details...</p>'+
-      '<img src="/images/ajax-loader.gif">'
-    );
-    $('#notification').fadeIn(200);
-    api.extractor.extract({url: $('input[name=lede-url]').val()}, function(recommendation) {
-      $('input[name=lede-url]').val($.trim($('input[name=lede-url]').val()));
-      $('input[name=lede-title]').val($.trim(recommendation.title));
-      $('textarea[name=lede-description]').val($.trim(recommendation.description));
-      $('input[name=lede-image-url]').val($.trim(recommendation.image.trim()));
-      $('#lede-image-preview').html('<img src="'+$.trim(recommendation.image) +'" width="75" height="75">');
-      $('#notification').fadeOut(500);
-      $('#notification').html('');
-    },
-    function(err) {
-      $('#notification').addClass('error');
-      $('#notification').html('Extracting Lede Information Has Failed.<br />Check your URL and try again.');
-      window.setTimeout(function() {
-        $('#notification').fadeOut(500);
-        $('#notification').removeClass('error');
-        $('#notification').html('');
-      }, 3000);
-    });
+    handleLookupLede();
   });
+
+   $('input[name=lede-url]').change(function(evt) {
+    handleLookupLede();
+  });
+  
 
   // Image preview handler
   $('input[name=lede-image-url]').change(function(evt) {

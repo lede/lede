@@ -40,7 +40,8 @@ exports.findOne = function(req, res) {
 // FIXME: currently insecure login, will let you access any account with a username
 // just for testing
 exports.login = function(req, res) {
-  if(email_address) {
+  if(req.body.user_email) {
+    var email_address = req.body.user_email.toLowerCase();
     dataLayer.User.findOne({email: email_address}, no_err(res, function(user) {
       if(!user) {
         res.status(403); // forbidden
