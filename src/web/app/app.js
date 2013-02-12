@@ -65,7 +65,7 @@ app.get('/', routes.index);
 // TODO: clean up api routing at some point
 // NOTE: we have to accept GET here because we're using image requests as a cross-site hack
 // NOTE: this endpoint does its own valid-user checking because it does some hackalicious stuff with the response pixel
-app.all('/api/lede', lede.create);
+app.all('/api/lede', ensure_user, lede.create);
 
 app.get('/api/ledes', ensure_user, lede.list);
 

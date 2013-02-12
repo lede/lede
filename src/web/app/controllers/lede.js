@@ -35,7 +35,6 @@ function createLede(req, res) {
 }
 
 exports.create = function(req, res) {
-//TODO: send meaningful stuff to the bookmarklet.  Right now it doesn't honor the API key and always nags the user to log in
   createLede(req, res);
 };
 

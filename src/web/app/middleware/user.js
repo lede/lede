@@ -7,6 +7,7 @@ var util = require('util');
 
 exports.ensure_user = function (req, res, next) {
   log.info('Verifying user is authenticated');
+   
 
   // If we have a session, see if it's valid
   if(req.session.user_id) {
@@ -17,6 +18,7 @@ exports.ensure_user = function (req, res, next) {
         res.send({ error: 'Invalid session, please log in again'});
       } else {
         req.user = user;
+        log.info("Attempting to set req.user via cookie");
         next();
       }
     }));
@@ -35,6 +37,7 @@ exports.ensure_user = function (req, res, next) {
             res.send({ error: 'User does not exist, please retry your request'});
           } else {
             req.user = user;
+            log.info("Attempting to set req.user via api key");
             next();
           }
         }));
