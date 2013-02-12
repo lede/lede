@@ -2,6 +2,7 @@
 <head>
   <title>Manage Your Ledes</title>
   <link href='http://fonts.googleapis.com/css?family=Andada' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400' rel='stylesheet' type='text/css'>
   <link href='/stylesheets/main.css' media='all' rel='stylesheet' type='text/css'>
   <link rel="icon" type="image/png" href="/images/lede_icon.png">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
@@ -20,7 +21,8 @@
   </script>
   <script type='text/javascript'>
     $(function() {
-
+      
+      // logout TODO: replace with the api-wrapped version
       function logout() {
         $.ajax('/api/user/logout', {
           type: 'POST',
@@ -30,20 +32,37 @@
         });
       }
 
+      // generate the bookmarklet and kick off all the neat effects
       function generateBookmarklet() {
-        api.user.apikey({}, function(result) {
+        api.user.apikey({}, function(apikey) {
           $('#generate-bookmarklet-button').hide();
-          var e = createBookmarkletLink(result.result);
-          $('#bookmarklet-div').append("Drag this link to your browser's bookmark bar: ");
-          $('#bookmarklet-div').append(e);
+          var bookmarkletLink = createBookmarkletLink(apikey.result, "<img src='/images/bookmark_add.png' alt='Lede This'></img>");
+          $('#bookmarklet-div').append(bookmarkletLink);
+
+          // animate the bookmarklet in
+          setTimeout(function() {
+            $('a#install-bookmarklet').show();
+            $('a#install-bookmarklet img').addClass('fly-in');
+            setTimeout(function() {
+              $('img#install-arrow').fadeIn();
+            }, 1000);
+          }, 2000);
+
+          // glow the bookmarklet
+          setInterval(function() {
+            if($('a#install-bookmarklet img').hasClass('glow')) {
+              $('a#install-bookmarklet img').removeClass('glow');
+            } else {
+              $('a#install-bookmarklet img').addClass('glow');
+            }
+          }, 1000);
+
         },
         function(err) {
           console.log(err);
         });
-
       }
 
-/*
       function updateLedesList() {
         api.lede.list(function(res) {
           var html = "";
@@ -61,9 +80,8 @@
           $('#error').html(err.error);
         });
       }
-*/
-      // handlers for form
 
+      // handlers for form
       $('a#logout-button').click(function(evt) {
         logout();
         evt.preventDefault();
@@ -75,22 +93,38 @@
       });
 
       $('#generate-bookmarklet-button').click(function(evt) {
-        generateBookmarklet();
         evt.preventDefault();
+        generateBookmarklet();
       });
     });
   </script>
 </head>
 <body>
-  <h2>User Management Panel</h2>
-  <a href='#' id='logout-button' class='button'> Log Out </a><br/>
+  <div class='signin-link'>
+    <a id='logout-button' class='signin' href='#'> Log out </a>.
+  </div>
+  <div class='logo-wrapper'>
+    <div class='logo'>
+      <div class='mark'>
+        <div class='box'></div>
+        <div class='line'></div>
+        <div class='line'></div>
+      </div> 
+      <h1> Lede - Manage</h1>
+    </div>
+  </div>
 
   <div id='error' class='message'></div>
 
-  <h3>Need a new bookmarklet?</h3>
-  <div id='bookmarklet-div'>
-    <a href='#' id='generate-bookmarklet-button' class='button'> Generate Bookmarklet </a>
+  <div class="tagline">
+    <div class="intro">
+      <h2>Need a new bookmarklet?</h2>
+      <h3>Generate a bookmarklet for each of your devices to have Lede cover stories from anywhere.</h3>
+      <a href='#' id='generate-bookmarklet-button' class='button'> Generate Bookmarklet </a>
+      <div id='bookmarklet-div'></div>
+    </div>
   </div>
+
 
 <!--
   <table id='ledes-list'>
