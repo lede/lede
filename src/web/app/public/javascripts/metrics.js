@@ -13,12 +13,10 @@ function addLinks(postId, callback) {
   lede.link.fromPost(postId, function(data) {
     _.each(data, function(link) {
       if(link.to_post_id) {
-         console.log("Adding link from " + postId + " to " + link.uri);
         graph.addNode(link.to_post_id, {title: link.title, url: link.uri});
         graph.addLink(postId, link.to_post_id);
         addLinks(link.to_post_id, function(){});
       } else {
-        console.log("Reached end of the link chain from post " + postId);
         return;
       }
     });

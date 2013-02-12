@@ -261,6 +261,7 @@ a.signin {
   font-size: 1em;
   color: #999;
   text-decoration: none;
+  text-align: center;
 }
 
 a.signin:hover {

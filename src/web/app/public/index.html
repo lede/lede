@@ -51,7 +51,6 @@
 
       // glow effect
       setInterval(function() {
-        console.log('glowing...');
         if($('a#install-bookmarklet img').hasClass('glow')) {
           $('a#install-bookmarklet img').removeClass('glow');
         } else {
@@ -61,7 +60,6 @@
 
       // validate and submit signup
       $('a.signup').click(function(evt) {
-        console.log('Clicked!');
         if($('form#signup input#email').val().length == 0) {
           $('form#signup').addClass('error');
           $('form#signup.error').trigger('startRumble');
@@ -72,14 +70,12 @@
           }, 300);
         } else {
           
-          console.log('submitting...');
           $('form#signup').removeClass('error');
           $('form#signup label').html('Creating your account...');
 
 
           $('form#signup input').fadeOut(250);
           $('form#signup a.button').fadeOut(250, function() {
-            console.log('Registering...');
             $('img#signup-loader').fadeIn();
             api.user.register(
               $('form#signup #email').val(),
@@ -96,7 +92,6 @@
                       $('p#waitlisted').fadeIn();
                     } else {
                       var e = createBookmarkletLink(res.apikey, "<img src='/images/bookmark_add.png' alt='Lede This'></img>");
-                      console.log(e);
                       $('#bookmarklet-div').append(e);
                       $('div#get-started h2').html('Your custom bookmarklet is ready.');
                       $('div#get-started h3').html('Install it to start covering stories with Lede.');
@@ -117,7 +112,6 @@
 
               // registration error
               function(error) {
-                console.log(error.error);
                 registerError(error.error);
               }
             );

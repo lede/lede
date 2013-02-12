@@ -56,7 +56,6 @@
 
         },
         function(err) {
-          console.log(err);
         });
       }
 
@@ -93,6 +92,15 @@
         evt.preventDefault();
         generateBookmarklet();
       });
+
+      // If we aren't logged in throw them back to the login page
+      api.user.check(function(user) {
+        adminUser = user.result;
+      }, 
+      function() {
+        window.location='/login.html';
+      });
+
     });
   </script>
 </head>
@@ -118,8 +126,10 @@
         <h2>Need a new bookmarklet?</h2>
         <h3>Generate a bookmarklet for each of your devices to have Lede cover stories from anywhere.</h3>
         <a href='#' id='generate-bookmarklet-button' class='button'> Generate Bookmarklet </a>
-        <div id='bookmarklet-div'></div>
       </div>
+    </div>
+    <div class="signup">
+      <div id='bookmarklet-div'></div>
     </div>
   </div>
 
