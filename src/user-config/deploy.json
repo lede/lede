@@ -85,7 +85,8 @@
       }
     ],
     "levels": {
-      "indexer": "TRACE"
+      "indexer": "TRACE",
+      "recommender": "DEBUG"
     }
   },
 
