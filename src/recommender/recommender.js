@@ -48,7 +48,11 @@ function sendDailyEmailForUser(user, done) {
           done(err);
         } else {
           // mark the recommendations as sent
-          dataLayer.Recommendation.update(_.pluck(ledes, 'id'), { sent: true }, done);
+          if(ledes.length > 0) {
+            dataLayer.Recommendation.update(_.pluck(ledes, 'id'), { sent: true }, done);
+          } else {
+            done();
+          }
         }
       });
     }
