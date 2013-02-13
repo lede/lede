@@ -257,3 +257,6 @@ div.preview {
   display: none;
 }
 
+span.timestamp {
+  color: #888888
+}

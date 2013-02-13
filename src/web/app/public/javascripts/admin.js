@@ -107,11 +107,15 @@ function updateLedes(userid, callback) {
     $('.recent-bookmarklets ul').html(li);
 
     _.each(ledes, function(lede) {
+      console.log(lede);
       $('.recent-bookmarklets ul').append(
         '<li>'+
           '<a href="'+lede.uri+'" target="_blank">'+
-            lede.uri+
-          '</a>'+
+            (lede.title ? lede.title : lede.uri) +
+          '</a> '+
+          '<span class="timestamp">' +
+          moment(lede.created_at, "YYYY-MM-DDTHH:mm:ss Z").fromNow() + 
+          '</span>' +
         '</li>'
       );
     });
