@@ -59,7 +59,7 @@
   <tr>
     <td></td>
     <td style="display:block!important; max-width:600px!important; margin:0 auto!important; clear:both!important;" class="container" align="" bgcolor="#FFFFFF">
-      
+
       <!-- content -->
       <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
         <table style="width: 100%;">
@@ -89,6 +89,18 @@
         </table>
       </div><!-- /content -->
       {{/ledes}}
+
+      <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
+        <table style="width: 100%;">
+          <tr>
+            <td>
+              <p style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;">
+                Help us out! When you read something that you like in your daily browsing, click your <b>Lede this</b> bookmarklet in your bookmarks bar to tell us to cover it.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </div><!-- /content -->
 
       <!-- content -->
       <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
