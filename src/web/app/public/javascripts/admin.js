@@ -55,13 +55,15 @@ function updateRecentLedes(userid, callback) {
   $('.recent-notifications ul').html('');
   api.recommendation.list({user_id: userid, sent: true, order: '-id', limit: 9}, function(recommendations) {
     var li = recommendations.length ? '' : '<li>Send them some ledes!</li>';
+    var clicked = '';
     $('.recent-notifications ul').html(li);
 
     _.each(recommendations, function(recommendation) {
+      clicked = recommendation.clicked_at ? '*' : '';
       $('.recent-notifications ul').append(
         '<li>'+
           '<a href="' + recommendation.uri + '" target="_blank">'+
-            recommendation.title+
+            recommendation.title +  clicked +
           '</a>'+
         '</li>'
       );
@@ -107,7 +109,6 @@ function updateLedes(userid, callback) {
     $('.recent-bookmarklets ul').html(li);
 
     _.each(ledes, function(lede) {
-      console.log(lede);
       $('.recent-bookmarklets ul').append(
         '<li>'+
           '<a href="'+lede.uri+'" target="_blank">'+
