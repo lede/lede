@@ -59,11 +59,11 @@ function updateRecentLedes(userid, callback) {
     $('.recent-notifications ul').html(li);
 
     _.each(recommendations, function(recommendation) {
-      clicked = recommendation.clicked_at ? '*' : '';
+      clicked = recommendation.clicked_at ? '<font size="4" color="#C80815">*</font>' : '';
       $('.recent-notifications ul').append(
         '<li>'+
           '<a href="' + recommendation.uri + '" target="_blank">'+
-            recommendation.title +  clicked +
+           clicked + recommendation.title +  
           '</a>'+
         '</li>'
       );
