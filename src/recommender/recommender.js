@@ -48,6 +48,7 @@ function sendDailyEmailForUser(user, done) {
           done(err);
         } else {
           // mark the recommendations as sent
+          log.info('NOTIFICATION_INSPECTION: ' + util.inspect(notification));
           if(ledes.length > 0) {
             dataLayer.Recommendation.update(_.pluck(ledes, 'id'), { sent: true, sent_notification_id: notification.id }, done);
           } else {

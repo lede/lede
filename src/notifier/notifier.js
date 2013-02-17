@@ -66,11 +66,6 @@ function generate_daily_email(user, posts, callback) {
   send_daily_email(user, mail_html, callback);
 }
 
-// Use the user and posts information to generate the content of the daily email and send it
-function generate_and_send_daily_email (user, posts, callback) {
-    generate_daily_email(user, posts, callback);
-}
-
 // Use the user and password informtion to generate a welcome email and send it
 function send_welcome_email (user, temp_password, callback) {
   var source = fs.readFileSync(__dirname + '/views/welcome.hjs', 'utf8');
@@ -126,7 +121,7 @@ function send_email(user, mail_options, callback) {
 
 // Wrap it all up. Resolve userid and postids, generate email, and send it
 exports.send_daily = function(user, posts, callback) {
-  generate_and_send_daily_email(user, posts, callback);
+  generate_daily_email(user, posts, callback);
 };
 
 // Wrap it all up. Resolve userid, generate email, and send it
