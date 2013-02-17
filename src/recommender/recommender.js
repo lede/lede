@@ -43,13 +43,13 @@ function sendDailyEmailForUser(user, done) {
       done(err);
     } else {
       log.info('Sending email to user ' + user.id + ' (' + user.email + ') with ' + ledes.length + ' links');
-      notifier.send_daily(user, ledes, function (err, results) {
+      notifier.send_daily(user, ledes, function (err, notification) {
         if (err) {
           done(err);
         } else {
           // mark the recommendations as sent
           if(ledes.length > 0) {
-            dataLayer.Recommendation.update(_.pluck(ledes, 'id'), { sent: true }, done);
+            dataLayer.Recommendation.update(_.pluck(ledes, 'id'), { sent: true, sent_notification_id: notification.id }, done);
           } else {
             done();
           }

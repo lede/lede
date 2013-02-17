@@ -18,6 +18,12 @@ exports.extract = function(req, res) {
 };
 
 exports.createThumbnail = function(req, res) {
+  if(!req.body.url) {
+    res.status(200);
+    res.end();
+    return;
+  }
+
   Extractor.createThumbnail(req.body.url, function(err, image) {
     if(err) {
       log.error(err);
