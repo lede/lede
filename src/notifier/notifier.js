@@ -40,7 +40,7 @@ function send_daily_email(user, mail_html, callback) {
   var mail_options = {
     from: "Lede <hello@unburythelede.com>",
     to: user.email,
-    subject: "Ledes of the day",
+    subject: "A week with Lede, what are your thoughts?",
     html: mail_html
   };
 
