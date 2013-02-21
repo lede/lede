@@ -97,6 +97,9 @@
               <p style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;">
                 Help us out! When you read something that you like in your daily browsing, click the <b>Lede This</b> bookmarklet in your bookmarks bar to tell us to cover it.
               </p>
+              <p style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;" class="lede">
+                <b>Remember:</b> if you have misplaced the bookmarklet, visit <a href="http://unburythelede.com">unburythelede.com</a> and log in to generate a new one. The more you click that bookmarklet, the more Lede can do its thing!
+              </p>
             </td>
           </tr>
         </table>
