@@ -75,8 +75,7 @@ function fetchLedesForUser(userId, limit, done) {
  * @param limit  the max number of Ledes to fetch
  */
 function fetchEditorsPicks(limit, done) {
-  // TODO actually run a query here
-  dataLayer.client.query("SELECT DISTINCT r.title, r.uri, r.description, r.author, r.image_url  FROM Recommendations r JOIN Users u ON r.userid = u.id AND u.admin = TRUE ORDER BY r.created_at DESC LIMIT $1", [limit], function(err, result) {
+  dataLayer.client.emit('query', "SELECT rec.title, rec.uri, rec.description, rec.author, rec.image_url FROM Recommendations rec JOIN (SELECT DISTINCT uri FROM (SELECT r.uri FROM Recommendations r JOIN Users u ON r.user_id = u.id AND u.admin = TRUE ORDER BY r.created_at DESC) AS rec LIMIT $1) AS picks ON rec.uri = picks.uri", [limit], function(err, result) {
     if (err) {
       done(err);
     } else {
