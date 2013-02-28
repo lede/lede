@@ -25,9 +25,6 @@ function extractContent(url, done) {
       log.debug(err);
       done(err);
     } else {
-      log.error("THAT SHIT WORKED");
-      log.error("GET BUFFER:");
-      log.error(result);
       extractContentFromHtml(result.body, result.url || url, done);
     }
   });
@@ -45,8 +42,6 @@ function extractContentFromHtml(siteBody, baseUrl, done) {
         log.error("error: " + util.inspect(err));
         done(err);
       } else {
-        log.debug("DOM:");
-        log.debug(dom);
         var result = {
           image: extractImage(dom, baseUrl),
           title: decodeHtml(extractTitle(dom)),
