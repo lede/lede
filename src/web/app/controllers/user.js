@@ -37,12 +37,24 @@ exports.findOne = function(req, res) {
   });
 };
 
-// FIXME: currently insecure login, will let you access any account with a username
-// just for testing
 exports.login = function(req, res) {
-  if(req.body.user_email) {
+  // yell if we don't have both username and password 422 Unprocessable Entity
+  if(req.body.user_email && req.body.user_password) {
+
+    // lc the email address for consistency!
     var email_address = req.body.user_email.toLowerCase();
-    dataLayer.User.findOne({email: email_address}, no_err(res, function(user) {
+
+    // hash the provided password
+    var sha_sum = crypto.createHash('sha1');
+    sha_sum.update(req.body.user_password);
+    var password_hash = sha_sum.digest('hex');
+    
+    // See if the user-password combination is valid
+    dataLayer.User.findOne({
+      email: email_address, 
+      password_hash: password_hash
+    }, 
+    no_err(res, function(user) {
       if(!user) {
         res.status(403); // forbidden
         res.send({ error: 'Invalid username or password' });
@@ -53,7 +65,7 @@ exports.login = function(req, res) {
     }));
   } else {
     res.status(422); // unprocessable entity
-    res.send({ error: 'dataLayer.User name is required but was not specified' });
+    res.send({ error: 'username and password are required fields but both were not specified' });
   }
 };
 
@@ -74,7 +86,6 @@ exports.whoami = function(req, res) {
 
 exports.register = function(req, res) {
 
-
   // Email param is required
   if(req.body.user_email) {
 
@@ -93,8 +104,6 @@ exports.register = function(req, res) {
 
     // Ensure we don't already have a user with that email
     dataLayer.User.findOne({email: email_address}, no_err(res, function(user) {
-
-
 
       // Duplicate user, yell
       if(user) {
