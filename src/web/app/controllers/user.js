@@ -60,6 +60,7 @@ exports.login = function(req, res) {
         res.send({ error: 'Invalid username or password' });
       } else {
         req.session.user_id = user.id;
+        req.session.cookie.maxAge = 51840000; //60 days
         res.send({ result: 'Logged in as: ' + user.email });
       }
     }));
