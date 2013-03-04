@@ -23,7 +23,7 @@ dbconf[settings.dbConnectionParams.user] = {
   "password": settings.dbConnectionParams.password,
   "host": settings.dbConnectionParams.host,
   "database": settings.dbConnectionParams.database
-}
+};
 
 var buffer = JSON.stringify(dbconf);
 fs.writeFileSync('TESTdatabase.json', buffer);
