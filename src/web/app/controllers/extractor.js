@@ -9,6 +9,7 @@ var util = require('util');
 exports.extract = function(req, res) {
   Extractor.extractContent(req.body.url, function(err, extraction) {
     if(err) {
+      log.error(err);
       res.status(500);
       res.send({message: err});
     } else if (extraction) {

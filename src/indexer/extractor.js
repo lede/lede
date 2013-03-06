@@ -9,6 +9,7 @@ var _ = require('underscore');
 var htmlparser = require('htmlparser');
 var select = require('soupselect').select;
 var http = require('http-get');
+var request = require('request');
 var gm = require('gm');
 var path = require('path');
 var uuid = require('node-uuid');
@@ -16,15 +17,18 @@ var encoder = new require('node-html-encoder').Encoder('entity');
 var urlParser = require('url');
 
 function extractContent(url, done) {
-  http.get(url, function(err, result) {
+  var cookie_jar = request.jar();
+  var request_with_jar = request.defaults({jar:cookie_jar});
+  var options = {url: url};
+  request_with_jar(options, function(err, result) {
     if (err) {
+      log.debug(err);
       done(err);
     } else {
-      extractContentFromHtml(result.buffer, result.url || url, done);
+      extractContentFromHtml(result.body, result.url || url, done);
     }
   });
 }
-
 
 /** extract the content from the web page, using some basic heuristics and metadata to figure out which parts are the parts that we seek.
  * @param siteBody  the raw response content of the web page
@@ -53,7 +57,7 @@ function extractContentFromHtml(siteBody, baseUrl, done) {
   } catch (e) {
     log.error("error caught: " + util.inspect(e));
     done(e);
-  }  
+  }
 }
 
 /** extract a representative image from the DOM
@@ -79,7 +83,7 @@ function extractImage(dom, baseUrl) {
     log.trace('resolving relative image URL');
     return urlParser.resolve(baseUrl, imageUrl);
   } else {
-    log.debug("unable to resolve relative URL");
+    log.error("unable to resolve relative URL");
     return null;
   }
 }

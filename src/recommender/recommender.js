@@ -30,7 +30,7 @@ function sendDailyEmails(done) {
       );
     }
   });
-} 
+}
 
 /** send an email for one user.  marks the recommendations that are sent as 'sent'
  * @param user  the user object to send to.  must contain attributes for 'id' and 'email'
