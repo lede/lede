@@ -24,10 +24,15 @@ exports.up = function(next){
           var group = this.group();
 
           _.each(results, function(story) {
-            db.run("INSERT INTO Stories (uri, title, description, author, image_url, origin_type, created_by_user_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9", [], group());
+            db.run("INSERT INTO Stories (uri, title, description, author, image_url, origin_type, created_by_user_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9", [story.uri, story.title, story.description, story.author, story.image_url, 0, story.created_by_user_id, story.created_at, story.updated_at], group());
           });
-        },
-        next
+        }, 
+        function(err, results) {
+          if (err) {
+            console.log(err);
+          }
+          next(err, results);
+        }
       );
     }
   });
