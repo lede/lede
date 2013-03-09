@@ -59,6 +59,10 @@ exports.Lede = FastLegS.Base.extend({
   belongsTo: [  {
     user: exports.User,
     joinOn: 'user_id'
+  },
+  {
+    story: exports.Story,
+    joinOn: 'story_id'
   }]
 });
 
@@ -99,6 +103,10 @@ exports.Recommendation = FastLegS.Base.extend({
   {
     user: exports.User,
     joinOn: 'created_by_user_id'
+  },
+  {
+    story: exports.Story,
+    joinOn: 'story_id'
   }]
 });
 
@@ -125,5 +133,16 @@ exports.Apikey = FastLegS.Base.extend({
   belongsTo: [{
     user: exports.User,
     joinOn: 'user_id'
+  }]
+});
+
+exports.Story = FastLegS.Base.extend({
+  tableName: "stories",
+  primaryKey: "id",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at",
+  belongsTo: [{
+    user: exports.User,
+    joinOn: 'created_by_user_id'
   }]
 });
