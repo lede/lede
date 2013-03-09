@@ -20,6 +20,5 @@ exports.run = function(query, vars, cb) {
         cb(err, res);
       });
     }
-    }
   });
 };
