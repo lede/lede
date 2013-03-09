@@ -18,6 +18,7 @@ var links_dashboard = require('./controllers/links_dashboard');
 var link = require('./controllers/link');
 var post = require('./controllers/post');
 var recommendation = require('./controllers/recommendation');
+var story = require('./controllers/story');
 var notification = require('./controllers/notification');
 var extractor = require('./controllers/extractor');
 var redis_store = require('connect-redis')(express);
@@ -94,6 +95,11 @@ app.get('/api/recommendation', ensure_user, recommendation.list);
 app.post('/api/recommendation', ensure_user, recommendation.create);
 app.post('/api/recommendation/send_daily', ensure_user, recommendation.sendDailyEmailForUser);
 app.delete('/api/recommendation/:recommendation_id', ensure_user, recommendation.remove);
+
+app.get('/api/story', ensure_user, story.list);
+app.post('/api/story', ensure_user, story.create);
+app.put('/api/story/:story_id', ensure_user, story.update);
+app.delete('/api/story/:story_id', ensure_user, story.remove);
 
 app.get('/api/notification', ensure_user, notification.list);
 app.post('/api/notification', ensure_user, notification.create);
