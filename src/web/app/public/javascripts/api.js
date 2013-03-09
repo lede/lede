@@ -136,6 +136,44 @@ api = {
       });
     }
   },
+  story: {
+    list: function(options, success, error) {
+      $.ajax({
+        url: '/api/story',
+        data: options,
+        success: success,
+        error: error
+      });
+    },
+    create: function(story, success, error) {
+      $.ajax({
+        url: '/api/story',
+        type: 'POST',
+        datatype: 'json',
+        data: story,
+        success: success,
+        error: error
+      });
+    },
+    update: function(story, success, error) {
+      $.ajax({
+        url: '/api/story/' + story.id,
+        type: 'PUT',
+        datatype: 'json',
+        data: story,
+        success: success,
+        error: error
+      });
+    },
+    remove: function(story_id, success, error) {
+      $.ajax({
+        url: '/api/story/' + story_id,
+        type: 'DELETE',
+        success: success,
+        errorr: error
+      });
+    }
+  },
   notification: {
     list: function(options, success, error) {
       $.ajax({
