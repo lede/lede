@@ -51,7 +51,8 @@ function sendDailyEmailForUser(user, editorsPicksLedes, mostPopularLedes, done) 
        * as a separate section of the email and thus should pass it as a
        * separate variable
        */
-      ledes = ledes.concat(editorsPicksLedes).slice(0, settings.recommender.numberOfLedes);
+      // TODO Commenting out editors picks temporarily to get the original ledes working with the new story / recommendation db structure
+      //ledes = ledes.concat(editorsPicksLedes).slice(0, settings.recommender.numberOfLedes);
 
       notifier.send_daily(user, ledes, function (err, notification) {
         if (err) {
@@ -76,7 +77,19 @@ function sendDailyEmailForUser(user, editorsPicksLedes, mostPopularLedes, done) 
  */
 function fetchLedesForUser(userId, limit, done) {
   log.debug('Fetching ledes for user: ' + userId);
-  dataLayer.Recommendation.find({ user_id: userId, sent: false }, { order: ['created_at'], limit: limit }, done);
+
+  // include follows the relationship defined in datalayer
+  dataLayer.Recommendation.find({ 
+    user_id: userId, 
+    sent: false 
+  }, 
+  {
+    order: ['created_at'], 
+    limit: limit, 
+    include: { 
+      story: {} 
+    } 
+  }, done);
 }
 
 /** fetches Ledes from those queued for users who have admin=true.  we use Ledes queued instead of stories covered because people can cover garbage and we don't have a clean way of fixing it or detecting it right now.  For the Editor's picks, and possibly also the Most Popular, I think "covered" would produce better results
