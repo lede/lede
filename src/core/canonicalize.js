@@ -84,6 +84,9 @@ function followLink(url, callback) {
   }
 }
 
+/** canonicalizes a URL
+ * callback params: err, canonical URL, path to the canonical URL through the redirects (an array, each element contains an object with properties 'statusCode', 'url', and 'next', the latter being the next URL in the sequence)
+ */
 exports.canonicalize = function(url, callback) {
   var urlStack = [];
 
@@ -104,6 +107,10 @@ exports.canonicalize = function(url, callback) {
   }
 
   recursiveFollow(url, function(err) {
-    callback(err, urlStack);
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, urlStack[urlStack.length - 1].url, urlStack);
+    }
   });
 };
