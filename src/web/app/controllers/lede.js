@@ -10,6 +10,82 @@ var User = require('../../../core/datalayer').User;
 var canonicalize = require('../../../core/canonicalize').canonicalize;
 var extractor = require('../../../indexer/extractor');
 
+function createLedeToStory(userId, storyId) {
+  dataLayer.Lede.create({ user_id: userId, story_id: storyId }, function(err, result) {
+    // yeah, it prints the results, and I'm sorry
+    if (err) {
+      log.error("While creating Lede to story " + storyId + " for user " + userId + ": " + err);
+    } else {
+      log.info("Finished processing Lede " + result.rows[0].id + " for user " + userId);
+    }
+  });
+}
+
+function selectStoryByUri(uri, done) {
+  dataLayer.Story.find({ uri: uri }, { only: ['id', 'uri'] }, done);
+}
+
+/** creates a story (via extraction) from the given URL, or, if it is found to
+ * already exist upon insert, it selects and returns the existing one.  you
+ * probably don't want to call this directly, you want selectOrCreateStory().
+ */
+function createOrSelectStory(url, userId, done) {
+  extractor.extractContent(canonicalUrl, function (err, content) {
+    if (err) {
+      log.error("While extracting bookmarklet URL '" + canonicalUrl + "' for user " + req.user.id + ": " + err);
+      done(err);
+    } else {
+      dataLayer.Story.create({uri: canonicalUrl,
+        title: content.title,
+        description: content.description,
+        author: content.author,
+        image_url: content.image,
+        created_by_user_id: req.user.id,
+        origin_type: 1
+      }, 
+      function (err, storyResult) {
+        if (err) {
+
+          } else {
+            log.error("While creating story from bookmarklet URL '" + canonicalUrl + "' for user " + req.user.id + ": " + err);
+          }
+        } else {
+        }
+      });
+    }
+  });
+}
+
+/** try to find an existing story, and if it doesn't exist, create it, then
+ * we perform extraction for it as a separate step
+ */
+function selectOrCreateStory(url, title, userId, done) {
+  selectStoryByUri(url, function(err, result) {
+    if (err) {
+      log.error("While finding bookmarklet story '" + url + "' for user " + userId + ": " + err);
+      done(err);
+    } else if (result.rows.length > 0) {
+      done(null, result);
+    } else {
+      dataLayer.Story.create({ uri: url, title: title }, function(err, result) {
+        if (err) {
+          /* we check this to handle the race condition possibility if
+           * someone else added this story in between when we selected for
+           * it initially and when we tried to create it
+           */
+          if (/duplicate key value/.test(err)) {
+            selectStoryByUri(url, done);
+          } else {
+            done(err);
+          }
+        } else {
+          extractAndUpdateStory(storyId, done);
+        }
+      });
+    }
+  });
+}
+
 function createLede(req, res) {
   // clean this up, but:
   // ensure we have a valid request
@@ -33,33 +109,6 @@ function createLede(req, res) {
     queues.fastDiscover.enqueue({ parentId: null, url: canonicalUrl });
 
     // extract that bitch
-    extractor.extractContent(canonicalUrl, function (err, content) {
-      if (err) {
-        log.error("While extracting bookmarklet URL '" + canonicalUrl + "' for user " + req.user.id + ": " + err);
-      } else {
-        dataLayer.Story.create({uri: canonicalUrl,
-          title: content.title,
-          description: content.description,
-          author: content.author,
-          image_url: content.image,
-          created_by_user_id: req.user.id,
-          origin_type: 1
-        }, 
-        function (err, storyResult) {
-          if (err) {
-            log.error("While creating story from bookmarklet URL '" + canonicalUrl + "' for user " + req.user.id + ": " + err);
-          } else {
-            dataLayer.Lede.create({ user_id: req.user.id, story_id: storyResult.rows[0].id }, function (err, ledeResult) {
-              if (err) {
-                log.error("While creating Lede to story " + storyResult.rows[0].id + " for user " + req.user.id + ": " + err);
-              } else {
-                log.info("Finished processing Lede " + ledeResult.rows[0].id + " for user " + req.user.id);
-              }
-            });
-          }
-        });
-      }
-    });
   });
 }
 
