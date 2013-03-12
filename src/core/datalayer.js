@@ -40,6 +40,17 @@ exports.User = FastLegS.Base.extend({
   createTimestamp: "created_at"
 });
 
+exports.Story = FastLegS.Base.extend({
+  tableName: "stories",
+  primaryKey: "id",
+  updateTimestamp: "updated_at",
+  createTimestamp: "created_at",
+  belongsTo: [{
+    user: exports.User,
+    joinOn: 'created_by_user_id'
+  }]
+});
+
 exports.Link = FastLegS.Base.extend({
   tableName: "links",
   primaryKey: "id",
@@ -136,13 +147,4 @@ exports.Apikey = FastLegS.Base.extend({
   }]
 });
 
-exports.Story = FastLegS.Base.extend({
-  tableName: "stories",
-  primaryKey: "id",
-  updateTimestamp: "updated_at",
-  createTimestamp: "created_at",
-  belongsTo: [{
-    user: exports.User,
-    joinOn: 'created_by_user_id'
-  }]
-});
+

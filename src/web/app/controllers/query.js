@@ -28,6 +28,11 @@ exports.translate = function(query) {
     attributes.count = query.count;
     delete query.count;
   }
+  if(query.include) {
+    attributes.include = {};
+    attributes.include[query.include] = {};
+    delete query.include;
+  }
 
   //after removing the attributes, send the select as is
   select = query;
