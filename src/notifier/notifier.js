@@ -99,6 +99,7 @@ function send_email(user, mail_options, callback) {
   dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, inserted_notifications) {
     if(err) {
       log.error('Failed to create record in the notifications table');
+      log.error(err);
       callback(err);
     } else if (inserted_notifications && inserted_notifications.rows.length) {
       var inserted_notification = inserted_notifications.rows[0];
