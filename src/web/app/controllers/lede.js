@@ -22,67 +22,70 @@ function createLedeToStory(userId, storyId) {
 }
 
 function selectStoryByUri(uri, done) {
-  dataLayer.Story.find({ uri: uri }, { only: ['id', 'uri'] }, done);
+  dataLayer.Story.findOne({ uri: uri }, { only: ['id', 'uri'] }, done);
 }
 
 /** creates a story (via extraction) from the given URL, or, if it is found to
  * already exist upon insert, it selects and returns the existing one.  you
  * probably don't want to call this directly, you want selectOrCreateStory().
  */
-function createOrSelectStory(url, userId, done) {
-  extractor.extractContent(canonicalUrl, function (err, content) {
+function extractAndUpdateStory(url, storyId, userId, done) {
+  log.debug("Extracting content for story " + storyId);
+  extractor.extractContent(url, function (err, content) {
     if (err) {
-      log.error("While extracting bookmarklet URL '" + canonicalUrl + "' for user " + req.user.id + ": " + err);
+      log.error("While extracting story " + storyId + " at '" + url + "' for user " + userId + ": " + err);
       done(err);
     } else {
-      dataLayer.Story.create({uri: canonicalUrl,
+      dataLayer.Story.update(storyId, {
         title: content.title,
         description: content.description,
         author: content.author,
-        image_url: content.image,
-        created_by_user_id: req.user.id,
-        origin_type: 1
+        image_url: content.image
       }, 
-      function (err, storyResult) {
+      function (err, numUpdatedRows) {
         if (err) {
-
-          } else {
-            log.error("While creating story from bookmarklet URL '" + canonicalUrl + "' for user " + req.user.id + ": " + err);
-          }
+          log.error("While updating story " + storyId + ": " + err);
+          done(err);
+        } else if (numUpdatedRows != 1) {
+          done("Unable to update story " + storyId);
         } else {
+          done(null, storyId);
         }
       });
     }
   });
 }
 
-/** try to find an existing story, and if it doesn't exist, create it, then
- * we perform extraction for it as a separate step
+/** create or find an existing story.  if we create, we also perform extraction as a separate step.  the params to done are (err, storyId)
  */
-function selectOrCreateStory(url, title, userId, done) {
-  selectStoryByUri(url, function(err, result) {
-    if (err) {
-      log.error("While finding bookmarklet story '" + url + "' for user " + userId + ": " + err);
-      done(err);
-    } else if (result.rows.length > 0) {
-      done(null, result);
-    } else {
-      dataLayer.Story.create({ uri: url, title: title }, function(err, result) {
-        if (err) {
-          /* we check this to handle the race condition possibility if
-           * someone else added this story in between when we selected for
-           * it initially and when we tried to create it
-           */
-          if (/duplicate key value/.test(err)) {
-            selectStoryByUri(url, done);
-          } else {
-            done(err);
-          }
+function createOrSelectStory(url, title, userId, done) {
+  dataLayer.Story.create({
+      uri: url,
+      title: title,
+      created_by_user_id: userId,
+      origin_type: 1 // origin type 1 == bookmarklet click
+    }, function(err, result) {
+      if (err) {
+        /* we check this to handle the race condition possibility if
+         * someone else added this story in between when we selected for
+         * it initially and when we tried to create it
+         */
+        if (/duplicate key value/.test(err)) {
+          log.debug("Story at URI '" + url + "' already exists");
+          selectStoryByUri(url, function(err, result) {
+            if (err) {
+              done(err);
+            } else {
+              done(null, result.id);
+            }
+          });
         } else {
-          extractAndUpdateStory(storyId, done);
+          done(err);
         }
-      });
-    }
+      } else {
+        log.debug("Created story " + result.rows[0].id + " at URI '" + url + "'");
+        extractAndUpdateStory(url, result.rows[0].id, userId, done);
+      }
   });
 }
 
@@ -108,7 +111,13 @@ function createLede(req, res) {
     // we've already performed discovery on this URL recently
     queues.fastDiscover.enqueue({ parentId: null, url: canonicalUrl });
 
-    // extract that bitch
+    createOrSelectStory(canonicalUrl, req.query.title, req.user.id, function(err, storyId) {
+      if (err) {
+        log.error("While creating/selecting story '" + canonicalUrl + "': " + err);
+      } else {
+        createLedeToStory(req.user.id, storyId);
+      }
+    });
   });
 }
 
