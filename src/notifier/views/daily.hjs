@@ -72,7 +72,7 @@
           </tr>
         </table>
       </div><!-- /content -->
-      
+
     {{#ledes}}
       <!-- content -->
       <div style="padding:15px; max-width:600px; margin:0 auto; display:block;" class="content">
@@ -95,11 +95,20 @@
           <tr>
             <td>
               <p style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;">
-                Help us out! When you read something that you like in your daily browsing, click the <b>Lede This</b> bookmarklet in your bookmarks bar to tell us to cover it.
+<!--                 Help us out! When you read something that you like in your daily browsing, click the <b>Lede This</b> bookmarklet in your bookmarks bar to tell us to cover it. -->
+                Over the last several weeks, we have learned an incredible amount about people's news consumption habits, and how we can use them to make Lede the best possible choice for following the stories you care about. In order to enhance Lede in this way, we are going to redesign several key components to the service, as well as add some new functionality. We plan to do this in the next month and a half, during which time the Lede service will not be available.
               </p>
               <p style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;" class="lede">
-                <b>Remember:</b> if you have misplaced the bookmarklet, visit <a href="http://unburythelede.com">unburythelede.com</a> and log in to generate a new one. The more you click that bookmarklet, the more Lede can do its thing!
+<!--                 <b>Remember:</b> if you have misplaced the bookmarklet, visit <a href="http://unburythelede.com">unburythelede.com</a> and log in to generate a new one. The more you click that bookmarklet, the more Lede can do its thing! -->
+                Don't worry! Our goal it to be able to support a much larger beta crowd, and <b>you</b> will be first in line for the re-launch. Here are some of the things you can look forward to:
+                <ul style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;">
+                  <li style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;">An immediate reward for clicking the bookmarklet</li>
+                  <li style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;">Visibility into the lifespan of a story</li>
+                  <li style="margin-bottom:10px;font-weight: normal;font-size:17px;line-height:1.6;">A consistently larger volume of daily, relevant followups and related stories</li>
+                </ul>
               </p>
+              <p style="margin-bottom:1px;font-weight: normal;font-size:17px;line-height:1.6;">Talk to you soon,</p>
+              <p style="margin-bottom:1px;font-weight: normal;font-size:17px;line-height:1.6;">— The Lede Team</p>
             </td>
           </tr>
         </table>
@@ -122,7 +131,7 @@
                         <tr style="padding: 15px 15px 0px 15px;">
                           <td style="padding: 15px 15px 0px 15px;">        
                             
-                            <h5 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:900!important; font-size: 17px!important;">Connect with Us:</h5>
+                            <h5 style="font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; line-height: 1.1; margin-bottom:15px; color:#000000!important;font-weight:900!important; font-size: 17px!important;"><!-- Connect with Us: -->Keep in touch with us!</h5>
                             <p style="margin-bottom:10px;font-weight: normal;font-size:14px;line-height:1.6;"><a style="background-color:#3B5998!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.facebook.com/unburythelede" class="soc-btn fb">Facebook</a> <a style="background-color:#1DACED!important;padding: 3px 7px; font-size:12px; margin-bottom:10px; text-decoration:none; color: #FFF;font-weight:bold; display:block; text-align:center;" href="http://www.twitter.com/unburythelede" class="soc-btn tw">Twitter</a></p>
                           </td>
                         </tr>

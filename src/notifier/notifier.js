@@ -25,7 +25,7 @@ function get_posts(postids, cb){
     log.error("Attempted to resolve empty list of post IDs");
     cb([]);
   }
-  
+
   dataLayer.Post.find(postids, {only: ['id','uri','title']}, function(err, posts) {
     if(err) {
       log.error(err);
@@ -40,7 +40,7 @@ function send_daily_email(user, mail_html, callback) {
   var mail_options = {
     from: "Lede <hello@unburythelede.com>",
     to: user.email,
-    subject: "A whole bunch of new Ledes, just for you",
+    subject: "Last email for a while (thank you)!",
     html: mail_html
   };
 
@@ -99,6 +99,7 @@ function send_email(user, mail_options, callback) {
   dataLayer.Notification.create({user_id: user.id, created_by_user_id: 0}, function(err, inserted_notifications) {
     if(err) {
       log.error('Failed to create record in the notifications table');
+      log.error(err);
       callback(err);
     } else if (inserted_notifications && inserted_notifications.rows.length) {
       var inserted_notification = inserted_notifications.rows[0];
