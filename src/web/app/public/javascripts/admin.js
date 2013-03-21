@@ -10,23 +10,23 @@ function initPage() {
 }
 
 function updateUserList(searchstr, callback) {
-  var filter = searchstr ? {'email.like': '%'+searchstr+'%'} : {}; 
+  var filter = searchstr ? {'email.like': '%'+searchstr+'%'} : {};
   api.user.list(filter, function(users) {
     $('.user-list ul').html('');
     _.each(users, function(user) {
 
       api.recommendation.list({
-        user_id: user.id, 
+        user_id: user.id,
         sent: false,
         count: true
-      }, 
+      },
       function (count) {
 
         var selectedTag = (user.id === activeUser.id) ? 'class="selected"' : '';
         $('.user-list ul').append(
           '<li '+selectedTag+'>'+
             '<a id="user-' + user.id + '" href="#user/' + user.id + '">'+
-              user.email + ' (' + count.count + ')' + 
+              user.email + ' (' + count.count + ')' +
            '</a>'+
           '</li>'
         );
@@ -63,7 +63,7 @@ function updateRecentLedes(userid, callback) {
       $('.recent-notifications ul').append(
         '<li>'+
           '<a href="' + recommendation.uri + '" target="_blank">'+
-           clicked + recommendation.title +  
+           clicked + recommendation.title +
           '</a>'+
         '</li>'
       );
@@ -75,7 +75,7 @@ function updateRecentLedes(userid, callback) {
 function updateRecommendations(userid, callback) {
   $('.queued-ledes ul').html('');
   api.recommendation.list({user_id: userid, sent: false, order: '-id'}, function(recommendations) {
-    var li = recommendations.length ? '' : '<li>Queue up some ledes!</li>'; 
+    var li = recommendations.length ? '' : '<li>Queue up some ledes!</li>';
     $('.queued-ledes ul').html(li);
 
     _.each(recommendations, function(recommendation) {
@@ -115,7 +115,7 @@ function updateLedes(userid, callback) {
             (lede.title ? lede.title : lede.uri) +
           '</a> '+
           '<span class="timestamp">' +
-          moment(lede.created_at, "YYYY-MM-DDTHH:mm:ss Z").fromNow() + 
+          moment(lede.created_at, "YYYY-MM-DDTHH:mm:ss Z").fromNow() +
           '</span>' +
         '</li>'
       );
@@ -127,7 +127,7 @@ function updateLedes(userid, callback) {
 // render up the user details 
 function renderUserDetails(userid) {
   $('#user-list li').removeClass('selected');
-  $('#user-'+userid).parent().addClass('selected'); 
+  $('#user-'+userid).parent().addClass('selected');
 
   var callbackCount = 3;
   $('#admin-dashboard').fadeOut(300);
@@ -189,7 +189,7 @@ function handleLookupLede() {
 
   api.extractor.extract({
     url: $('input[name=lede-url]').val()
-  }, 
+  },
   function(recommendation) {
       $('input[name=lede-url]').val($.trim($('input[name=lede-url]').val()));
       $('input[name=lede-title]').val($.trim(recommendation.title));
@@ -237,7 +237,7 @@ $(function() {
 
   api.user.check(function(user) {
     adminUser = user.result;
-  }, 
+  },
   function() {
     window.location='/login.html';
   });
@@ -263,7 +263,7 @@ $(function() {
   // Handler to preview ledes
   $('#preview-lede').click(function(evt) {
     evt.preventDefault();
-    var recommendation = { 
+    var recommendation = {
       uri: $('input[name=lede-url]').val().trim(),
       title: $('input[name=lede-title]').val().trim(),
       author: $('input[name=lede-author]').val().trim(),
@@ -284,7 +284,7 @@ $(function() {
   $('#add-lede-form').submit(function(evt) {
     evt.preventDefault();
 
-    var recommendation = { 
+    var recommendation = {
       user_id: userid,
       created_by_user_id: adminUser.id,
       uri: $('input[name=lede-url]').val().trim(),
@@ -332,7 +332,7 @@ $(function() {
    $('input[name=lede-url]').change(function(evt) {
     handleLookupLede();
   });
-  
+
 
   // Image preview handler
   $('input[name=lede-image-url]').change(function(evt) {

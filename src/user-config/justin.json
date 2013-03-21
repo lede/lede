@@ -2,9 +2,9 @@
   "domain": "http://localhost:3000",
   
   "dbConnectionParams": {
-    "user": "justin",
-    "password": "justindbpass",
-    "database": "dev_justin"
+    "user": "production",
+    "password": "U*6}-%YpK06@;Rt",
+    "database": "production"
   },
 
   "graphConnectionParams": {
