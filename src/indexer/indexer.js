@@ -11,12 +11,6 @@ var queues = require('../core/resque-queues');
 var errors = require('../core/errors.js');
 var pg = require('pg').native;
 
-// HACK: inline config to test straight SQL
-var config = require('../db/database.json')[process.env.LEDE_DB];
-var conn_string = 'tcp://' + encodeURIComponent(config.user) + ':' + encodeURIComponent(config.password) + '@' + encodeURIComponent(config.host) + '/' + encodeURIComponent(config.database);
-
-
-
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
   log.fatal('Top-Level Uncaught Exception: ' + error);
@@ -212,13 +206,6 @@ process.on('SIGINT', function() {
   _.each(workers, function(worker) { worker.finish(); });
   process.exit(0);
 });
-
-// helper for running a query through the pool
-dbQuery = function(query, args, callback) {
-  pg.connect(conn_string, function(err, client) {
-    client.query(query, args, callback);
-  });
-}
 
 // create workers per config file
 _.each(_.keys(settings.indexer.workers), function(queue) {

@@ -15,7 +15,7 @@ var pool = pooler.Pool({
     });
   },
   
-  destroy: function(client) { db.close(); },
+  destroy: function(client) { client.close(); },
   
   max: settings.graphConnectionParams.maxPoolSize,
 
