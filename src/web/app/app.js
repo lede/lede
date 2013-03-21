@@ -11,22 +11,22 @@ var http = require('http');
 var path = require('path');
 var util = require('util');
 var uuid = require('node-uuid');
-var lede = require('./controllers/lede');
-var posts_dashboard = require('./controllers/posts_dashboard');
-var sources_dashboard = require('./controllers/sources_dashboard');
-var links_dashboard = require('./controllers/links_dashboard');
-var link = require('./controllers/link');
-var post = require('./controllers/post');
-var recommendation = require('./controllers/recommendation');
-var story = require('./controllers/story');
-var notification = require('./controllers/notification');
-var extractor = require('./controllers/extractor');
+var lede = require('./routes/lede');
+var posts_dashboard = require('./routes/posts_dashboard');
+var sources_dashboard = require('./routes/sources_dashboard');
+var links_dashboard = require('./routes/links_dashboard');
+var link = require('./routes/link');
+var post = require('./routes/post');
+var recommendation = require('./routes/recommendation');
+var story = require('./routes/story');
+var notification = require('./routes/notification');
+var extractor = require('./routes/extractor');
 var redis_store = require('connect-redis')(express);
 var redis = require('redis').createClient();
 var _ = require('underscore');
 var ensure_user = require('./middleware/user.js').ensure_user;
-var user = require('./controllers/user.js');
-var email_callback = require('./controllers/email_callback.js');
+var user = require('./routes/user.js');
+var email_callback = require('./routes/email_callback.js');
 
 // handle top-level exceptions
 process.on('uncaughtException',function(error){
