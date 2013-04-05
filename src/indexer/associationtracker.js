@@ -7,10 +7,24 @@ var url = require('url');
 var select = require('soupselect').select;
 
 // TODO consider the difference between an article 
-// and a story and implemnt different methods for determining 
+// and a story and implement different methods for determining 
 // these properties. The current thinking is to implement each of 
 // these to be source agnostic (article|story)
 
+
+// Interesting idea from here: https://code.google.com/p/boilerpipe/
+// Basically, humans use two buckets when writing: short,long
+// One can extract the text content of a page by grabbing only
+// long blocks of contiguous text
+//
+// Naive jQuery implementation:
+/*
+$('p').each( function(i,t) {
+  if($(t).text().length > 500) { 
+    console.log($(t).text())
+  } 
+});
+*/
 
 // Grab author. Consider trying to come to some canonicalized
 // version of the name (maybe just lc() to start)
