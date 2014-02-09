@@ -79,8 +79,8 @@
     "port": "587",
     "domain": "unburythelede.com",
     "authentication": "login",
-    "username": "lede",
-    "password": "Passw0rd!"
+    "username": "",
+    "password": ""
   },
 
   "recommender": {
