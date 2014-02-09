@@ -3,7 +3,7 @@
 # Project: FeedReader
 # Company: readtheinter.net
 #!/bin/sh
-RS_USER="jhayden211"
+RS_USER=""
 RS_API_KEY=""
 RS_API_URL="https://auth.api.rackspacecloud.com/v1.0"
 LOCAL_IMAGE_PATH="/tmp/rs_local_image.tar.gz";
