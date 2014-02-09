@@ -4,7 +4,7 @@
 # Company: readtheinter.net
 #!/bin/sh
 RS_USER="jhayden211"
-RS_API_KEY="498278b2c12744af7c1d986101d371a1"
+RS_API_KEY=""
 RS_API_URL="https://auth.api.rackspacecloud.com/v1.0"
 LOCAL_IMAGE_PATH="/tmp/rs_local_image.tar.gz";
 
